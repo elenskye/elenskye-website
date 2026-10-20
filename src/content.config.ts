@@ -5,22 +5,22 @@ import { glob } from 'astro/loaders';
 // this honest: it fails on any file here that is not named
 // `<slug>.zh.md` / `<slug>.en.md`, so a stray duplicate or backup is reported
 // rather than silently turning into a page.
-const CONTENT_PATTERN = '**/*.{md,mdx}';
+const CONTENT_PATTERN = '**/*.md';
 
 const wander = defineCollection({
   loader: glob({ pattern: CONTENT_PATTERN, base: './src/content/wander' }),
   schema: z.object({
     title: z.string(),
     language: z.enum(['zh', 'en']),
-    // NOTE: keep every field below tolerant of what the Keystatic admin may
-    // save (empty selects, cleared text). A schema-invalid file makes the
-    // dev content sync fail silently and the site freezes on stale data.
+    // NOTE: keep every field below tolerant of empty or half-filled values
+    // (cleared selects and text). A schema-invalid file makes the dev content
+    // sync fail silently and the site freezes on stale data.
     // Zero or one current Category per card. A retired taxonomy value is
-    // tolerated here and normalized away at render/admin time.
+    // tolerated here and normalized away at render time.
     category: z.string().default(''),
     // Zero or more current Topics per card (growing taxonomy; same JSON file).
     topics: z.array(z.string()).default([]),
-    // Publication precision stops at the month. Invalid/cleared admin input
+    // Publication precision stops at the month. Invalid/cleared input
     // is treated as absent so one half-filled field cannot freeze content sync.
     month: z
       .string()
@@ -35,13 +35,13 @@ const wander = defineCollection({
     englishTitle: z.string().optional(),
     englishSummary: z.string().optional(),
     thumbnail: z.string().optional(),
-    // Optional reference to any existing image under public/. Keystatic's
-    // path-reference field makes shared assets reusable without re-uploading.
+    // Optional reference to any existing image under public/, so shared
+    // assets are reused rather than uploaded again. Wins over `thumbnail`.
     thumbnailRef: z.string().optional(),
     // Gallery works: an ordered image set rendered as a lightbox above the
     // body text. Empty for every other kind of work. Kept deliberately
-    // tolerant — Keystatic can save a half-filled row, and a schema error
-    // silently freezes the whole dev content sync.
+    // tolerant — a half-filled row must not fail the schema, which would
+    // silently freeze the whole dev content sync.
     gallery: z
       .array(
         z.object({

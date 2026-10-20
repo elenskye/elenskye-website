@@ -118,7 +118,7 @@ export function compareWanderMonths(a: string | undefined, b: string | undefined
 // language page shows its own version.
 export function getWanderSlug(entry: WanderEntry) {
   const base = entry.filePath?.split('/').pop() ?? entry.id;
-  return base.replace(/\.(md|mdx)$/, '').replace(/\.(zh|en)$/, '');
+  return base.replace(/\.md$/, '').replace(/\.(zh|en)$/, '');
 }
 
 // Chinese pieces live at the root; English versions and English stubs for

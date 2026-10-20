@@ -20,7 +20,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 
 const CONTENT_DIRECTORIES = ['wander', 'now', 'career', 'about'];
 // Wander uses `<slug>.<zh|en>.md`; the singleton pages use `<zh|en>.md`.
-const VALID_NAME = /^([a-z0-9][a-z0-9-]*\.)?(zh|en)\.(md|mdx)$/;
+const VALID_NAME = /^([a-z0-9][a-z0-9-]*\.)?(zh|en)\.md$/;
 
 const problems = [];
 let checked = 0;

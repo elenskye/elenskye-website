@@ -8,7 +8,7 @@
  * one implementation; `assets.ts` re-exports it for the existing call sites.
  */
 
-/** Convert Keystatic file-system references into browser-facing URLs. */
+/** Convert `public/…` file references into browser-facing URLs. */
 export function toPublicAssetUrl(path) {
   if (!path) return undefined;
   if (path.startsWith('public/')) return `/${path.slice('public/'.length)}`;
@@ -18,13 +18,13 @@ export function toPublicAssetUrl(path) {
 /**
  * Resolve a work's `gallery` frontmatter into renderable images.
  *
- * Rows are tolerated in whatever half-filled state Keystatic may have saved: a
+ * Rows are tolerated in whatever half-filled state they were saved in: a
  * row with neither `imageRef` nor `image` is dropped rather than rendered as a
  * broken image. `imageRef` (a reused, registered asset) wins over `image` (a
  * fresh upload), matching the thumbnail precedence used elsewhere.
  *
  * `alt` falls back to the work's own title so a gallery is never unlabelled;
- * authors are still asked for a real description in the admin.
+ * authors are still asked for a real description when editing.
  */
 export function resolveGalleryImages(gallery, fallbackAlt) {
   return (gallery ?? []).flatMap((item) => {

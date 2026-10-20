@@ -44,9 +44,8 @@ export const pagePaths: Record<PageKey, Record<Locale, string>> = {
   },
 };
 
-// Social links and the Wander taxonomy are stored as JSON so the Keystatic
-// admin (/keystatic during `npm run dev`) can edit them. Restart the dev
-// server after editing the taxonomy so the admin's dropdown options refresh.
+// Social links and the Wander taxonomy are stored as JSON so they can be
+// edited as data (Pomelo writes them) rather than as code.
 import socialLinksData from './social-links.json';
 import taxonomyData from './wander-taxonomy.json';
 

@@ -8,7 +8,7 @@ import '@fontsource/noto-serif-sc/600.css';
 import '@fontsource/work-sans/latin-200.css';
 import '@fontsource/work-sans/latin-300.css';
 import '@fontsource/work-sans/latin-400.css';
-import { CakeSlice, MapPin, Music } from 'lucide-react';
+import { CakeSlice, MapPin, Music } from '@lucide/astro';
 
 // ===========================================================================
 // 改期只改这一行：北京时间，格式 YYYY-MM-DD HH:MM
@@ -344,7 +344,7 @@ const endUtcMs = beijingToUtcMs(endBeijing);
 
               {/* 只有在自动播放被浏览器拦下时才由脚本显示；成功自动播放则永不出现。 */}
               <button type="button" id="music-hint" aria-label={copy.musicHint} hidden>
-                <Music size={18} strokeWidth={1.6} aria-hidden="true" />
+                <Music size={18} stroke-width={1.6} aria-hidden="true" />
               </button>
             </section>
 
@@ -400,7 +400,7 @@ const endUtcMs = beijingToUtcMs(endBeijing);
             <button type="button" id="wish-button">
               <span class="star-core" aria-hidden="true">
                 <span class="star-gate-orbit"></span>
-                <CakeSlice className="star-gate-icon" size={26} strokeWidth={1.7} />
+                <CakeSlice class="star-gate-icon" size={26} stroke-width={1.7} />
                 <span class="star-gate-spark star-gate-spark-a"></span>
                 <span class="star-gate-spark star-gate-spark-b"></span>
               </span>
@@ -413,7 +413,7 @@ const endUtcMs = beijingToUtcMs(endBeijing);
                 <button type="button" id="node-panel-close" aria-label={copy.closePanel}>×</button>
                 <p class="panel-date" id="node-panel-date"></p>
                 <p class="panel-place">
-                  <MapPin className="panel-place-icon" size={16} strokeWidth={1.8} aria-hidden="true" />
+                  <MapPin class="panel-place-icon" size={16} stroke-width={1.8} aria-hidden="true" />
                   <span id="node-panel-place"></span>
                 </p>
                 <img id="node-panel-photo" src="" alt="" loading="lazy" decoding="async" />

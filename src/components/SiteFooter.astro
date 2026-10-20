@@ -1,5 +1,5 @@
 ---
-import { BriefcaseBusiness, GitBranch, Globe2, Mail, Rss, type LucideIcon } from 'lucide-react';
+import { BriefcaseBusiness, GitBranch, Globe2, Mail, Rss, type AstroComponent } from '@lucide/astro';
 import { brandMarks, brandMarkViewBox } from '../data/brand-marks';
 import {
   discoveryPaths,
@@ -33,7 +33,7 @@ const secondColumn = footerLinks.slice(6, 12);
 // Official brand marks win where the platform allows redistribution
 // (see src/data/brand-marks.ts). Everything else keeps a Lucide semantic
 // icon, so an unregistered platform still renders a sensible entry.
-const socialIcons: Record<string, LucideIcon> = {
+const socialIcons: Record<string, AstroComponent> = {
   github: GitBranch,
   linkedin: BriefcaseBusiness,
   email: Mail,
@@ -45,7 +45,7 @@ const socialIcons: Record<string, LucideIcon> = {
     <div class="footer-intro">
       <p class="footer-heading">{heading}</p>
       <a class="footer-rss-link" href={discoveryPaths.rss[locale]}>
-        <Rss aria-hidden="true" size={20} strokeWidth={1.8} />
+        <Rss aria-hidden="true" size={20} stroke-width={1.8} />
         <span>RSS Feed</span>
       </a>
       <div class="footer-social" aria-label={locale === 'zh' ? '外部链接' : 'External links'}>
@@ -72,7 +72,7 @@ const socialIcons: Record<string, LucideIcon> = {
                     <path d={mark.path} />
                   </svg>
                 ) : (
-                  <SocialIcon aria-hidden="true" size={24} strokeWidth={1.8} />
+                  <SocialIcon aria-hidden="true" size={24} stroke-width={1.8} />
                 )}
               </a>
             );

@@ -169,22 +169,6 @@ for (const file of htmlFiles) {
   }
 }
 
-// Phase 16 keeps Keystatic strictly local. A release build must contain neither
-// the admin route nor its API/asset-preview implementation.
-for (const file of distFiles) {
-  const relativePath = file.slice(dist.length + 1).replaceAll('\\', '/');
-  if (/(^|\/)(?:keystatic|api\/keystatic)(?:\/|$)/i.test(relativePath)) {
-    errors.push(`${relativePath}: local-only Keystatic leaked into the production build`);
-  }
-}
-const inspectableReleaseFiles = distFiles.filter((file) => /\.(?:html|js|css|json|xml|txt)$/i.test(file));
-const releaseText = (
-  await Promise.all(inspectableReleaseFiles.map((file) => readFile(file, 'utf8')))
-).join('\n');
-if (/\/(?:api\/)?keystatic(?:\/|["'`])|__keystatic|asset-preview/i.test(releaseText)) {
-  errors.push('dist: local-only Keystatic or asset-preview code leaked into release text');
-}
-
 // The Phase 16 performance fixes are intentional release invariants: fonts are
 // non-blocking and swap to the selected families, the first Wander image is discoverable at high
 // priority, and the one-column wall leaves the masonry row sizing behind.

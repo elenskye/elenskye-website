@@ -40,7 +40,7 @@ for (const file of await filesIn(join(root, 'src/data/assets/documents'))) {
 }
 
 for (const file of await filesIn(wanderDirectory)) {
-  if (!['.md', '.mdx'].includes(extname(file))) continue;
+  if (extname(file) !== '.md') continue;
   const source = await readFile(file, 'utf8');
   for (const match of source.matchAll(/^thumbnailRef:\s*["']?([^"'\n]+)["']?\s*$/gm)) {
     await assertLocalPath(file, match[1].trim());
@@ -73,5 +73,5 @@ if (errors.length) {
   console.error(errors.join('\n'));
   process.exitCode = 1;
 } else {
-  console.log('Admin reference QA passed: optional paths resolve and shared-image relationships are registered');
+  console.log('Reference QA passed: optional paths resolve and shared-image relationships are registered');
 }

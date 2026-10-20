@@ -9,9 +9,7 @@ const registryRoots = [
   { kind: 'document', directory: join(projectRoot, 'src/data/assets/documents') },
 ];
 const scanRoots = [join(projectRoot, 'src'), join(projectRoot, 'public')];
-const rootFiles = ['astro.config.mjs', 'keystatic.config.ts', 'vercel.json'].map((file) =>
-  join(projectRoot, file)
-);
+const rootFiles = ['astro.config.mjs', 'vercel.json'].map((file) => join(projectRoot, file));
 const textExtensions = new Set([
   '.astro',
   '.css',

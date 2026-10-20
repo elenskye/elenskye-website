@@ -1,5 +1,5 @@
 ---
-import { Globe2, Moon, Search, Sun } from 'lucide-react';
+import { Globe2, Moon, Search, Sun } from '@lucide/astro';
 import { discoveryPaths, getAlternatePath, localeConfig, navItems, type Locale, type PageKey } from '../data/site';
 
 interface Props {
@@ -61,14 +61,14 @@ const homeHref = locale === 'zh' ? '/' : '/en/';
   </nav>
   <div class="header-actions">
     <a class="icon-toggle" href={searchHref} aria-label={searchLabel}>
-      <Search aria-hidden="true" size={20} strokeWidth={1.8} />
+      <Search aria-hidden="true" size={20} stroke-width={1.8} />
     </a>
     <a class="icon-toggle" href={languageHref} aria-label={languageLabel}>
-      <Globe2 aria-hidden="true" size={20} strokeWidth={1.8} />
+      <Globe2 aria-hidden="true" size={20} stroke-width={1.8} />
     </a>
     <button class="icon-toggle theme-toggle" type="button" aria-label={themeLabel}>
-      <Moon className="icon-moon" aria-hidden="true" size={20} strokeWidth={1.8} />
-      <Sun className="icon-sun" aria-hidden="true" size={20} strokeWidth={1.8} />
+      <Moon class="icon-moon" aria-hidden="true" size={20} stroke-width={1.8} />
+      <Sun class="icon-sun" aria-hidden="true" size={20} stroke-width={1.8} />
     </button>
   </div>
 </header>

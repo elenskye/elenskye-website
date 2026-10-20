@@ -13,7 +13,7 @@
 const cleanText = (value) => (typeof value === 'string' ? value.trim() : '');
 
 /**
- * Keep the Career page resilient to half-filled rows saved from Keystatic.
+ * Keep the Career page resilient to half-filled rows.
  * Incomplete rows are ignored until they contain enough information to render,
  * while an intentionally empty, titled module remains visible.
  *

@@ -2198,7 +2198,7 @@ p {
 }
 
 /* Dev-only notice shown when a content collection is momentarily empty while
-   Astro re-syncs after a Keystatic save. A production build fails instead of
+   Astro re-syncs after a content save. A production build fails instead of
    rendering this (see src/lib/require-entry.ts). */
 .content-resync-notice {
   padding: var(--space-4) var(--space-5);

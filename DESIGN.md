@@ -59,7 +59,7 @@
 
 ## 7. 本地实验与例外
 
-- `/design-preview/` 只用于比较色彩、字体、Logo、控件与卡片；它被 gitignore，不进 Keystatic 或部署。
+- `/design-preview/` 只用于比较色彩、字体、Logo、控件与卡片；它被 gitignore，不进部署。
 - 未决视觉方案先在实验页比较，再进入正式页面与本文件。
 - Phase 18 的 `/love-shuyu/` 是唯一可脱离本视觉系统的隐藏页；它正常提交仓库，但站内不放任何入口。它与 `design-preview` 一同列在 `scripts/qa-build.mjs` 的 `localOnlyHtml` 里，不按正式内容页检查元数据与唯一 `h1`；同一脚本另有断言保证它永远不进 sitemap。
 

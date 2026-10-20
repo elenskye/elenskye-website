@@ -162,7 +162,7 @@ for (const relativePath of ['index.html', 'en/index.html']) {
 const sourceFiles = await readdir(join(root, 'src/content/wander'));
 const works = new Map();
 for (const file of sourceFiles) {
-  const match = /^(.*)\.(zh|en)\.(md|mdx)$/.exec(file);
+  const match = /^(.*)\.(zh|en)\.md$/.exec(file);
   if (!match) continue;
   const [, slug, locale] = match;
   const source = await readFile(join(root, 'src/content/wander', file), 'utf8');
@@ -254,8 +254,7 @@ for (const metadataFile of ['rss.xml', 'en/rss.xml', 'sitemap.xml']) {
 }
 
 // --- Gallery ---------------------------------------------------------------
-// getGalleryImages has to survive whatever half-filled rows Keystatic can
-// save, because a thrown error here freezes the whole content collection.
+// getGalleryImages has to survive half-filled rows, because a thrown error here freezes the whole content collection.
 assert.deepEqual(resolveGalleryImages([], 'fallback'), [], 'empty gallery must yield no images');
 
 assert.deepEqual(

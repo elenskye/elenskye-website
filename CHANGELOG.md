@@ -2,6 +2,13 @@
 
 这里只记录已完成且验证过的阶段结果；状态与待办见 `ROADMAP.md`。
 
+## 2026-10-20 —— 拿掉 Keystatic，内容改由 Pomelo 编辑与发布
+
+- 内容的编辑、预览和发布都搬进了 Pomelo 的「呦呦漫游」；网站里删掉 Keystatic（`keystatic.config.ts`、`@keystatic/*`、开发时的资源引用预览接口），以及只为它在线模式准备的 `build:remote-check`、`qa-remote-build.mjs` 和 `@astrojs/vercel`。
+- 图标从 `lucide-react` 换成同版本（1.26.0）的 `@lucide/astro`，`react`、`react-dom`、`@astrojs/react` 随之移除；没有 `.mdx` 内容，`@astrojs/mdx` 移除，内容只认 `.md`。
+- `qa:admin` 改名 `qa:refs`（`scripts/qa-references.mjs`）；`qa-career` 不再检查 Keystatic 配置；改词表后不必再重启 dev server（只有 Keystatic 的下拉框需要）。
+- **验证**：改前改后各构建一次逐页比对，全部 31 个页面（含本地的 design-preview）除 SVG 属性顺序外完全一致；Node 22 + npm 10 从 lockfile 干净安装后完整 `npm run qa` 通过；Pomelo 的编辑、发布与本地预览测试在副本上通过。
+
 ## 2026-08-28 —— Phase 18 收尾，Personal Website v1 完成并部署
 
 站主提供的生日信终稿逐字接入（9 段正文 + 两行落款，落款改为 `你的，` / `呦呦`），构建产物与源文本逐字符比对一致。Phase 18 就此收尾，v1 全部完成并部署。

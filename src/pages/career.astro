@@ -8,7 +8,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const page = pageCopy.zh.career;
 const [rawEntry] = await getCollection('career', (item) => item.data.language === 'zh');
-// Survives the dev-server content re-sync that follows every Keystatic save.
+// Survives the dev-server content re-sync that follows every content save.
 const entry = requireEntry(rawEntry, 'career', 'zh');
 const Extra = entry ? (await render(entry)).Content : undefined;
 const summary = entry?.data.summary.trim() || page.description;

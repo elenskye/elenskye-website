@@ -70,7 +70,7 @@ assert.deepEqual(
       ],
     },
   ],
-  'both Career modes and half-filled Keystatic rows must normalize safely'
+  'both Career modes and half-filled rows must normalize safely'
 );
 
 const decodeHtml = (value) =>
@@ -143,14 +143,6 @@ for (const [relativePath, contentPath, pageSourcePath] of [
     `${pageSourcePath}: Career summary no longer comes from editable content`
   );
 }
-
-const keystaticSource = await readFile(join(root, 'keystatic.config.ts'), 'utf8');
-assert.match(keystaticSource, /summary:\s*fields\.text\(/, 'Keystatic is missing the editable Career summary');
-assert.match(
-  keystaticSource,
-  /sections:\s*fields\.array\([\s\S]*?content:\s*fields\.conditional\(/,
-  'Keystatic is missing dynamic Career sections with selectable modes'
-);
 
 const careerComponentSource = await readFile(join(root, 'src/components/CareerCv.astro'), 'utf8');
 const globalCss = await readFile(join(root, 'src/styles/global.css'), 'utf8');

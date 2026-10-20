@@ -26,7 +26,7 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 const zhEntries = await getCollection('wander', (item) => item.data.language === 'zh');
 const entry = zhEntries.find((item) => getWanderSlug(item) === slug);
-// The dev server empties the content store while re-syncing after a Keystatic
+// The dev server empties the content store while re-syncing after a content
 // save, so a path that getStaticPaths matched can momentarily resolve to
 // nothing. Redirecting beats a 500 that makes the whole site look broken.
 if (!entry) return Astro.redirect(pagePaths.wander.zh, 302);

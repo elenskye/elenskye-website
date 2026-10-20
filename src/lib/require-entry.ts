@@ -3,7 +3,7 @@
  * backed by exactly one entry per language).
  *
  * Why this exists: Astro's dev server rebuilds the content-layer store whenever
- * a content file changes. Keystatic saves a file on every edit, so any request
+ * a content file changes. The editor saves a file on every edit, so any request
  * that lands during that rebuild sees an EMPTY collection — the dev log says
  * `The collection "career" does not exist or is empty`. Pages that did
  * `const [entry] = await getCollection(...)` then passed `undefined` straight
@@ -31,7 +31,7 @@ export function requireEntry<T>(entry: T | undefined, collection: string, langua
   }
 
   console.warn(
-    `[content] "${collection}" is empty for "${language}". This is normally Astro re-syncing after a Keystatic save — reload in a moment. ` +
+    `[content] "${collection}" is empty for "${language}". This is normally Astro re-syncing after a save — reload in a moment. ` +
       `If it persists, check the terminal for InvalidContentEntryDataError.`
   );
   return undefined;
@@ -39,6 +39,6 @@ export function requireEntry<T>(entry: T | undefined, collection: string, langua
 
 /** Localized copy for the dev-only placeholder shown in place of a missing entry. */
 export const missingEntryNotice = {
-  zh: '内容正在重新同步（通常发生在 Keystatic 保存之后）。请稍候刷新。',
-  en: 'Content is re-syncing (this usually follows a Keystatic save). Reload in a moment.',
+  zh: '内容正在重新同步（通常发生在保存之后）。请稍候刷新。',
+  en: 'Content is re-syncing (this usually follows a save). Reload in a moment.',
 } as const;

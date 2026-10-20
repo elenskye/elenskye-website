@@ -2,9 +2,9 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Keystatic content bridge: convert the custom syntax used by the editor
-// into ordinary mdast nodes that Astro's Markdown renderer understands.
-// The editor saves tables in Markdoc syntax:
+// Content bridge: convert the Markdoc-style tags the content uses into
+// ordinary mdast nodes that Astro's Markdown renderer understands.
+// Tables are written in Markdoc syntax:
 //
 //   {% table %}
 //   - Header A
@@ -118,7 +118,7 @@ function sharedImageNode(node, registry) {
   if (!asset) {
     // A registry entry may be retired independently from an article. Keep
     // the article buildable and omit only the missing image; the dedicated
-    // admin-reference QA reports the stale slug with its source location.
+    // reference QA reports the stale slug with its source location.
     return { type: 'html', value: '' };
   }
   return {

@@ -1,5 +1,5 @@
 ---
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from '@lucide/astro';
 import aboutImages from '../data/about-images.json';
 import type { Locale } from '../data/site';
 import { toPublicAssetUrl } from '../lib/assets';
@@ -36,10 +36,10 @@ const labels =
         {artworks.length > 1 && (
           <>
             <button class="artwork-arrow artwork-arrow--prev" type="button" aria-label={labels.prev}>
-              <ChevronLeft aria-hidden="true" size={17} strokeWidth={1.8} />
+              <ChevronLeft aria-hidden="true" size={17} stroke-width={1.8} />
             </button>
             <button class="artwork-arrow artwork-arrow--next" type="button" aria-label={labels.next}>
-              <ChevronRight aria-hidden="true" size={17} strokeWidth={1.8} />
+              <ChevronRight aria-hidden="true" size={17} stroke-width={1.8} />
             </button>
           </>
         )}

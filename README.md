@@ -1,6 +1,6 @@
 # Elen Skye Website
 
-Elen Skye 的双语个人网站，以「漫游」连接写作、项目、画作与个人经历。技术栈为 Astro、MDX、Keystatic、Pagefind、GitHub 与 Vercel；中文使用根路径，英文镜像位于 `/en`。
+Elen Skye 的双语个人网站，以「漫游」连接写作、项目、画作与个人经历。技术栈为 Astro、Pagefind、GitHub 与 Vercel，内容在站主的本地应用 Pomelo（「呦呦漫游」）里编辑和发布；中文使用根路径，英文镜像位于 `/en`。
 
 正式网站：<https://elenskye.com>；`www.elenskye.com` 永久重定向到根域名。**v1 已全部完成并部署**；当前状态、长期边界与 v2 队列见 `ROADMAP.md`。
 
@@ -9,7 +9,7 @@ Elen Skye 的双语个人网站，以「漫游」连接写作、项目、画作�
 | 路径 | 用途 |
 | --- | --- |
 | `src/components/` | 页头、页脚、Wander 墙、筛选、搜索与 Gallery |
-| `src/content/` | Keystatic 管理的 About、Career、Now、Wander 双语内容 |
+| `src/content/` | About、Career、Now、Wander 双语内容 |
 | `src/data/` | 站点文案、分类、社交入口、资源登记与 `/love-shuyu/` 时间线数据 |
 | `src/layouts/`、`src/pages/` | 公共布局、双语路由、RSS、404 与 sitemap |
 | `src/lib/` | 内容、资源、Gallery、搜索与 RSS 逻辑 |
@@ -17,7 +17,6 @@ Elen Skye 的双语个人网站，以「漫游」连接写作、项目、画作�
 | `src/styles/` | 字体、Vermilion 主题、排版与响应式样式 |
 | `public/` | 简历、图片、Logo、图标与原样发布的静态文件 |
 | `scripts/` | QA、资源审计、删除预览与 `/love-shuyu/` 照片压缩 |
-| `keystatic.config.ts` | 本地内容管理配置 |
 
 `/love-shuyu/` 是 Phase 18 的隐藏页（仅中文、无站内入口、`noindex`），构成如下：
 
@@ -48,14 +47,10 @@ Elen Skye 的双语个人网站，以「漫游」连接写作、项目、画作�
 
 ## 内容在哪里改
 
-日常内容更新不需要动代码。
-
 | 要改的东西 | 去哪里 |
 | --- | --- |
-| Wander 文章、About、Career、Now | `npm run dev` 后进 `/keystatic`；写入的是 `src/content/` 下的 `<slug>.zh.md` / `<slug>.en.md` |
-| 站点文案、导航、社交入口 | `src/data/` |
-| Wander 分类词表 | `src/data/wander-taxonomy.json`（只改显示名；ID 是稳定键，改词表后要重启 dev server） |
-| 简历 PDF | `public/cv/{zh,en}/` |
+| Wander 作品、Now 与当下状态、About、Career 与简历、资源登记、Wander 分类词表、外部链接 | Pomelo →「呦呦漫游」 |
+| 站点文案、导航 | `src/data/site.ts` |
 | `/love-shuyu/` 的信、称谓、按钮文案 | `src/pages/love-shuyu.astro` 顶部的 `copy` 常量 |
 | `/love-shuyu/` 的 11 个时间线节点 | `src/data/love-shuyu-timeline.ts`（`place` / `body` / `alt` 都是必填，漏写会在 `tsc` 报错） |
 | `/love-shuyu/` 的歌词 | `src/data/love-shuyu-lyrics.ts` |
@@ -70,25 +65,21 @@ Elen Skye 的双语个人网站，以「漫游」连接写作、项目、画作�
 | 命令 | 用途 |
 | --- | --- |
 | `npm ci` | 按 lockfile 安装依赖 |
-| `npm run dev` | 启动 `http://127.0.0.1:4328/`；后台为 `/keystatic` |
+| `npm run dev` | 启动 `http://127.0.0.1:4328/` |
 | `npm run build` | 静态生产构建与 Pagefind 索引 |
 | `npm run preview` | 预览构建产物。**视觉验收走这里，不是 `npm run dev`**：dev 不压缩 CSS，压缩器改写简写导致的问题只在构建产物里出现 |
 | `npm run qa` | 阶段收尾、发布候选或部署前的完整检查 |
 | `npm run qa:workspace` | 检查内容文件命名 |
 | `npm run audit:assets` | 检查资源体积、重复与坏引用 |
+| `npm run qa:refs` | 检查内容里引用的文件存在、共享图片已登记 |
 | `npm run assets:delete-preview` | 只读预览资源引用，不执行删除 |
 | `node scripts/love-shuyu-photos.mjs` | 压缩 `/love-shuyu/` 时间线照片到 1.5 MB 内 |
 | `node scripts/love-memory-photos.mjs /绝对路径/love-memory` | 用 Quick Look 解码 HDR／HEIC，按原比例生成 1280px、JPEG Q76 的照片流副本并逐张检查 |
 
 长期规则见 `AGENTS.md`；状态、边界与待办见 `ROADMAP.md`；视觉规范与「不要这样做」见 `DESIGN.md`；阶段结果见 `CHANGELOG.md`。
 
-`/love-shuyu/` 额外使用 Three.js（约 539 KB，gzip 约 135 KB，只在该页加载）。它正常提交仓库并会进入构建，但站内不放任何入口，且带 `noindex, nofollow`、不进 sitemap 与 RSS。
+## 发布
 
-## 发布与更新
-
-完整的操作步骤（拉取、分支、Keystatic 内容、PR、Preview 验收、合并、回滚）见 **`DEPLOY.md`**，这里只留几条边界：
-
-- `main` 对应 Vercel Production；日常改动一律走分支 → PR → Preview → 合并，不在 Vercel 手工上传 `dist/`。
-- 合并前跑 `npm run qa`：它内含 `build` 与 `tsc`，本地跑不过的东西云端也不会好。
-- Keystatic 只在本地写入仓库，线上不提供内容后台。
-- `/love-shuyu/` 会随构建上线并在 `https://elenskye.com/love-shuyu/` 真实可达（无站内入口、`noindex, nofollow`、不进 sitemap / RSS / Pagefind，但知道 URL 即可打开）。PR 的 Preview 链接同样是公开可访问的。
+- 日常发布在 Pomelo 里点「发布」：先跑 `npm run qa`，过了再把全部改动（内容和代码）提交并推到 `main`，Vercel 自动上线（构建命令同样是 `npm run qa`，不过就不替换线上版本）。手动发布与回滚见 `DEPLOY.md`。
+- 不在 Vercel 手工上传 `dist/` 或直接改线上文件。
+- `/love-shuyu/` 会随构建上线，知道 URL 即可打开（无站内入口、`noindex, nofollow`、不进 sitemap / RSS / Pagefind）。
