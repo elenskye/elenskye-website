@@ -1,7 +1,19 @@
 {
   "links": [
-    { "key": "github", "label": "GitHub", "href": "https://github.com/elenskye" },
-    { "key": "linkedin", "label": "LinkedIn", "href": "https://www.linkedin.com/in/tianyou-lei" },
-    { "key": "email", "label": "Email", "href": "mailto:yoeki929032@gmail.com" }
+    {
+      "key": "github",
+      "label": "GitHub",
+      "href": "https://github.com/elenskye"
+    },
+    {
+      "key": "email",
+      "label": "Email",
+      "href": "mailto:yoeki929032@gmail.com"
+    },
+    {
+      "key": "linkedin",
+      "label": "LinkedIn",
+      "href": "https://www.linkedin.com/in/tianyou-lei"
+    }
   ]
 }

@@ -5,8 +5,7 @@ resumeDownloads:
   - label: ❗️中文页面简历仍在完善中❗️
     fileRef: public/cv/zh/resumeDownloads/0/cv-it-v0-zh.rtf
 summary: >-
-  重庆大学（985）本科，新加坡国立大学系统分析研究生（GDipSA,
-  NUS-ISS），机器学习与全栈软件工程并行：设计并评测过多个深度学习模型，也以
+  重庆大学（985）本科，新加坡国立大学系统分析研究生（GDipSA, NUS-ISS），机器学习与全栈软件工程并行：设计并评测过多个深度学习模型，也以
   Java/Spring Boot/ReactJS 交付生产级系统
 sections:
   - title: 技能
@@ -47,7 +46,9 @@ sections:
           role: 论文共同作者
           org: 《基于机器学习的政治效能感关键预测因素》
           bullets:
-            - 对比评测 11 个模型（树集成、梯度提升、SVR、KNN、神经网络），依据 R²、MAE、RMSE 选定 CatBoost 为最终模型
+            - >-
+              对比评测 11 个模型（树集成、梯度提升、SVR、KNN、神经网络），依据 R²、MAE、RMSE 选定 CatBoost
+              为最终模型
             - 用 Python 与 R 搭建可复现的建模管线，包括完整个案清洗与类别编码
             - 应用 SHAP 可解释性（平均绝对值与依赖图）对特征重要性排序
   - title: 项目
@@ -67,8 +68,8 @@ sections:
           org: 全栈购物车 Web 应用
           bullets:
             - >-
-              与两名队友共同负责后端，基于 Spring Boot 构建 RESTful API 服务，JPA/Hibernate ORM 持久化至 SQL
-              数据库
+              与两名队友共同负责后端，基于 Spring Boot 构建 RESTful API 服务，JPA/Hibernate ORM
+              持久化至 SQL 数据库
             - 与 2 人 ReactJS 前端团队约定 API 契约，打通前后端边界，整合出覆盖 6 大核心功能的电商应用
   - title: 实习经历
     content:
@@ -80,5 +81,7 @@ sections:
           bullets:
             - 研读大量内部行业研报，产出基础行业研究报告
             - 带领 3 人小组为客户需求定制多元化投资策略
-            - 编写 2 个 ChatGPT 辅助的组合收益分析脚本，以 Python 计算、Excel VBA 自动出报，设计了创新的投资决策工作流
+            - >-
+              编写 2 个 ChatGPT 辅助的组合收益分析脚本，以 Python 计算、Excel VBA
+              自动出报，设计了创新的投资决策工作流
 ---

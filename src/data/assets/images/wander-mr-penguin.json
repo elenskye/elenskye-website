@@ -1,0 +1,12 @@
+{
+  "title": "wander-mr-penguin",
+  "asset": {
+    "discriminant": "existingImage",
+    "value": {
+      "file": "public/assets/images/cornelius-ventures-ak81vc-kcf4-unsplash.jpg",
+      "alt": ""
+    }
+  },
+  "usage": "Wander 封面",
+  "deletionRequested": false
+}

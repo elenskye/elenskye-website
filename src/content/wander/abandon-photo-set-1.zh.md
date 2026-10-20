@@ -18,6 +18,7 @@ gallery:
     alt: 黑白照片中，多排鱼平放在湿润的台面上
   - imageRef: public/images/wander/abandon/photo-abandon-5.jpg
     alt: 黑白夜市摊前，戴口罩的摊主隔着柜台向顾客递出食物
+    caption: 老家大学城的夜市
   - imageRef: public/images/wander/abandon/photo-abandon-6.jpg
     alt: 黑白照片中，熟食摊陈列多盘卤味，摊主隔着案台递出一袋食物
   - imageRef: public/images/wander/abandon/photo-abandon-7.jpg

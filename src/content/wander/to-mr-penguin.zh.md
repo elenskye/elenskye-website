@@ -4,7 +4,7 @@ language: zh
 category: literature
 topics:
   - poetry
-month: '2026-02'
+month: 2026-02
 englishTitle: To Mr. Penguin
 englishSummary: >-
   A New Year poem addressed to Mr. Penguin — about another kind of winter,

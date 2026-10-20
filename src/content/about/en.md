@@ -11,6 +11,16 @@ contextIntro: >-
   traveling remain my favorites—especially the joy and sense of accomplishment
   that comes from creating something.
 timeline:
+  - role: Application Development Assistant
+    org: Bank of China (BOCSG)
+    period: Sep 2026 – Present
+    description: >-
+      Currently interning at the Fintech Department of BOCSG, primarily
+      responsible for RPA development, data analysis for internal platforms, and
+      AI training across departments. While gaining hands-on programming
+      experience in real business scenarios, continuously strengthening
+      requirements analysis and technical feasibility assessment skills through
+      ongoing communication with business units.
   - role: Graduate Student, Systems Analysis
     org: National University of Singapore
     period: Jul 2025 – Present
