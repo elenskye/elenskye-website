@@ -1,0 +1,9 @@
+@import '@fontsource/noto-sans-sc/400.css';
+@import '@fontsource/noto-serif-sc/400.css';
+
+/* Latin companions lead the global stacks in both languages. The sliced files
+   let each page fetch only the Latin glyph ranges it actually uses. */
+@import '@fontsource/source-serif-4/latin-400.css';
+@import '@fontsource/source-serif-4/latin-600.css';
+@import '@fontsource/work-sans/latin-400.css';
+@import '@fontsource/work-sans/latin-500.css';

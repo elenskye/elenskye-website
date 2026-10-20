@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageShell from '../components/PageShell.astro';
+import WanderWall from '../components/WanderWall.astro';
+import { getCollection } from 'astro:content';
+import { pageCopy } from '../data/site';
+import { getCategoryCounts, getUniqueWanderCount, toWanderCards } from '../lib/wander';
+
+const page = pageCopy.zh.wander;
+const wanderEntries = await getCollection('wander');
+const wanderCards = toWanderCards(wanderEntries, 'zh');
+const wanderCount = getUniqueWanderCount(wanderEntries);
+const categoryCounts = getCategoryCounts(wanderEntries);
+---
+
+<BaseLayout
+  title="呦呦漫游"
+  description={page.description}
+  locale="zh"
+  pageKey="wander"
+>
+  <PageShell eyebrow={page.eyebrow} title={page.title} description={page.description} variant="wide" count={wanderCount} countLabel={`呦呦漫游目前收纳 ${wanderCount} 篇内容`}>
+    <WanderWall cards={wanderCards} emptyText="这里很快会放入项目、文章、画作和笔记。" locale="zh" categoryCounts={categoryCounts} />
+  </PageShell>
+</BaseLayout>

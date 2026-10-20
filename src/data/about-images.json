@@ -1,0 +1,12 @@
+{
+  "portraits": [
+    "/images/about/portraits/profile-test-1.png",
+    "/images/about/portraits/profile-test-2.jpg"
+  ],
+  "artworks": [
+    "/images/about/artworks/art-test-1.jpg",
+    "/images/about/artworks/art-test-2.jpg"
+  ],
+  "portraitRefs": [],
+  "artworkRefs": []
+}

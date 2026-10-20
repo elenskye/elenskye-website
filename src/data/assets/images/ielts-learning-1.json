@@ -1,0 +1,12 @@
+{
+  "title": "ielts-learning-1",
+  "asset": {
+    "discriminant": "existingImage",
+    "value": {
+      "file": "public/images/wander/ielts-excel-ai.zh/ielts-1.jpeg",
+      "alt": "艾宾浩斯背诵表（Excel）"
+    }
+  },
+  "usage": "Wander 卡片内容",
+  "deletionRequested": false
+}

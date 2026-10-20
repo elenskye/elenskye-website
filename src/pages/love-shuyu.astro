@@ -1,0 +1,4031 @@
+---
+// 隐藏页 /love-shuyu/ —— Phase 18-3 两幕结构。
+// 站内不放任何入口，noindex，不进 sitemap 与 RSS。云部署须站主单独批准。
+// 视觉完全独立：不引入 global.css，也不得反向影响全站 Vermilion token。
+import '@fontsource/noto-serif-sc/300.css';
+import '@fontsource/noto-serif-sc/400.css';
+import '@fontsource/noto-serif-sc/600.css';
+import '@fontsource/work-sans/latin-200.css';
+import '@fontsource/work-sans/latin-300.css';
+import '@fontsource/work-sans/latin-400.css';
+import { CakeSlice, MapPin, Music } from 'lucide-react';
+
+// ===========================================================================
+// 改期只改这一行：北京时间，格式 YYYY-MM-DD HH:MM
+// ===========================================================================
+const endBeijing = '2027-01-31 00:00';
+
+// 异地起点，同样是北京时间；用于总时长与进度条。
+const startBeijing = '2025-10-03 00:00';
+
+// 每年的生日，按北京时间判定。
+const birthdayMonth = 9;
+const birthdayDay = 3;
+
+// ---------------------------------------------------------------------------
+// 站主填写区：以下文案全部由站主自己写，Agent 不代拟内容。
+// 时间线各节点的地点与正文见 src/data/love-shuyu-timeline.ts。
+// ---------------------------------------------------------------------------
+const copy = {
+  countdownLabel: '距离我们结束异地',
+  progressPrefix: '已经走过',
+  reunionTitle: '我们结束异地啦',
+  reunionLabel: '这场异地一共走了',
+  scrollHint: 'S&Y',
+  // 两侧的爱心**不写在文案里**：`❤`（U+2764）在手机上会被系统按 emoji 渲染成
+  // 一颗刺眼的红心，暖金的调子当场断掉，加 U+FE0E 变体选择符在 iOS 与各家
+  // Android 定制字体上也时灵时不灵。所以爱心改成 CSS 画的形状（`.has-hearts`
+  // 的 ::before / ::after），跟着 currentColor 走，永远是暖金。
+  // 文案本身只留文字，脚本改写 textContent 时也不会把爱心刷掉。
+  starIdle: '舒宇 19 岁生日快乐',
+  starBirthday: '舒宇 19 岁生日快乐',
+  // 祝福页第一幕：灯。拉绳是进入第二幕的入口。
+  wishPreludeTitle: 'Happy Birthday',
+  lanternPull: '拉一下',
+  lanternHint: '拉开灯～看看我写给你的信鸭～',
+  // 祝福页第二幕：信。
+  // 称谓单独一行、不缩进；正文每一项是一个自然段，自动首行缩进两个字。
+  // 段落数量可自由增删，分页与折角会自动跟着重算。
+  wishSalutation: '致最亲爱的舒宇，',
+  wishParagraphs: [
+    '十九岁生日快乐呀！我最喜欢最可爱最漂亮最聪明的公主～～～',
+    '在设计 /love-shuyu/ 时，尝试过好几个版本，比如说安置一个猪猪脸的大蛋糕，比如说盛放烟花和彩纸的祝福，比如变幻的极光和流星雨。不过，蛋糕还是和你一起吃的好，烟花还是得实实在在地点燃，至于极光，不如哪天我们一起去挪威的木结构小镇，在即将被澄澈的夜空融化时撞见流星雨。',
+    '排除以上种种，我又想，人的肉眼真的能望见银河吗？据说这在我们的祖先是非常平常的事，结束一天的劳作或狩猎，在没有电灯和计算机的时代，他们被真正的黑暗包裹住，并在其中发现连接地平线的灿烂光带。我竭尽全力想象这样的银河 —— 青色与暖金色，在宏大黑暗里数以万计的宇宙尘埃，忽然黯淡又忽然闪耀，于是生生不息地流动着。',
+    '幽蓝或者奶白都不好，星空是灿烂的，不是孤独的。银河是蓬勃的，不是忧郁的。我笃定银河肯定是被我们的颜色浸染着，是永不成熟的生命的青色，和永不凋敝的爱的金色。',
+    '我想，如果没有遇见你，如果不是献给你的祝福，我不至于对“生命”抱有如此的想象和希望。当我坐在大城市的星巴克或者麦当劳里，略显冷漠或略带焦躁地啃食油炸鸡，意识到自己已经很久没有写作、没有绘画、没有摄影，便觉得身边人包括自己宛如呆拙的食肉动物，失去远古的血气，保留一贯的盲目。我感到愤怒，感到不解，感到无法行动，那么就让那几只西装革履的霸王龙脱颖而出吧，我选择做一只赤身露体的小香猪，拉着你的手在洒满阳光的草地上打滚。',
+    '我要和亲爱的一起买两张大桌子，可以画画可以化妆可以打游戏可以自由伸展手臂，我们还需要一张大瑜伽垫，至少能够打滚 2.5 圈，以及大床、大沙发、大冰箱、大衣柜、大厨房……想着这样的日子并不远，想着很快就能陪在你身边，那就姑且打上领带吃吃这边的啾哩币叭。只要你在，愿你一切都好，愿你的生命平安、顺遂、温暖，愿我们的幸福和回忆一直绵延下去。',
+    '我不仅仅想祝福你的生日，也真挚祝福你漂亮而温暖的生命。啊不，可能比起祝福，更多的情绪是感激，感激你来到这个世界，感激生命以如此温暖的形态出现在我面前，感激我们以解离、以封闭、以攻击、以接纳、以热爱的各种方式将自己保留世间、并在许多时刻以敞开的唯一方式将对方保留身边。',
+    '我爱你，生日快乐亲爱的，祝福你第十九次迎接这最重要的日子。',
+    'Happy Birthday to You～',
+  ],
+  // 落款：一行一项，右对齐。行高就是横线间距，几行就占几格，不会让后面的横线错位。
+  wishSignature: ['你的', '呦呦'],
+  turnPage: '翻到下一页',
+  turnPagePrev: '翻回上一页',
+  backToSky: '回到银河',
+  closePanel: '收起',
+  musicHint: '播放音乐',
+};
+
+// ---------------------------------------------------------------------------
+// 双栏中缝上的白描小花。
+//
+// 花不能画进那条分隔线的 SVG 里：那个 SVG 用 preserveAspectRatio="none" 被纵向
+// 拉到整页高，任何画在里面的东西都会被压扁。所以每朵花各自是一张正常比例的
+// 小图，按百分比挂在中缝上，`--shift` 控制它落在线的左边还是右边。
+//
+// 手绘感全靠「不对称」：五瓣的两侧控制点不同、每瓣角度带抖动、每朵整体再转一个
+// 零头角度。完全对称的花瓣会立刻读成一个图标。
+// ---------------------------------------------------------------------------
+const PETAL_SHAPES = [
+  'M0 0C-5.2 -3.6 -6.6 -10.2 -0.7 -14.2C5.6 -10.8 5 -3.8 0 0Z',
+  'M0 0C-4.6 -4.2 -6 -11 0.5 -13.6C6.1 -10.2 4.4 -3.4 0 0Z',
+  'M0 0C-5.7 -3.2 -7.1 -9.6 -0.3 -13.4C5.1 -11.4 5.3 -4.2 0 0Z',
+];
+
+const makePetals = (seed: number, count: number) =>
+  Array.from({ length: count }, (_, index) => ({
+    d: PETAL_SHAPES[(index + seed) % PETAL_SHAPES.length],
+    // 抖动是确定的（不用随机数），刷新时花不会跳。
+    // seed 的系数不能是 13：那样 `% 13` 会把它整除掉，五朵花的角度就全一样了。
+    transform: `rotate(${((index * 360) / count + ((index * 37 + seed * 5) % 13) - 6).toFixed(1)})`,
+  }));
+
+// 花心的几根蕊。短、乱、不等长。
+const STAMENS = [
+  'M-1.5 -2L-4.6 -7M0.3 -2.6L1 -8M2.4 -1.5L6.2 -5M-2.4 1.1L-6.6 3',
+  'M-1.3 -2.4L-3.4 -7.6M1.3 -2.4L3.1 -7.1M2.5 0.9L6.9 2.1M-2 1.7L-5.6 4.6',
+];
+
+// 信纸上那朵干花复用同一套花瓣，换一组抖动种子，免得和中缝的某一朵撞脸。
+const pressedPetals = makePetals(3, 5);
+
+// 花直接**串在中缝那条线上**：线从花心背后穿过去，叶与花苞就从线上生出来。
+// 试过让花偏在一侧、另画一段花枝去够那条线——枝要么被花瓣盖住看不见，
+// 要么把整朵花推出栏间距、压到正文上。线即是枝，反而又紧凑又干净。
+const seamBlooms = [
+  {
+    kind: 'full',
+    at: '13%',
+    shift: -3,
+    spin: -8,
+    scale: 1,
+    leaves: ['translate(1.6 10.6) rotate(24)'],
+    buds: ['translate(-1.2 -17) rotate(-14) scale(0.9)'],
+    petals: makePetals(0, 5),
+    stamen: STAMENS[0],
+  },
+  {
+    kind: 'small',
+    at: '31%',
+    shift: 2,
+    spin: 12,
+    scale: 0.62,
+    leaves: ['translate(-1.4 10.2) rotate(156)'],
+    buds: [],
+    petals: makePetals(1, 5),
+    stamen: STAMENS[1],
+  },
+  {
+    kind: 'full',
+    at: '52%',
+    shift: -2,
+    spin: 6,
+    scale: 0.86,
+    leaves: ['translate(-1.6 10.4) rotate(156)', 'translate(2.4 14.2) rotate(30) scale(0.72)'],
+    buds: ['translate(1 -17.4) rotate(16) scale(0.86)'],
+    petals: makePetals(2, 5),
+    stamen: STAMENS[0],
+  },
+  {
+    kind: 'small',
+    at: '71%',
+    shift: 3,
+    spin: -14,
+    scale: 0.55,
+    leaves: ['translate(1.2 10.2) rotate(26)'],
+    buds: [],
+    petals: makePetals(0, 5),
+    stamen: STAMENS[1],
+  },
+  {
+    kind: 'full',
+    at: '88%',
+    shift: -2,
+    spin: 10,
+    scale: 0.95,
+    leaves: ['translate(-1.4 10.8) rotate(154)'],
+    buds: ['translate(1.4 -17) rotate(18) scale(0.82)'],
+    petals: makePetals(1, 5),
+    stamen: STAMENS[0],
+  },
+];
+
+// 绕灯的萤火。只有 5 点，全部压到最轻：小、暗、极慢。
+//
+// 与微尘是两件事，不能合并：微尘是直线上浮的一次性轨迹，萤火是**打转的**、
+// 会明灭。三条漂移路径 × 各自的周期与相位，五点因此不会同步。
+const fireflies = [
+  { left: '16%', top: '58%', size: 2.6, dur: 26, delay: -3, pulse: 4.2, path: 0 },
+  { left: '76%', top: '32%', size: 2, dur: 31, delay: -11, pulse: 5.1, path: 1 },
+  { left: '44%', top: '16%', size: 2.4, dur: 37, delay: -19, pulse: 3.7, path: 2 },
+  { left: '84%', top: '68%', size: 1.8, dur: 29, delay: -7, pulse: 5.8, path: 1 },
+  { left: '8%', top: '36%', size: 2.2, dur: 34, delay: -15, pulse: 4.6, path: 0 },
+];
+
+// 第一幕的暖色微尘：固定分布避免刷新跳动，只让上浮相位与时长错开。
+const wishDust = Array.from({ length: 22 }, (_, index) => ({
+  left: `${(9 + index * 31) % 92}%`,
+  size: index % 4 === 0 ? 2.5 : 1.5,
+  delay: `-${((index * 2.17) % 14).toFixed(2)}s`,
+  duration: `${(13 + (index * 2.63) % 9).toFixed(2)}s`,
+  drift: `${((index % 5) - 2) * 14}px`,
+}));
+
+// 方案 A：19 颗愿望星沿灯的外缘排成一圈不闭合的星环，下方留出拉绳入口。
+// 坐标固定，既能准确保留 19 颗，也不会在刷新时跳位。
+const wishStars = Array.from({ length: 19 }, (_, index) => {
+  const angle = 140 + (260 / 18) * index;
+  const radians = (angle * Math.PI) / 180;
+  return {
+    left: `${(50 + Math.cos(radians) * 47).toFixed(2)}%`,
+    top: `${(50 + Math.sin(radians) * 43).toFixed(2)}%`,
+    size: 3.5 + (index % 4) * 0.8,
+    delay: `${(index * 0.22).toFixed(2)}s`,
+    tone: index % 3 === 0 ? 'warm' : 'teal',
+  };
+});
+
+// 站主另行提供的 42 张 love-memory 照片，不与时间线节点素材混用。奇偶拆成
+// 两条反向轨道，每条在 DOM 中只复制一次来完成无缝循环。
+const memoryPhotos = Array.from(
+  { length: 42 },
+  (_, index) => `/love-shuyu/memories/${String(index + 1).padStart(2, '0')}.jpg`,
+);
+const memoryLanes = [
+  memoryPhotos.filter((_, index) => index % 2 === 0),
+  memoryPhotos.filter((_, index) => index % 2 === 1),
+];
+
+// 方案四的前景星屑：主 WebGL 银河在照片后方，这组稀疏光点从照片前方掠过，
+// 两层一起制造照片悬浮在星河中的纵深。分布固定，刷新不会跳位。
+const memoryGlints = Array.from({ length: 26 }, (_, index) => ({
+  left: `${(5 + index * 37) % 94}%`,
+  top: `${(9 + index * 53) % 84}%`,
+  size: index % 6 === 0 ? 5 : 1.5 + (index % 3),
+  delay: `-${((index * 1.37) % 12).toFixed(2)}s`,
+  duration: `${(10.5 + (index * 1.91) % 9).toFixed(2)}s`,
+  drift: `${((index % 5) - 2) * 12}px`,
+  tone: index % 3 === 0 ? 'warm' : 'teal',
+  star: index % 6 === 0,
+}));
+
+// 与银河粒子分层的稀疏星点。
+//
+// 它们铺在一片比视口高得多的**虚拟天幕**上，随滚动缓慢反向漂移，因此第一幕
+// 与第二幕看到的是不同的星。这一点是必须的：整个 #flip-root 是 fixed，星点
+// 若只铺满一屏就会纹丝不动地钉在视口上，读起来像贴在玻璃上的一张贴图。
+const SKY_SPAN_VH = 220;
+// 三分之一是四角星（复用节点那条自绘 ✦ 路径，视觉语言统一），其余是小圆点。
+const ambientStars = Array.from({ length: 42 }, (_, index) => {
+  const isStar = index % 3 === 0;
+  const sizeStep = index % 5;
+  return {
+    // 固定分布避免刷新时布局跳动；互质步长铺开，不会出现肉眼可见的网格。
+    left: `${(7 + index * 41) % 96}%`,
+    top: `${(3 + index * 37) % 97}%`,
+    isStar,
+    size: isStar ? 4 + (sizeStep % 3) : 1 + (sizeStep % 3) * 0.5,
+    delay: `-${((index * 1.73) % 9).toFixed(2)}s`,
+    duration: `${(6.2 + (index * 1.91) % 5).toFixed(2)}s`,
+    tone: index % 3,
+  };
+});
+
+// 北京时间字符串 → UTC 毫秒。Date.UTC 会自行处理 h-8 变成负数的跨日情况。
+const beijingToUtcMs = (value: string) => {
+  const [date, time] = value.trim().split(' ');
+  const [y, mo, d] = date.split('-').map(Number);
+  const [h, mi] = time.split(':').map(Number);
+  return Date.UTC(y, mo - 1, d, h - 8, mi, 0);
+};
+
+const startUtcMs = beijingToUtcMs(startBeijing);
+const endUtcMs = beijingToUtcMs(endBeijing);
+---
+
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#03050c" />
+    {/* 这一页不用全站的 /favicon.svg：那是 Logo A 的青绿虚线路径，属于主站身份。
+        这里用页面自己那颗自绘四芒星，深空底 + 暖金实心，16px 下才认得出。
+
+        **只给 SVG 是不够的**：iOS 上的 Safari / Edge / Chrome 全是 WebKit，
+        标签页与书签只认位图，遇到纯 SVG 的 icon 就退回站点首字母的灰底占位；
+        Android 的书签磁贴同理。所以下面三张位图必须留着：
+        32px 给标签页，192px 给 Android 书签，180px 给 iOS 主屏与书签。
+        位图由 favicon.svg 与 app-icon-180.svg 光栅化而来，改图标要一起重生成。 */}
+    <link rel="icon" type="image/svg+xml" href="/love-shuyu/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/love-shuyu/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/love-shuyu/favicon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/love-shuyu/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="致舒宇" />
+    <link rel="stylesheet" href="/love-shuyu/fonts/yozai/yozai-regular.css" />
+    <link rel="stylesheet" href="/love-shuyu/fonts/kaushan-script/kaushan-script.css" />
+    <title>致舒宇</title>
+  </head>
+  <body
+    data-start-utc={String(startUtcMs)}
+    data-end-utc={String(endUtcMs)}
+    data-birthday-month={String(birthdayMonth)}
+    data-birthday-day={String(birthdayDay)}
+    data-progress-prefix={copy.progressPrefix}
+    data-idle-text={copy.starIdle}
+    data-birthday-text={copy.starBirthday}
+  >
+    {/* 唯一在滚动的元素；所有可视层都是 fixed，因此整屏翻面才成立。 */}
+    <div id="scroll-spacer" aria-hidden="true"></div>
+
+    <div id="flip-root">
+      <div id="flip-inner">
+        <!-- ============ 正面：银河带 + 两幕内容 ============ -->
+        <div id="face-front">
+          <canvas id="galaxy" aria-hidden="true"></canvas>
+          <div class="fallback-sky" aria-hidden="true"></div>
+          <div class="ambient-twinkles" aria-hidden="true">
+            <div class="ambient-sky" id="ambient-sky" style={`height:${SKY_SPAN_VH}vh`}>
+              {ambientStars.map((star) => (
+                <span
+                  class={`ambient-twinkle ambient-twinkle-${star.tone}${star.isStar ? ' is-star' : ' is-dot'}`}
+                  style={`--twinkle-left:${star.left};--twinkle-top:${star.top};--twinkle-size:${star.size}px;--twinkle-delay:${star.delay};--twinkle-duration:${star.duration}`}
+                >
+                  {star.isStar && (
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                      <path d="M12 0C13.1 7.7 16.3 10.9 24 12C16.3 13.1 13.1 16.3 12 24C10.9 16.3 7.7 13.1 0 12C7.7 10.9 10.9 7.7 12 0Z" />
+                    </svg>
+                  )}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <main>
+            <!-- 第一幕 -->
+            {/* tabindex="-1"：从祝福页回来时焦点落回这里，回到页面开头。 */}
+            <section id="act-one" tabindex="-1">
+              <p class="eyebrow" id="countdown-label">{copy.countdownLabel}</p>
+
+              <div class="clock" id="clock" role="timer">
+                <div class="unit"><span class="num" id="d">--</span><span class="cap">天</span></div>
+                <span class="sep" aria-hidden="true"></span>
+                <div class="unit"><span class="num" id="h">--</span><span class="cap">时</span></div>
+                <span class="sep" aria-hidden="true"></span>
+                <div class="unit"><span class="num" id="m">--</span><span class="cap">分</span></div>
+                <span class="sep" aria-hidden="true"></span>
+                <div class="unit"><span class="num num-s" id="s">--</span><span class="cap">秒</span></div>
+              </div>
+
+              <p class="sr-only" id="clock-text" aria-live="polite"></p>
+
+              <div class="progress" id="progress">
+                <div class="track"><span class="fill" id="progress-fill"></span></div>
+                <p class="progress-text" id="progress-text"></p>
+              </div>
+
+              <div class="reunion" id="reunion" hidden>
+                <h1>{copy.reunionTitle}</h1>
+                <p class="eyebrow">{copy.reunionLabel}</p>
+                <p class="total" id="total"></p>
+              </div>
+
+              {/* 只有在自动播放被浏览器拦下时才由脚本显示；成功自动播放则永不出现。 */}
+              <button type="button" id="music-hint" aria-label={copy.musicHint} hidden>
+                <Music size={18} strokeWidth={1.6} aria-hidden="true" />
+              </button>
+            </section>
+
+            <div id="scroll-hint" aria-hidden="true">
+              <span class="hint-label">{copy.scrollHint}</span>
+              <span class="hint-arrow">
+                <svg viewBox="0 0 18 9" focusable="false" aria-hidden="true">
+                  <path d="M1 1.25H17L9 7.5Z" />
+                </svg>
+              </span>
+            </div>
+
+            <!-- 第二幕：节点由脚本按曲线投影生成并定位 -->
+            <div id="timeline-nodes"></div>
+
+            <!--
+              第二幕尽头：星雾溶边双轨 + 星河漂浮层。照片保持完整比例，脚本只在接近
+              银河末端时才挂载 love-memory 资源；整层是装饰性回望，不重复读出内容。
+            -->
+            <section id="memory-stream" aria-hidden="true">
+              {memoryLanes.map((lane, laneIndex) => (
+                <div class:list={['memory-lane', `memory-lane-${laneIndex + 1}`]}>
+                  <div class="memory-track">
+                    {[0, 1].map((copyIndex) => (
+                      <div class="memory-sequence" aria-hidden={copyIndex === 1 ? 'true' : undefined}>
+                        {lane.map((photo, photoIndex) => (
+                          <span class="memory-cell" style={`--line-delay:-${(photoIndex * 0.47 + laneIndex * 0.8).toFixed(2)}s`}>
+                            <img
+                              class="memory-photo"
+                              data-memory-src={photo}
+                              alt=""
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          </span>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <div class="memory-foreground" aria-hidden="true">
+                {memoryGlints.map((glint) => (
+                  <span
+                    class:list={['memory-glint', glint.star && 'is-star', `is-${glint.tone}`]}
+                    style={`--glint-left:${glint.left};--glint-top:${glint.top};--glint-size:${glint.size}px;--glint-delay:${glint.delay};--glint-duration:${glint.duration};--glint-drift:${glint.drift}`}
+                  />
+                ))}
+              </div>
+            </section>
+
+            <!-- 银河尽头最亮的一颗星：生日入口 -->
+            <button type="button" id="wish-button">
+              <span class="star-core" aria-hidden="true">
+                <span class="star-gate-orbit"></span>
+                <CakeSlice className="star-gate-icon" size={26} strokeWidth={1.7} />
+                <span class="star-gate-spark star-gate-spark-a"></span>
+                <span class="star-gate-spark star-gate-spark-b"></span>
+              </span>
+              <span class="star-label has-hearts" id="wish-button-text">{copy.starIdle}</span>
+            </button>
+
+            <!-- 节点展开层，全 11 个节点共用 -->
+            <div id="node-panel" role="dialog" aria-modal="false" aria-label="这一次见面" hidden>
+              <div class="panel-surface">
+                <button type="button" id="node-panel-close" aria-label={copy.closePanel}>×</button>
+                <p class="panel-date" id="node-panel-date"></p>
+                <p class="panel-place">
+                  <MapPin className="panel-place-icon" size={16} strokeWidth={1.8} aria-hidden="true" />
+                  <span id="node-panel-place"></span>
+                </p>
+                <img id="node-panel-photo" src="" alt="" loading="lazy" decoding="async" />
+                <p class="panel-body" id="node-panel-body"></p>
+              </div>
+
+              <svg class="panel-border-trace" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <path class="panel-trace panel-trace-right" pathLength="1" d="M100 50V9Q100 0 91 0H9Q0 0 0 9V50" />
+                <path class="panel-trace panel-trace-right" pathLength="1" d="M100 50V91Q100 100 91 100H9Q0 100 0 91V50" />
+                <path class="panel-trace panel-trace-left" pathLength="1" d="M0 50V9Q0 0 9 0H91Q100 0 100 9V50" />
+                <path class="panel-trace panel-trace-left" pathLength="1" d="M0 50V91Q0 100 9 100H91Q100 100 100 91V50" />
+              </svg>
+              <span class="panel-mobile-edge" aria-hidden="true"></span>
+            </div>
+          </main>
+        </div>
+
+        <!-- ============ 背面：明信片 ============ -->
+        <div id="face-back" aria-hidden="true">
+          {/*
+            纸的纤维质感。feTurbulence 只渲染一次，之后是一张静态位图，
+            用它比堆一层层 repeating-linear-gradient 更像手工纸，也更便宜。
+          */}
+          <svg class="paper-grain" aria-hidden="true" focusable="false">
+            <filter id="paper-fiber">
+              <feTurbulence type="fractalNoise" baseFrequency="0.86" numOctaves="4" seed="7" />
+              <feColorMatrix type="saturate" values="0" />
+            </filter>
+            {/*
+              磨砂纸：极细的高频颗粒 + 一层被拉长的粗纤维。
+              feColorMatrix 把噪声压成很窄的一段灰阶，颗粒才是「哑光」而不是「噪点」。
+            */}
+            <filter id="paper-frost">
+              <feTurbulence type="fractalNoise" baseFrequency="1.6 1.9" numOctaves="3" seed="19" result="fine" />
+              <feTurbulence type="fractalNoise" baseFrequency="0.02 0.7" numOctaves="2" seed="41" result="fiber" />
+              <feBlend in="fine" in2="fiber" mode="multiply" result="mixed" />
+              <feColorMatrix
+                in="mixed"
+                type="matrix"
+                values="0 0 0 0 0.5  0 0 0 0 0.47  0 0 0 0 0.42  0.9 0.9 0.9 0 0"
+              />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#paper-fiber)" />
+          </svg>
+
+          <!-- ======== 祝福页第一幕：灯 ======== -->
+          <section id="wish-act-one">
+            <header class="wish-prelude">
+              <h1 class="has-hearts">{copy.wishPreludeTitle}</h1>
+            </header>
+
+            <div class="dust" aria-hidden="true">
+              {wishDust.map((mote) => (
+                <span
+                  class="dust-mote"
+                  style={`--dust-left:${mote.left};--dust-size:${mote.size}px;--dust-delay:${mote.delay};--dust-duration:${mote.duration};--dust-drift:${mote.drift}`}
+                />
+              ))}
+            </div>
+
+            {/*
+              站主提供的歌词：每条轨道一次只放一个原文／译文版本，并在标题、灯、
+              提示和其他歌词之外随机寻找空位。桌面有三条错峰短句轨道，移动端只启用第一条。
+            */}
+            <div class="wish-lyrics" aria-live="off">
+              <p class="wish-lyric wish-lyric-long" id="wish-lyric-long"></p>
+              <p class="wish-lyric wish-lyric-short" id="wish-lyric-short"></p>
+              <p class="wish-lyric wish-lyric-short" id="wish-lyric-short-2"></p>
+              <p class="wish-lyric wish-lyric-short" id="wish-lyric-short-3"></p>
+            </div>
+
+            <div class="lantern-hang">
+              {/* 绕灯打转的萤火。跟着灯一起飞出去，不留在光池里。 */}
+              <div class="fireflies" aria-hidden="true">
+                {fireflies.map((fly) => (
+                  <span
+                    class:list={['firefly', `firefly-p${fly.path}`]}
+                    style={`--fx:${fly.left};--fy:${fly.top};--fsize:${fly.size}px;--fdur:${fly.dur}s;--fdelay:${fly.delay}s;--fpulse:${fly.pulse}s`}
+                  />
+                ))}
+              </div>
+
+              <span class="lantern-cord" aria-hidden="true"></span>
+
+              <div class="lantern-sway">
+                <div class="wish-nineteen" aria-hidden="true">
+                  {wishStars.map((star) => (
+                    <span
+                      class:list={['wish-star', `wish-star-${star.tone}`]}
+                      style={`--wish-left:${star.left};--wish-top:${star.top};--wish-size:${star.size}px;--wish-delay:${star.delay}`}
+                    />
+                  ))}
+                </div>
+                {/*
+                  八面纸灯：canvas 内是八个真实三角纸面与十二根竹骨，慢转时可看见
+                  正侧面依次换位。WebGL 不可用时才显示后面的静态菱形降级。
+                */}
+                <div class="lantern-stage" id="lantern-stage">
+                  <canvas
+                    id="lantern-3d"
+                    class="lantern"
+                    role="img"
+                    aria-label="一盏缓慢转动的八面纸灯，灯下悬着五枚祝福挂件和一根立体拉绳"
+                  ></canvas>
+                  <span class="lantern-fallback" aria-hidden="true"></span>
+                  {/*
+                    拉绳本体已在 canvas 内做成真实圆柱、木珠与流苏。
+                    这个透明原生按钮只提供指针、键盘和读屏的交互热区。
+                  */}
+                  <button type="button" id="lantern-pull" aria-label={copy.lanternPull}></button>
+                </div>
+              </div>
+            </div>
+
+            <p class="lantern-hint" id="lantern-hint">{copy.lanternHint}</p>
+          </section>
+
+          <!-- ======== 祝福页第二幕：信 ======== -->
+          {/* 信纸铺满整屏。桌面两栏、移动端单栏，超出的内容顺着多栏溢出成后续页。 */}
+          <section id="wish-act-two" hidden>
+            <article class="letter">
+              {/* 青色浸染。两片青晕自己极慢地在纸上游走，其余暖色片是静止的底。 */}
+              <div class="letter-stain" aria-hidden="true">
+                <span class="stain-drift stain-drift-a"></span>
+                <span class="stain-drift stain-drift-b"></span>
+                <span class="stain-drift stain-drift-c"></span>
+              </div>
+
+              {/*
+                夹在信里的一朵干花。与中缝那五朵同一套画法，只是填了淡青、
+                压得更扁（`scaleY`）——干花是被压过的，正圆的花读不出「夹了很久」。
+                画在正文之前，所以它永远在字的**下面**，落款压过来也只是透出来。
+              */}
+              <svg class="letter-pressed" viewBox="-26 -26 52 52" aria-hidden="true" focusable="false">
+                <g transform="rotate(-13) scale(1 0.86)">
+                  <path class="pressed-leaf" d="M-2 11C3.4 8.2 10 9 13 13.6C8.4 16.6 1.2 15.8 -2 11Z" />
+                  {pressedPetals.map((petal) => (
+                    <path class="pressed-petal" d={petal.d} transform={petal.transform} />
+                  ))}
+                  <circle class="pressed-heart" cx="0" cy="0" r="2.4" />
+                </g>
+              </svg>
+
+              {/* 对折过一次的折痕：上缘提亮、正中一线压暗，只靠纸面本身。 */}
+              <span class="letter-fold" aria-hidden="true"></span>
+
+              <svg class="letter-frost" aria-hidden="true" focusable="false">
+                <rect width="100%" height="100%" filter="url(#paper-frost)" />
+              </svg>
+
+              {/*
+                双栏中缝：一条弧度很小的手绘曲线，外加几朵同色调的白描小花。
+                线走 preserveAspectRatio="none" 被纵向拉满，花**绝不能**画在同一
+                个 SVG 里——那个拉伸会把花压成扁片。花各自成图、按百分比挂在中缝上。
+              */}
+              <div id="letter-seam" aria-hidden="true" hidden>
+                <svg id="letter-divider" viewBox="0 0 12 1000" preserveAspectRatio="none">
+                  <path
+                    class="divider-echo"
+                    d="M6 0C8.4 88 3.6 176 6.4 268S8.9 420 5.4 522S3.1 662 7 762S8.4 902 6 1000"
+                  />
+                  <path d="M6 0C8.4 88 3.6 176 6.4 268S8.9 420 5.4 522S3.1 662 7 762S8.4 902 6 1000" />
+                </svg>
+
+                {seamBlooms.map((bloom) => (
+                  <svg
+                    class:list={['seam-bloom', `seam-bloom-${bloom.kind}`]}
+                    viewBox="-26 -26 52 52"
+                    style={`--at:${bloom.at}; --shift:${bloom.shift}px; --spin:${bloom.spin}deg; --scale:${bloom.scale}`}
+                    focusable="false"
+                  >
+                    {/*
+                      叶与花苞贴着中缝那条线生出来，短柄的那一头一直伸进花瓣圈里，
+                      看起来才是从线上长的，而不是浮在旁边的两片图形。
+                    */}
+                    {bloom.leaves.map((leaf) => (
+                      <g transform={leaf}>
+                        <path class="bloom-leaf" d="M0 0C5.4 -2.8 12 -1.8 15 2.8C10.4 5.8 3.2 4.8 0 0Z" />
+                        <path class="bloom-vein" d="M1.6 0.8C5.6 1.2 10 1.9 13.6 2.8" />
+                      </g>
+                    ))}
+                    {bloom.buds.map((bud) => (
+                      <g transform={bud}>
+                        <path class="bloom-bud" d="M0 0C-3.6 -3 -4.2 -8.2 0 -10.4C4.4 -8 3.4 -2.8 0 0Z" />
+                        <path class="bloom-vein" d="M0 0.6L0.8 7.4" />
+                      </g>
+                    ))}
+                    {/*
+                      五瓣。每瓣的两侧控制点不对称、角度带 ±6° 的抖动，
+                      对称的五瓣会立刻读成图标而不是随手画上去的花。
+                    */}
+                    {bloom.petals.map((petal) => (
+                      <path class="bloom-petal" d={petal.d} transform={petal.transform} />
+                    ))}
+                    <circle class="bloom-heart" cx="0" cy="0" r="2.6" />
+                    <path class="bloom-stamen" d={bloom.stamen} />
+                  </svg>
+                ))}
+              </div>
+
+              <div class="letter-viewport">
+                <div class="letter-body" id="letter-body">
+                  <p class="wish-salutation">{copy.wishSalutation}</p>
+                  {copy.wishParagraphs.map((line) => <p class="wish-line">{line}</p>)}
+                  <p class="wish-sign">{copy.wishSignature.join('\n')}</p>
+
+                  {/* 信末的银河印记：微微呼吸，点它回到主界面。 */}
+                  <button type="button" id="postcard-back-button" aria-label={copy.backToSky}>
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="letter-galaxy-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                          <stop class="back-star-stop back-star-stop-cold" offset="0%"></stop>
+                          <stop class="back-star-stop back-star-stop-teal" offset="48%"></stop>
+                          <stop class="back-star-stop back-star-stop-warm" offset="100%"></stop>
+                        </linearGradient>
+                      </defs>
+                      <path
+                        fill="url(#letter-galaxy-gradient)"
+                        d="M12 0C13.1 7.7 16.3 10.9 24 12C16.3 13.1 13.1 16.3 12 24C10.9 16.3 7.7 13.1 0 12C7.7 10.9 10.9 7.7 12 0Z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              {/*
+                两个折角：右下角通向下一页、左下角通向上一页，各自只在真的
+                还有那一页时才出现。左下角就是右下角整个镜像过去的，
+                连掀起的角度都跟着翻，所以两个共用同一套样式。
+              */}
+              <button type="button" id="letter-turn-prev" aria-label={copy.turnPagePrev} hidden>
+                <span class="dogear-under" aria-hidden="true"></span>
+                <span class="dogear-flap" aria-hidden="true"></span>
+              </button>
+              <button type="button" id="letter-turn" aria-label={copy.turnPage} hidden>
+                <span class="dogear-under" aria-hidden="true"></span>
+                <span class="dogear-flap" aria-hidden="true"></span>
+              </button>
+            </article>
+          </section>
+
+          {/* 台灯光池：拉灯之后留下的那片光，之后一直作为第二幕的照明。 */}
+          <div id="lamp-pool" aria-hidden="true">
+            <span class="lamp-glow"></span>
+            <span class="lamp-vignette"></span>
+          </div>
+
+        </div>
+      </div>
+
+      {/* 星门穿越的暖金光流：圆心由脚本钉在星门的屏幕坐标上。 */}
+      <div id="gate-flash" aria-hidden="true"></div>
+
+      {/*
+        回主界面时信纸碎成的粒子。必须放在两个面之外：换回正面那一刻它还得
+        继续盖在上面，才能与银河的开场聚拢无缝交棒。
+      */}
+      <canvas id="letter-dust" aria-hidden="true"></canvas>
+    </div>
+
+    {/* 背景音乐：无可见控件，脚本负责起播与三秒交叉淡入淡出。 */}
+    <audio id="music-sky" src="/love-shuyu/audio/sky.m4a" loop preload="auto" playsinline></audio>
+    <audio id="music-wish" src="/love-shuyu/audio/wish.m4a" loop preload="metadata" playsinline></audio>
+    {/* 两声交互音正常路径由 audio.ts 解码成 AudioBuffer 播（见那边的注释），
+        这两个元素只是没有 Web Audio 时的回退，所以 preload 关掉，
+        免得同一份文件被下载两次。 */}
+    <audio id="sfx-pull" src="/love-shuyu/audio/pull-chain.m4a" preload="none" playsinline></audio>
+    <audio id="sfx-page" src="/love-shuyu/audio/page-turn.m4a" preload="none" playsinline></audio>
+
+    <script>
+      import '../scripts/love-shuyu/index';
+    </script>
+
+    <style is:global>
+      /* 本页不引入 global.css；以下样式只作用于这一页。 */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      :root {
+        /*
+          手机浏览器工具栏当下遮住的那一条，由 viewport.ts 实测后写进来。
+          这一页所有可视层都是 `position: fixed; inset: 0`，铺的是**工具栏收起时**
+          的布局视口，下缘因此会被展开的工具栏压住；需要「一定在屏内」的交互元素
+          自己加上这个值，通常还要再叠一个 env(safe-area-inset-bottom)
+          —— 工具栏收起时前者归零，由后者接手让出 home 指示条。
+        */
+        --chrome-bottom: 0px;
+        --void: #03050c;
+        --ink: #f4f6ff;
+        --ink-soft: #a9b3d6;
+        --ink-faint: #6f7899;
+        --warm: #ffd9a0;
+        --teal: #7fe8d2;
+        --rose: #ff9ec0;
+        --paper: #f3e4cb;
+        --paper-deep: #e2cda9;
+        --paper-ink: #3a2b1c;
+        --paper-ink-soft: #6d5740;
+        /* 祝福页专用色，取自站主提供的纸灯参考图。 */
+        --wish-void: #0a0603;
+        --tassel: #efe0c4;
+        --sans: 'Work Sans', 'Noto Serif SC', system-ui, sans-serif;
+        --serif: 'Noto Serif SC', 'Songti SC', serif;
+        --display-script: 'Kaushan Script', 'Brush Script MT', cursive;
+        /*
+          信纸统一使用 OFL 1.1 的悠哉字体：比文楷更圆、更松弛，也更接近 Hannotate
+          的可爱手写气质。Apple / Windows / Android 使用同一份自托管子集。
+        */
+        --hand: 'Yozai', var(--serif);
+      }
+
+      @property --letter-cut {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 0%;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--void);
+      }
+
+      /*
+        移动端的三条硬性设置，桌面上完全无感：
+
+        - text-size-adjust：Android Chrome 的「字体自动放大」会挑窄容器里的正文
+          自行加大字号。信纸的分页是按实测高度算的，字一被放大页数就全错。
+        - tap-highlight：Android 上每次点按都闪一块蓝底，深空与信纸上都很脏。
+        - overscroll-behavior：Android Chrome 在页首继续下拉会触发下拉刷新。
+          第一幕正好停在页首，随手一划整页就重载了。
+      */
+      html {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+        overscroll-behavior-y: none;
+      }
+
+      /*
+        所有按钮统一去掉双击缩放的等待与长按选中：
+        触屏上按钮被当作文字长按会弹出选择菜单，翻页折角尤其容易碰上。
+      */
+      button {
+        touch-action: manipulation;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+
+      body {
+        color: var(--ink);
+        font-family: var(--serif);
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      /* 开场聚拢与翻面期间锁滚动。html 才是滚动容器。 */
+      html.is-intro,
+      html.is-flipped {
+        overflow: hidden;
+      }
+
+      /* 约 4.8 屏：第一幕 1 屏 + 时间线 11 节点。 */
+      #scroll-spacer {
+        height: 480vh;
+      }
+
+      #flip-root {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+      }
+
+      #flip-inner {
+        position: absolute;
+        inset: 0;
+      }
+
+      #face-front,
+      #face-back {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* 星门穿越：正面与背面在白光最盛的一帧交换，用户看不到这次硬切。 */
+      #face-front.is-gone {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      #face-back {
+        opacity: 0;
+        pointer-events: none;
+        /* 从白光深处落下来：略大一点点，收到 1 时正好「落定」。 */
+        transform: scale(1.07);
+      }
+
+      #face-back.is-present {
+        opacity: 1;
+        pointer-events: auto;
+        transform: scale(1);
+        transition:
+          opacity 620ms cubic-bezier(0.22, 0.61, 0.24, 1),
+          transform 760ms cubic-bezier(0.18, 0.66, 0.22, 1);
+      }
+
+      /* 穿越途中主界面的 DOM 覆盖层必须先撤走：它们跟着相机走会满屏乱飞。 */
+      html.is-warping #act-one,
+      html.is-warping #timeline-nodes,
+      html.is-warping #memory-stream,
+      html.is-warping #wish-button,
+      html.is-warping #scroll-hint,
+      html.is-warping #node-panel {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: opacity 240ms ease-out;
+      }
+
+      /*
+        星门穿梭的暖金光流。**刻意不洗白**：洗白会把青绿与暖金一起抹平，
+        而这一段的主角就是银河自己的粒子。所以这一层只在最里侧给一点点
+        接近白的高光，外围整个交给暖金，青绿由粒子本身保留。
+        圆心由脚本钉在星门上，--flash-scale 按墙钟推进。
+      */
+      #gate-flash {
+        position: absolute;
+        inset: 0;
+        z-index: 6;
+        opacity: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          circle calc(var(--flash-scale, 0) * 46vmax) at var(--flash-x, 50%) var(--flash-y, 50%),
+          rgba(255, 246, 216, 0.96) 0%,
+          rgba(255, 205, 120, 0.9) 18%,
+          rgba(255, 150, 46, 0.72) 40%,
+          rgba(226, 108, 30, 0.4) 62%,
+          rgba(3, 5, 12, 0) 84%
+        );
+      }
+
+      #galaxy,
+      .fallback-sky,
+      #confetti {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .ambient-twinkles {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      /* 虚拟天幕：比视口高，靠 --sky-drift 随滚动缓慢上移，读作远天的视差。
+         不加这一层的话星点会钉死在 fixed 视口上，像贴在玻璃上的贴图。 */
+      .ambient-sky {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        transform: translate3d(0, calc(var(--sky-drift, 0) * -120vh), 0);
+      }
+
+      .ambient-twinkle {
+        --twinkle-color: 244, 246, 255;
+        position: absolute;
+        left: var(--twinkle-left);
+        top: var(--twinkle-top);
+        width: var(--twinkle-size);
+        height: var(--twinkle-size);
+        opacity: 0;
+        animation: ambient-twinkle var(--twinkle-duration) ease-in-out var(--twinkle-delay) infinite;
+      }
+
+      .ambient-twinkle.is-dot {
+        border-radius: 50%;
+        background: rgb(var(--twinkle-color));
+        box-shadow: 0 0 4px rgba(var(--twinkle-color), 0.7);
+      }
+
+      /* 四角星复用节点那条自绘 ✦ 路径，不用会随字体变化的字符。 */
+      .ambient-twinkle.is-star svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        fill: rgb(var(--twinkle-color));
+        filter: drop-shadow(0 0 3px rgba(var(--twinkle-color), 0.6));
+      }
+
+      .ambient-twinkle-1 {
+        --twinkle-color: 127, 232, 210;
+      }
+
+      .ambient-twinkle-2 {
+        --twinkle-color: 255, 217, 160;
+      }
+
+      /* 亮起的时间窗保持在约 40%（原来只有约 11%，那才是「几乎看不见」的根因），
+         但峰值收敛到「微微闪耀」：不再放大到 1.7 倍，也不再冲到全不透明。 */
+      @keyframes ambient-twinkle {
+        0%,
+        100% {
+          opacity: 0.14;
+          transform: scale(0.85);
+        }
+        22% {
+          opacity: 0.42;
+        }
+        40% {
+          opacity: 0.82;
+          transform: scale(1.16);
+        }
+        58% {
+          opacity: 0.4;
+        }
+        78% {
+          opacity: 0.18;
+          transform: scale(0.9);
+        }
+      }
+
+      /* WebGL 不可用时的静态深空，避免留下纯黑空白。 */
+      .fallback-sky {
+        display: none;
+        background:
+          radial-gradient(60% 40% at 50% 28%, rgba(60, 128, 128, 0.22), transparent 70%),
+          radial-gradient(120% 90% at 50% 40%, #071018, var(--void) 72%);
+      }
+
+      .webgl-fallback #galaxy {
+        display: none;
+      }
+
+      .webgl-fallback .fallback-sky {
+        display: block;
+      }
+
+      main {
+        position: absolute;
+        inset: 0;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+
+      /* ---------------- 第一幕 ---------------- */
+      #act-one {
+        position: absolute;
+        left: 50%;
+        top: 58%;
+        transform: translate(-50%, -50%);
+        width: min(940px, calc(100vw - 48px));
+        text-align: center;
+        transition: opacity 200ms linear;
+      }
+
+      .eyebrow {
+        margin: 0 0 clamp(20px, 3vh, 32px);
+        font-size: clamp(0.8rem, 2.7vw, 0.9rem);
+        font-weight: 400;
+        letter-spacing: 0.42em;
+        text-indent: 0.42em;
+        color: var(--ink-soft);
+      }
+
+      .clock {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: clamp(6px, 2vw, 18px);
+      }
+
+      .unit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: clamp(8px, 1.4vh, 14px);
+        min-width: clamp(58px, 17vw, 140px);
+      }
+
+      .num {
+        font-family: var(--sans);
+        font-weight: 200;
+        font-variant-numeric: tabular-nums;
+        font-size: clamp(3rem, 13vw, 6.4rem);
+        line-height: 0.92;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        text-shadow: 0 0 26px rgba(3, 5, 12, 0.9), 0 0 60px rgba(3, 5, 12, 0.7);
+      }
+
+      .num-s {
+        color: var(--warm);
+      }
+
+      .num-s.beat {
+        animation: beat 620ms ease-out;
+      }
+
+      @keyframes beat {
+        0% {
+          opacity: 0.45;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .cap {
+        font-size: clamp(0.7rem, 2.2vw, 0.82rem);
+        letter-spacing: 0.32em;
+        text-indent: 0.32em;
+        color: var(--ink-faint);
+      }
+
+      .sep {
+        align-self: center;
+        width: 3px;
+        height: 3px;
+        margin-top: clamp(-2.2rem, -5.5vw, -1rem);
+        border-radius: 50%;
+        background: var(--ink-faint);
+      }
+
+      .progress {
+        margin: clamp(36px, 6vh, 64px) auto 0;
+        max-width: min(460px, 80vw);
+      }
+
+      .track {
+        position: relative;
+        height: 1px;
+        background: rgba(169, 179, 214, 0.24);
+      }
+
+      .fill {
+        position: absolute;
+        inset: 0;
+        transform-origin: left center;
+        transform: scaleX(0);
+        background: linear-gradient(90deg, rgba(127, 232, 210, 0.3), var(--warm));
+        box-shadow: 0 0 12px rgba(255, 217, 160, 0.5);
+        transition: transform 400ms ease-out;
+      }
+
+      .progress-text {
+        margin: 14px 0 0;
+        font-family: var(--sans);
+        font-weight: 300;
+        font-variant-numeric: tabular-nums;
+        font-size: clamp(0.76rem, 2.4vw, 0.84rem);
+        letter-spacing: 0.2em;
+        color: var(--ink-faint);
+      }
+
+      .reunion h1 {
+        margin: 0 0 24px;
+        font-size: clamp(2rem, 8vw, 3.4rem);
+        font-weight: 600;
+        line-height: 1.25;
+        color: var(--warm);
+      }
+
+      .total {
+        margin: 0;
+        font-family: var(--sans);
+        font-weight: 300;
+        font-variant-numeric: tabular-nums;
+        font-size: clamp(1.6rem, 6vw, 2.6rem);
+        color: var(--ink);
+      }
+
+      /* ---------------- 滚动提示 ---------------- */
+      #scroll-hint {
+        position: absolute;
+        left: 50%;
+        /* 固定层的下缘在手机上会被工具栏压住，底部这几件都要让开那一条。 */
+        bottom: calc(var(--chrome-bottom, 0px) + max(28px, env(safe-area-inset-bottom)));
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        transition: opacity 320ms ease-out;
+      }
+
+      #scroll-hint.is-hidden {
+        opacity: 0;
+      }
+
+      .hint-label {
+        font-size: 0.72rem;
+        letter-spacing: 0.4em;
+        text-indent: 0.4em;
+        color: var(--ink-faint);
+      }
+
+      .hint-arrow {
+        width: 18px;
+        height: 9px;
+        color: var(--teal);
+        filter: drop-shadow(0 0 5px rgba(127, 232, 210, 0.28));
+        animation: hint-arrow 2.6s ease-in-out infinite;
+      }
+
+      .hint-arrow svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      .hint-arrow path {
+        fill: currentColor;
+      }
+
+      @keyframes hint-arrow {
+        0%,
+        18% {
+          transform: translateY(0);
+          opacity: 0.28;
+        }
+        58% {
+          transform: translateY(5px);
+          opacity: 0.82;
+        }
+        86%,
+        100% {
+          transform: translateY(8px);
+          opacity: 0;
+        }
+      }
+
+      /* ---------------- 第二幕节点 ---------------- */
+      #timeline-nodes {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      /*
+        方案一 + 方案四：双轨仍保持紧贴与反向流动，四边用星雾溶掉区域感；照片
+        在纵向错相轻漂，前景星屑与背后的 WebGL 银河夹出空间纵深。
+      */
+      #memory-stream {
+        --memory-reveal: 0;
+        --memory-rise: 18px;
+        position: absolute;
+        z-index: 1;
+        right: 0;
+        bottom: calc(var(--chrome-bottom, 0px) + max(18px, env(safe-area-inset-bottom)));
+        left: 0;
+        display: grid;
+        gap: 2px;
+        overflow: hidden;
+        padding: 3px 0;
+        isolation: isolate;
+        opacity: var(--memory-reveal);
+        pointer-events: none;
+        transform: translate3d(0, var(--memory-rise), 0);
+        transition: opacity 280ms ease-out, transform 420ms cubic-bezier(0.22, 0.61, 0.24, 1);
+        mask-image:
+          linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%),
+          linear-gradient(180deg, transparent 0%, #000 7%, #000 93%, transparent 100%);
+        mask-composite: intersect;
+        -webkit-mask-image:
+          linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%),
+          linear-gradient(180deg, transparent 0%, #000 7%, #000 93%, transparent 100%);
+        -webkit-mask-composite: source-in;
+      }
+
+      /* 青金细线保留，但压低亮度并一起溶入四边，不再读成生硬矩形框。 */
+      #memory-stream::before {
+        position: absolute;
+        z-index: 4;
+        inset: 0;
+        padding: 1px;
+        content: '';
+        pointer-events: none;
+        background: linear-gradient(112deg, #7fe8d2 0%, #ffd9a0 24%, #7fe8d2 50%, #ffd9a0 76%, #7fe8d2 100%);
+        background-size: 320% 320%;
+        /*
+          只留 1px 描边环：两层遮罩相减（内层贴 content-box、外层贴 border-box），
+          差集正好是那圈 padding。
+
+          **必须写成 mask-image / mask-clip 这样的长写法，绝不能用 `mask:` 简写。**
+          `mask` 是简写，会把 mask-composite 重置回初始值 `add`；生产构建的 CSS
+          压缩器会把重复的 `mask` / `-webkit-mask` 合并成一条并挪到 composite
+          之后，于是 composite 被重置成 add、两层遮罩相加铺满整块，0.48 的青金
+          渐变直接糊在 42 张照片上（dev 不压缩所以看不出来，只有生产构建会犯）。
+          长写法之间不会互相重置，同一条规则里的四边遮罩就是这么活下来的。
+        */
+        mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+        mask-clip: content-box, border-box;
+        mask-composite: exclude;
+        -webkit-mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+        -webkit-mask-clip: content-box, border-box;
+        -webkit-mask-composite: xor;
+        opacity: 0.48;
+        animation: memory-line-flow-x 5.4s linear infinite;
+        animation-play-state: paused;
+      }
+
+      /* 两层之间同样只留一根青金流动线。 */
+      #memory-stream::after {
+        position: absolute;
+        z-index: 3;
+        top: 50%;
+        right: 0;
+        left: 0;
+        height: 1px;
+        content: '';
+        pointer-events: none;
+        background: linear-gradient(90deg, #7fe8d2 0%, #ffd9a0 28%, #7fe8d2 52%, #ffd9a0 78%, #7fe8d2 100%);
+        background-size: 300% 100%;
+        opacity: 0.44;
+        animation: memory-line-flow-x 4.8s linear infinite reverse;
+        animation-play-state: paused;
+      }
+
+      .memory-lane {
+        position: relative;
+        z-index: 1;
+        height: clamp(84px, 13vh, 124px);
+        min-width: 0;
+        overflow: hidden;
+        animation: memory-lane-drift-a 16s ease-in-out infinite alternate;
+        animation-play-state: paused;
+        will-change: translate;
+      }
+
+      .memory-lane-2 {
+        animation-name: memory-lane-drift-b;
+        animation-duration: 19s;
+      }
+
+      .memory-track {
+        display: flex;
+        height: 100%;
+        width: max-content;
+        animation: memory-flow-left 46s linear infinite;
+        animation-play-state: paused;
+        will-change: transform;
+      }
+
+      .memory-lane-2 .memory-track {
+        animation-name: memory-flow-right;
+        animation-duration: 54s;
+      }
+
+      #memory-stream.is-active .memory-track,
+      #memory-stream.is-active .memory-lane,
+      #memory-stream.is-active .memory-glint,
+      #memory-stream.is-active::before,
+      #memory-stream.is-active::after,
+      #memory-stream.is-active .memory-cell::after {
+        animation-play-state: running;
+      }
+
+      .memory-sequence {
+        display: flex;
+        flex: none;
+        height: 100%;
+        align-items: center;
+        gap: 0;
+      }
+
+      .memory-cell {
+        position: relative;
+        display: flex;
+        height: 100%;
+        flex: none;
+        padding-right: 2px;
+      }
+
+      /* 极轻的青金色雾面统一照片与银河色域，不改动源图本身。 */
+      .memory-cell::before {
+        position: absolute;
+        z-index: 1;
+        inset: 0 2px 0 0;
+        content: '';
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 18% 16%, rgba(127, 232, 210, 0.1), transparent 42%),
+          radial-gradient(circle at 82% 84%, rgba(255, 217, 160, 0.08), transparent 44%);
+        mix-blend-mode: soft-light;
+      }
+
+      /* 相邻照片的 1px 内分隔线，颜色沿竖向流动；没有独立照片边框。 */
+      .memory-cell::after {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 1px;
+        content: '';
+        pointer-events: none;
+        background: linear-gradient(180deg, #7fe8d2 0%, #ffd9a0 32%, #7fe8d2 58%, #ffd9a0 84%, #7fe8d2 100%);
+        background-size: 100% 280%;
+        opacity: 0.5;
+        animation: memory-line-flow-y 4.2s linear var(--line-delay) infinite;
+        animation-play-state: paused;
+      }
+
+      .memory-photo {
+        display: block;
+        width: auto;
+        height: 100%;
+        flex: none;
+        max-width: none;
+        object-fit: contain;
+        opacity: 0.88;
+        filter: saturate(0.86) contrast(0.94) brightness(0.92) sepia(0.035);
+      }
+
+      /* 照片前方掠过的稀疏星屑；主体星场仍由背后的 WebGL 银河承担。 */
+      .memory-foreground {
+        position: absolute;
+        z-index: 5;
+        inset: -6px 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .memory-glint {
+        position: absolute;
+        top: var(--glint-top);
+        left: var(--glint-left);
+        width: var(--glint-size);
+        height: var(--glint-size);
+        border-radius: 50%;
+        background: currentColor;
+        color: rgba(127, 232, 210, 0.78);
+        opacity: 0;
+        box-shadow: 0 0 9px currentColor;
+        animation: memory-glint-drift var(--glint-duration) ease-in-out var(--glint-delay) infinite;
+        animation-play-state: paused;
+      }
+
+      .memory-glint.is-warm {
+        color: rgba(255, 217, 160, 0.74);
+      }
+
+      .memory-glint.is-star {
+        border-radius: 0;
+        background: transparent;
+      }
+
+      .memory-glint.is-star::before,
+      .memory-glint.is-star::after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        content: '';
+        background: currentColor;
+        box-shadow: 0 0 8px currentColor;
+        transform: translate(-50%, -50%);
+      }
+
+      .memory-glint.is-star::before {
+        width: 1px;
+        height: 100%;
+      }
+
+      .memory-glint.is-star::after {
+        width: 100%;
+        height: 1px;
+      }
+
+      @keyframes memory-line-flow-x {
+        from {
+          background-position: 0% 50%;
+        }
+        to {
+          background-position: 300% 50%;
+        }
+      }
+
+      @keyframes memory-line-flow-y {
+        from {
+          background-position: 50% 0%;
+        }
+        to {
+          background-position: 50% 280%;
+        }
+      }
+
+      @keyframes memory-flow-left {
+        from {
+          transform: translate3d(0, 0, 0);
+        }
+        to {
+          transform: translate3d(-50%, 0, 0);
+        }
+      }
+
+      @keyframes memory-flow-right {
+        from {
+          transform: translate3d(-50%, 0, 0);
+        }
+        to {
+          transform: translate3d(0, 0, 0);
+        }
+      }
+
+      @keyframes memory-lane-drift-a {
+        from {
+          translate: 0 -2px;
+        }
+        to {
+          translate: 0 2px;
+        }
+      }
+
+      @keyframes memory-lane-drift-b {
+        from {
+          translate: 0 2px;
+        }
+        to {
+          translate: 0 -3px;
+        }
+      }
+
+      @keyframes memory-glint-drift {
+        0%,
+        100% {
+          opacity: 0;
+          transform: translate3d(0, 6px, 0) scale(0.72);
+        }
+        24% {
+          opacity: 0.46;
+        }
+        68% {
+          opacity: 0.2;
+        }
+        84% {
+          opacity: 0.36;
+          transform: translate3d(var(--glint-drift), -5px, 0) scale(1);
+        }
+      }
+
+      .node {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 44px;
+        padding: 10px 16px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: var(--ink-soft);
+        font-family: var(--serif);
+        font-size: 0.82rem;
+        letter-spacing: 0.12em;
+        cursor: pointer;
+        pointer-events: auto;
+        opacity: 0.3;
+        transition:
+          opacity 420ms ease-out,
+          color 300ms ease;
+      }
+
+      .node.is-lit {
+        opacity: 1;
+        color: var(--ink);
+      }
+
+      /* 画面外：只做视觉隐藏，保留在 Tab 序列里，聚焦时会被滚回视野。 */
+      .node.is-offscreen,
+      #wish-button.is-offscreen {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .node.is-offscreen:focus-visible,
+      #wish-button.is-offscreen:focus-visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .node-star-mark {
+        position: relative;
+        width: 22px;
+        height: 22px;
+        flex: none;
+        color: var(--teal);
+        filter: drop-shadow(0 0 0 rgba(127, 232, 210, 0));
+        transition:
+          color 300ms ease,
+          filter 420ms ease-out;
+      }
+
+      .node-star-shape,
+      .milestone-twin {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 12px;
+        height: 12px;
+        overflow: visible;
+        transform: translate(-50%, -50%);
+      }
+
+      .node-star-shape path,
+      .milestone-twin path {
+        fill: currentColor;
+      }
+
+      .node.is-lit .node-star-mark {
+        color: var(--warm);
+        filter: drop-shadow(0 0 7px rgba(255, 217, 160, 0.78));
+      }
+
+      .node.is-open .node-star-mark {
+        color: var(--rose);
+        filter: drop-shadow(0 0 9px rgba(255, 158, 192, 0.82));
+      }
+
+      /* 三个里程碑沿用同一颗四芒星，但分别增加「初光／双星／轨道」结构。 */
+      .node.is-milestone .node-star-shape {
+        width: 16px;
+        height: 16px;
+      }
+
+      .milestone-spark,
+      .star-gate-spark {
+        position: absolute;
+        display: block;
+        background: currentColor;
+        clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+      }
+
+      .milestone-spark-a {
+        right: -1px;
+        top: -1px;
+        width: 5px;
+        height: 5px;
+        opacity: 0.78;
+      }
+
+      .milestone-spark-b {
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        height: 4px;
+        opacity: 0.58;
+      }
+
+      .node.milestone-confession .node-star-shape {
+        left: 1px;
+        width: 13px;
+        height: 13px;
+        transform: translateY(-50%);
+      }
+
+      .milestone-twin {
+        left: auto;
+        right: 1px;
+        width: 13px;
+        height: 13px;
+        transform: translateY(-50%);
+      }
+
+      .node.milestone-distance .node-star-shape {
+        width: 14px;
+        height: 14px;
+      }
+
+      .milestone-orbit {
+        position: absolute;
+        left: -1px;
+        top: 4px;
+        width: 24px;
+        height: 14px;
+        border: 1px solid currentColor;
+        border-radius: 50%;
+        opacity: 0.48;
+        transform: rotate(-24deg);
+      }
+
+      .milestone-orbit-dot {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .milestone-orbit-dot-a {
+        right: 1px;
+        top: 0;
+      }
+
+      .milestone-orbit-dot-b {
+        left: 1px;
+        bottom: 0;
+      }
+
+      .milestone-echo {
+        position: absolute;
+        inset: -4px;
+        border: 1px solid rgba(255, 217, 160, 0.68);
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(255, 217, 160, 0.28);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .node.is-heart-echo .milestone-echo {
+        animation: milestone-echo 640ms ease-out;
+      }
+
+      @keyframes milestone-echo {
+        0% {
+          transform: scale(0.78);
+          opacity: 0;
+        }
+        22% {
+          opacity: 0.48;
+        }
+        100% {
+          transform: scale(1.72);
+          opacity: 0;
+        }
+      }
+
+      .node-date {
+        font-family: var(--sans);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        text-shadow: 0 0 12px rgba(3, 5, 12, 0.95);
+      }
+
+      /* ---------------- 音乐提示 ---------------- */
+      /* 自动播放被拦下时的唯一可见 UI。轻轻摇晃 + 呼吸感，暖金，低调到
+         不与倒计时争视线；一旦音乐真的响了就淡掉并从 DOM 里移除。 */
+      /*
+        必须脱离文档流。#act-one 是按自身高度垂直居中的（top:58% + translateY(-50%)），
+        音符若留在流里，它一消失整块就矮 70px，居中点不变、内容就整体往下挪半个高度。
+        用独立的 translate / rotate / scale 属性而不是 transform 简写：摇晃、
+        淡出缩小与这里的水平居中各占一条，互不覆盖。
+      */
+      #music-hint {
+        position: absolute;
+        left: 50%;
+        top: calc(100% + 26px);
+        translate: -50% 0;
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: 1px solid rgba(255, 217, 160, 0.26);
+        border-radius: 50%;
+        background: rgba(255, 217, 160, 0.05);
+        color: var(--warm);
+        cursor: pointer;
+        animation:
+          music-hint-sway 3.6s ease-in-out infinite,
+          music-hint-breathe 2.4s ease-in-out infinite;
+      }
+
+      #music-hint:hover {
+        border-color: rgba(255, 217, 160, 0.5);
+        background: rgba(255, 217, 160, 0.11);
+      }
+
+      #music-hint:focus-visible {
+        outline: 2px solid var(--warm);
+        outline-offset: 3px;
+      }
+
+      /* 脚本在音乐起播后加上，等淡完再真正隐藏，不做硬切。 */
+      #music-hint.is-leaving {
+        animation: none;
+        opacity: 0;
+        scale: 0.86;
+        rotate: 0deg;
+        pointer-events: none;
+        transition: opacity 520ms ease-out, scale 520ms ease-out;
+      }
+
+      @keyframes music-hint-sway {
+        0%,
+        100% {
+          rotate: -7deg;
+        }
+        50% {
+          rotate: 7deg;
+        }
+      }
+
+      @keyframes music-hint-breathe {
+        0%,
+        100% {
+          opacity: 0.62;
+          box-shadow: 0 0 0 0 rgba(255, 217, 160, 0);
+        }
+        50% {
+          opacity: 1;
+          box-shadow: 0 0 16px -2px rgba(255, 217, 160, 0.42);
+        }
+      }
+
+      /* ---------------- 展开层 ---------------- */
+      #node-panel {
+        --panel-anchor-y: 50%;
+        --panel-bridge: 24px;
+        /* 三段共用一条缓动与一套时长变量：改节奏只改这里，桌面与手机不会走偏。 */
+        --panel-ease: cubic-bezier(0.22, 0.61, 0.24, 1);
+        --panel-ease-out: cubic-bezier(0.42, 0, 0.72, 0.36);
+        --t-bridge: 300ms;
+        /* 描边刻意做得比卡片短很多：它必须在卡片显现完成之前就跑完并淡掉，
+           这样屏幕上永远不会只剩一条金线在飘。 */
+        --t-trace: 380ms;
+        --t-trace-delay: 120ms;
+        --t-open: 660ms;
+        --t-open-delay: 150ms;
+        --t-fade: 420ms;
+        --t-close: 480ms;
+        position: absolute;
+        z-index: 4;
+        width: min(340px, calc(100vw - 32px));
+        pointer-events: none;
+      }
+
+      /* 收回星点：整张卡片（卡面、描边、引光）作为一个整体绕节点星缩放。
+         变换原点由脚本钉在节点上，所以缩放本身就是「朝节点收拢」，
+         不需要另算位移；也因此三者不可能再各走各的、留下孤立的金线。 */
+      #node-panel.is-open {
+        pointer-events: auto;
+        animation: panel-emerge var(--t-open) var(--panel-ease) both;
+      }
+
+      #node-panel.is-closing {
+        pointer-events: none;
+        animation: panel-retract var(--t-close) cubic-bezier(0.45, 0, 0.7, 0.42) both;
+      }
+
+      @keyframes panel-emerge {
+        0% {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        26% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes panel-retract {
+        0% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        /* 透明度一路撑到很后面才掉：卡片本体必须是最后消失的那个，
+           不能像上一版那样 300ms 就没了、把舞台让给描边。 */
+        62% {
+          opacity: 0.82;
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0.86);
+        }
+      }
+
+      /* 竖屏量高度阶段：卡片已在文档流里有尺寸，但既不可见也不参与压暗。 */
+      #node-panel.is-measuring {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* 方案 D：三个里程碑节点的卡片整体放慢约 15%，并多一层暖金外晕。 */
+      #node-panel.is-milestone-panel {
+        --t-bridge: 345ms;
+        --t-trace: 715ms;
+        --t-trace-delay: 195ms;
+        --t-open: 760ms;
+        --t-open-delay: 175ms;
+        --t-fade: 500ms;
+        --t-close: 550ms;
+      }
+
+      #node-panel.is-milestone-panel .panel-surface {
+        border-color: rgba(255, 217, 160, 0.34);
+        box-shadow:
+          0 0 0 1px rgba(255, 217, 160, 0.08),
+          0 0 26px -6px rgba(255, 217, 160, 0.3);
+      }
+
+      .panel-surface {
+        position: relative;
+        z-index: 1;
+        min-height: 100%;
+        padding: 20px;
+        border: 1px solid rgba(127, 232, 210, 0.28);
+        border-radius: 12px;
+        background: rgba(4, 10, 16, 0.9);
+        backdrop-filter: blur(6px);
+        opacity: 0;
+        /* 方案 C：软边遮罩代替硬 clip-path 切边。遮罩比卡片宽 2.5 倍，
+           全透明段刚好铺满卡片宽度，靠 mask-position 滑过来完成擦除。 */
+        mask-size: 250% 100%;
+        -webkit-mask-size: 250% 100%;
+        mask-repeat: no-repeat;
+        -webkit-mask-repeat: no-repeat;
+      }
+
+      /* 桌面端：先从节点铺出横向光线，再由接入点分成上下两束描摹卡片。 */
+      #node-panel.is-desktop-panel::before {
+        content: '';
+        position: absolute;
+        z-index: 0;
+        top: var(--panel-anchor-y);
+        width: var(--panel-bridge);
+        height: 1px;
+        background: linear-gradient(90deg, rgba(127, 232, 210, 0.2), rgba(255, 217, 160, 0.86));
+        box-shadow: 0 0 7px rgba(255, 217, 160, 0.46);
+        opacity: 0;
+        transform: scaleX(0);
+        pointer-events: none;
+      }
+
+      #node-panel.is-desktop-panel[data-side='left']::before {
+        left: 100%;
+        transform-origin: right center;
+      }
+
+      #node-panel.is-desktop-panel[data-side='right']::before {
+        right: 100%;
+        background: linear-gradient(90deg, rgba(255, 217, 160, 0.86), rgba(127, 232, 210, 0.2));
+        transform-origin: left center;
+      }
+
+      #node-panel.is-desktop-panel.is-open::before {
+        animation: panel-bridge-open var(--t-bridge) var(--panel-ease) both;
+      }
+
+      /* 退场时引光不再单独播：它跟着整张卡片一起被收回节点。 */
+      #node-panel.is-desktop-panel.is-closing::before {
+        opacity: 0.34;
+        transform: scaleX(1);
+      }
+
+      @keyframes panel-bridge-open {
+        0% {
+          opacity: 0;
+          transform: scaleX(0);
+        }
+        24% {
+          opacity: 0.92;
+        }
+        100% {
+          opacity: 0.34;
+          transform: scaleX(1);
+        }
+      }
+
+      .panel-border-trace {
+        position: absolute;
+        z-index: 2;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        pointer-events: none;
+      }
+
+      /* 减弱后的描边：更细、更淡、辉光更收，只作为入场的一道点缀。 */
+      .panel-trace {
+        display: none;
+        fill: none;
+        stroke: rgba(255, 217, 160, 0.62);
+        stroke-width: 0.6;
+        stroke-linecap: round;
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        vector-effect: non-scaling-stroke;
+        filter: drop-shadow(0 0 2px rgba(255, 217, 160, 0.42));
+      }
+
+      #node-panel.is-desktop-panel[data-side='left'] .panel-trace-right,
+      #node-panel.is-desktop-panel[data-side='right'] .panel-trace-left {
+        display: block;
+      }
+
+      #node-panel.is-desktop-panel.is-open .panel-trace {
+        animation: panel-trace-open var(--t-trace) var(--panel-ease) var(--t-trace-delay) both;
+      }
+
+      /* 退场时描边完全不播：入场末尾它已经淡到 0，退场再动就成了孤立元素。 */
+      #node-panel.is-desktop-panel.is-closing .panel-trace {
+        animation: none;
+        opacity: 0;
+      }
+
+      @keyframes panel-trace-open {
+        0% {
+          stroke-dashoffset: 1;
+          opacity: 0;
+        }
+        8% {
+          opacity: 1;
+        }
+        86% {
+          opacity: 0.88;
+        }
+        100% {
+          stroke-dashoffset: 0;
+          opacity: 0;
+        }
+      }
+
+      /* 卡片贴在节点左侧时，光从右边（靠节点那一侧）擦过来，反之亦然。
+         遮罩：透明段占 0–40%（正好一个卡片宽），52% 之后全实，中间 12% 是软边。 */
+      #node-panel.is-desktop-panel[data-side='left'] .panel-surface {
+        mask-image: linear-gradient(90deg, transparent 0 40%, #000 52%, #000 100%);
+        -webkit-mask-image: linear-gradient(90deg, transparent 0 40%, #000 52%, #000 100%);
+        mask-position: 0% 0;
+        -webkit-mask-position: 0% 0;
+      }
+
+      #node-panel.is-desktop-panel[data-side='right'] .panel-surface {
+        mask-image: linear-gradient(270deg, transparent 0 40%, #000 52%, #000 100%);
+        -webkit-mask-image: linear-gradient(270deg, transparent 0 40%, #000 52%, #000 100%);
+        mask-position: 100% 0;
+        -webkit-mask-position: 100% 0;
+      }
+
+      /* 方案 A + C：擦除与透明度拆成两条动画，各走各的时长与曲线——
+         透明度先快后缓地收到 1，擦除稍慢跟上，读起来才是「淡入」而不是「刷过」。 */
+      #node-panel.is-desktop-panel[data-side='left'].is-open .panel-surface {
+        animation:
+          panel-reveal-from-right var(--t-open) var(--panel-ease) var(--t-open-delay) both,
+          panel-fade-in var(--t-fade) ease-out var(--t-open-delay) both;
+      }
+
+      #node-panel.is-desktop-panel[data-side='right'].is-open .panel-surface {
+        animation:
+          panel-reveal-from-left var(--t-open) var(--panel-ease) var(--t-open-delay) both,
+          panel-fade-in var(--t-fade) ease-out var(--t-open-delay) both;
+      }
+
+      /* 退场时卡面不再自己擦除、自己淡出：它保持完整，由 #node-panel 整体
+         带着描边与引光一起绕节点收拢。上一版正是这里各走各的，才会出现
+         「卡片没了，只剩一条金边在飘」。
+         必须用 !important：按边／按端的遮罩规则选择器权重比这条高，不压住的话
+         卡面会停在遮罩的「全隐藏」位置，退场全程一片空白——正是要修的那个 bug。 */
+      #node-panel.is-closing .panel-surface {
+        animation: none !important;
+        opacity: 1 !important;
+        mask-image: none !important;
+        -webkit-mask-image: none !important;
+      }
+
+      @keyframes panel-reveal-from-right {
+        0% {
+          mask-position: 0% 0;
+          -webkit-mask-position: 0% 0;
+        }
+        100% {
+          mask-position: 100% 0;
+          -webkit-mask-position: 100% 0;
+        }
+      }
+
+      @keyframes panel-reveal-from-left {
+        0% {
+          mask-position: 100% 0;
+          -webkit-mask-position: 100% 0;
+        }
+        100% {
+          mask-position: 0% 0;
+          -webkit-mask-position: 0% 0;
+        }
+      }
+
+      /* 透明度自己走一条曲线：先冲到 0.62，再慢慢收满，边缘因此不会「啪」地出现。 */
+      @keyframes panel-fade-in {
+        0% {
+          opacity: 0;
+        }
+        34% {
+          opacity: 0.62;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+
+      /* 手机端：卡片向下展开，暖金移动边缘带着几颗极轻的粒子。 */
+      .panel-mobile-edge {
+        display: none;
+        position: absolute;
+        z-index: 3;
+        left: 1px;
+        right: 1px;
+        top: 0;
+        height: 1px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, transparent, rgba(255, 217, 160, 0.92) 22% 78%, transparent);
+        box-shadow: 0 0 7px rgba(255, 217, 160, 0.52);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .panel-mobile-edge::before,
+      .panel-mobile-edge::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        width: 2px;
+        height: 2px;
+        border-radius: 50%;
+        background: var(--warm);
+        box-shadow: 10px -2px 0 -0.5px rgba(255, 217, 160, 0.62), -7px 3px 0 -0.5px rgba(127, 232, 210, 0.46);
+      }
+
+      .panel-mobile-edge::before {
+        left: 22%;
+      }
+
+      .panel-mobile-edge::after {
+        right: 24%;
+        transform: scale(0.75);
+      }
+
+      /* 手机端整体再快一档：卡片就在指尖下方，等待感比桌面更明显。
+         这里的数值与 timeline.ts 的 closeMs() 必须一致，否则退场会被提前截断。 */
+      #node-panel.is-mobile-panel {
+        --t-open: 560ms;
+        --t-fade: 360ms;
+        --t-close: 460ms;
+      }
+
+      #node-panel.is-mobile-panel.is-milestone-panel {
+        --t-open: 645ms;
+        --t-fade: 415ms;
+        --t-close: 530ms;
+      }
+
+      /* 手机端遮罩是纵向的：实心段在上、透明段在下，靠 mask-position 向上滑开。 */
+      #node-panel.is-mobile-panel .panel-surface {
+        mask-size: 100% 250%;
+        -webkit-mask-size: 100% 250%;
+        mask-image: linear-gradient(180deg, #000 0 48%, transparent 60% 100%);
+        -webkit-mask-image: linear-gradient(180deg, #000 0 48%, transparent 60% 100%);
+        mask-position: 0 100%;
+        -webkit-mask-position: 0 100%;
+      }
+
+      #node-panel.is-mobile-panel.is-open .panel-surface {
+        animation:
+          panel-mobile-reveal var(--t-open) var(--panel-ease) both,
+          panel-fade-in var(--t-fade) ease-out both;
+      }
+
+      #node-panel.is-mobile-panel.is-open .panel-mobile-edge {
+        display: block;
+        animation: panel-mobile-edge-open var(--t-open) var(--panel-ease) both;
+      }
+
+      /* 退场时暖金边缘同样不单独播——它正是手机端会看到的那条孤立金线。 */
+      #node-panel.is-mobile-panel.is-closing .panel-mobile-edge {
+        display: none;
+      }
+
+      @keyframes panel-mobile-reveal {
+        0% {
+          mask-position: 0 100%;
+          -webkit-mask-position: 0 100%;
+        }
+        100% {
+          mask-position: 0 0%;
+          -webkit-mask-position: 0 0%;
+        }
+      }
+
+      @keyframes panel-mobile-edge-open {
+        0% {
+          top: 0;
+          opacity: 0;
+        }
+        12%,
+        82% {
+          opacity: 0.9;
+        }
+        100% {
+          top: calc(100% - 1px);
+          opacity: 0;
+        }
+      }
+
+
+      .node.is-detail-launch .node-star-mark {
+        animation: node-detail-launch 520ms ease-out;
+      }
+
+      @keyframes node-detail-launch {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        38% {
+          transform: scale(1.12);
+          filter: drop-shadow(0 0 12px rgba(255, 217, 160, 0.88));
+        }
+      }
+
+      #node-panel-close {
+        position: absolute;
+        right: 6px;
+        top: 6px;
+        width: 44px;
+        height: 44px;
+        border: 0;
+        background: transparent;
+        color: var(--ink-faint);
+        font-size: 1.3rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      #node-panel-close:hover {
+        color: var(--warm);
+      }
+
+      .panel-date {
+        margin: 0 0 4px;
+        font-family: var(--sans);
+        font-variant-numeric: tabular-nums;
+        font-size: 0.92rem;
+        letter-spacing: 0.08em;
+        color: var(--warm);
+      }
+
+      .panel-place {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin: 0 0 14px;
+        font-size: 0.8rem;
+        letter-spacing: 0.16em;
+        color: var(--ink-soft);
+      }
+
+      .panel-place-icon {
+        flex: none;
+        color: var(--teal);
+      }
+
+      /*
+        横向永远铺满卡片。高度上限是为了让整张卡片留在屏内，但配 contain 时
+        竖图会缩到上限高度、在左右留出两条暗边（站主在移动端看到的正是这个）。
+        改用 cover：宽度铺满，只把纵向超出上限的那部分等比裁掉——裁掉的量恰好
+        等于原先浪费成暗边的量，屏幕够高时（竖图自然高度不触上限）不裁切。
+      */
+      #node-panel-photo {
+        display: block;
+        width: 100%;
+        max-height: 46vh;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      /*
+        2026.02.25 是站主明确批准的单图例外：原片很高，通用 contain 会在移动端
+        留出两条大面积暗边。改用 4:5 满幅视窗并等比 cover，只裁掉上方列车与下方
+        地面的冗余，人物和镜框不做拉伸。
+      */
+      #node-panel[data-node-id='07'] #node-panel-photo {
+        aspect-ratio: 4 / 5;
+        max-height: none;
+        object-fit: cover;
+        object-position: center 55%;
+        background: transparent;
+      }
+
+      .panel-body {
+        margin: 14px 0 0;
+        font-weight: 300;
+        font-size: 0.9rem;
+        line-height: 1.9;
+        color: var(--ink);
+      }
+
+      /* ---------------- 银河尽头的星 ---------------- */
+      #wish-button {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        min-width: 44px;
+        min-height: 44px;
+        padding: 12px 20px;
+        border: 0;
+        background: transparent;
+        color: var(--ink-soft);
+        font-family: var(--serif);
+        font-size: clamp(0.82rem, 3vw, 0.94rem);
+        letter-spacing: 0.16em;
+        text-indent: 0.16em;
+        cursor: pointer;
+        opacity: 0.35;
+        transition: opacity 480ms ease-out, color 300ms ease;
+      }
+
+      #wish-button.is-lit {
+        opacity: 1;
+        color: var(--ink);
+      }
+
+      .star-core {
+        position: relative;
+        display: grid;
+        width: 52px;
+        height: 52px;
+        place-items: center;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 217, 160, 0.15) 0 28%, rgba(255, 217, 160, 0) 68%);
+        color: var(--warm);
+        filter: drop-shadow(0 0 10px rgba(255, 217, 160, 0.5));
+        animation: pulse 3.2s ease-in-out infinite;
+      }
+
+      .star-gate-orbit {
+        position: absolute;
+        inset: 6px;
+        border: 1px solid currentColor;
+        border-right-color: transparent;
+        border-bottom-color: rgba(255, 217, 160, 0.25);
+        border-radius: 50%;
+        opacity: 0.72;
+        transform: rotate(-28deg);
+      }
+
+      .star-gate-orbit::before {
+        content: '';
+        position: absolute;
+        left: -3px;
+        top: 8px;
+        width: 44px;
+        height: 22px;
+        border-top: 1px solid currentColor;
+        border-bottom: 1px solid rgba(255, 217, 160, 0.32);
+        border-radius: 50%;
+        opacity: 0.58;
+        transform: rotate(58deg);
+      }
+
+      .star-gate-icon {
+        position: relative;
+        z-index: 1;
+        width: 26px;
+        height: 26px;
+        stroke: currentColor;
+      }
+
+      .star-gate-spark-a {
+        right: 2px;
+        top: 4px;
+        width: 6px;
+        height: 6px;
+        opacity: 0.88;
+      }
+
+      .star-gate-spark-b {
+        left: 4px;
+        bottom: 3px;
+        width: 4px;
+        height: 4px;
+        opacity: 0.58;
+      }
+
+      /* 心跳波抵达时的一圈扩散。单独挂在 ::after 上，
+         不去打断 .star-core 那条常驻的 pulse。 */
+      .star-core::after {
+        content: '';
+        position: absolute;
+        inset: 3px;
+        border-radius: 50%;
+        border: 1px solid currentColor;
+        opacity: 0;
+      }
+
+      #wish-button.is-flare .star-core::after {
+        animation: flare 900ms ease-out;
+      }
+
+      @keyframes flare {
+        0% {
+          transform: scale(1);
+          opacity: 0.7;
+        }
+        100% {
+          transform: scale(2.2);
+          opacity: 0;
+        }
+      }
+
+      #wish-button.is-birthday .star-core {
+        background: radial-gradient(circle, rgba(255, 158, 192, 0.18) 0 28%, rgba(255, 158, 192, 0) 68%);
+        color: var(--rose);
+        filter: drop-shadow(0 0 12px rgba(255, 158, 192, 0.58));
+      }
+
+      #wish-button.is-birthday .star-gate-orbit {
+        border-bottom-color: rgba(255, 158, 192, 0.25);
+      }
+
+      #wish-button.is-birthday .star-gate-orbit::before {
+        border-bottom-color: rgba(255, 158, 192, 0.32);
+      }
+
+      #wish-button.is-birthday {
+        color: var(--rose);
+      }
+
+      .star-label {
+        color: var(--warm);
+        text-shadow: 0 0 14px rgba(3, 5, 12, 0.95), 0 0 12px rgba(255, 217, 160, 0.16);
+      }
+
+      /*
+        文案两侧的爱心 —— 生日入口的 `.star-label` 与祝福页第一幕的标题共用。
+
+        **绝不能用 `❤`（U+2764）**：不带变体选择符时，iOS 与多数 Android 定制
+        字体都按 emoji 呈现，直接变成一颗系统红心，整行暖金当场被戳破；
+        补 U+FE0E 想要回文本形态，在这两类平台上都时灵时不灵。
+        所以爱心是这里 mask 出来的形状，底色走 currentColor：跟着文字走，
+        永远是 --warm，也不受任何 emoji 字体影响。
+
+        写成 ::before / ::after 还有一个必须的理由：生日态是靠脚本改写
+        `textContent` 切换的，爱心若在文案字符串里就会被一起刷掉；
+        伪元素不在文本节点里，改写多少次都还在。
+
+        mask 只用 longhand。简写会被生产构建的压缩器合并重排，
+        照片流那次 1px 描边糊成色雾就是这么来的。
+      */
+      .has-hearts::before,
+      .has-hearts::after {
+        content: '';
+        display: inline-block;
+        width: 0.86em;
+        height: 0.86em;
+        vertical-align: -0.09em;
+        background-color: currentColor;
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z'/%3E%3C/svg%3E");
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z'/%3E%3C/svg%3E");
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+      }
+
+      /* 爱心与文字之间的间距原本是文案里那个空格，改成外边距后不受字距影响。 */
+      .has-hearts::before {
+        margin-right: 0.62em;
+      }
+
+      .has-hearts::after {
+        margin-left: 0.62em;
+      }
+
+      /* 标题那两颗更大，给一点和文字同源的暖光，别让它读成一枚扁平图标。 */
+      .wish-prelude h1.has-hearts::before,
+      .wish-prelude h1.has-hearts::after {
+        width: 0.66em;
+        height: 0.66em;
+        vertical-align: 0.02em;
+        filter: drop-shadow(0 0 14px rgba(255, 173, 65, 0.34));
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.85;
+        }
+        50% {
+          transform: scale(1.07);
+          opacity: 1;
+        }
+      }
+
+      /* ================ 祝福页 ================ */
+      /* 底色是近黑，唯一的暖源是灯本身——这与参考图一致，也和主界面的深空连得上。 */
+      #face-back {
+        background: radial-gradient(120% 90% at 50% 46%, #150c06 0%, var(--wish-void) 62%);
+        color: var(--paper-ink);
+        overflow: hidden;
+      }
+
+      /* 手工纸的纤维。整页共用一张，靠混合模式压在各层之上。 */
+      .paper-grain {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.16;
+        mix-blend-mode: overlay;
+        pointer-events: none;
+      }
+
+      #wish-act-one,
+      #wish-act-two {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* ---------------- 第一幕：灯 ---------------- */
+      #wish-act-one {
+        display: grid;
+        grid-template-rows: 1fr auto;
+        place-items: center;
+        padding: max(24px, env(safe-area-inset-top)) 20px
+          calc(var(--chrome-bottom, 0px) + max(28px, env(safe-area-inset-bottom)));
+      }
+
+      /* 第一幕只保留站主给定的英文生日标题，灯与 19 颗愿望星仍是主视觉。 */
+      .wish-prelude {
+        position: absolute;
+        z-index: 3;
+        top: max(28px, calc(env(safe-area-inset-top) + 14px));
+        left: 50%;
+        width: min(86vw, 560px);
+        text-align: center;
+        pointer-events: none;
+        transform: translateX(-50%);
+      }
+
+      .wish-prelude h1 {
+        margin: 0;
+        font-family: var(--display-script);
+        font-size: clamp(1.72rem, 5.6vw, 2.5rem);
+        font-weight: 400;
+        line-height: 1.3;
+        letter-spacing: 0.025em;
+        color: var(--warm);
+        text-shadow: 0 0 20px rgba(255, 173, 65, 0.24);
+      }
+
+      /*
+        歌词不做卡片或底框。脚本每次在标题、灯、提示和其他歌词之外寻找随机
+        空位；长段逐行、短句逐字从墨晕里浮现，退场时整段重新晕开。
+      */
+      .wish-lyrics {
+        position: absolute;
+        z-index: 2;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        transition: opacity 260ms ease-out;
+      }
+
+      .wish-lyric {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 0;
+        color: rgba(239, 224, 196, 0.54);
+        font-family: var(--hand);
+        font-size: var(--lyric-size, 13px);
+        font-weight: 400;
+        line-height: 1.82;
+        letter-spacing: 0.075em;
+        text-align: left;
+        text-wrap: pretty;
+        opacity: 0;
+        visibility: hidden;
+        filter: blur(4px);
+        transform: scale(1.018);
+        transform-origin: center;
+        text-shadow:
+          0 1px 14px rgba(10, 6, 3, 0.9),
+          0 0 12px currentColor;
+        transition:
+          opacity var(--lyric-fade, 1100ms) ease,
+          filter var(--lyric-fade, 1100ms) ease,
+          transform var(--lyric-fade, 1100ms) cubic-bezier(0.22, 0.61, 0.24, 1),
+          text-shadow var(--lyric-fade, 1100ms) ease;
+      }
+
+      .wish-lyric[data-tone='teal'] {
+        color: rgba(132, 205, 195, 0.57);
+      }
+
+      .wish-lyric[data-tone='warm'] {
+        color: rgba(239, 224, 196, 0.57);
+      }
+
+      .wish-lyric.is-visible {
+        opacity: 1;
+        visibility: visible;
+        filter: blur(0);
+        transform: scale(1);
+        text-shadow: 0 1px 14px rgba(10, 6, 3, 0.9);
+      }
+
+      .wish-lyric.is-measuring {
+        visibility: hidden;
+        opacity: 0;
+        filter: none;
+        transform: none;
+      }
+
+      .wish-lyric.is-visible.is-leaving {
+        opacity: 0;
+        visibility: visible;
+        filter: blur(7px);
+        transform: scale(1.026);
+        text-shadow:
+          0 1px 14px rgba(10, 6, 3, 0.9),
+          0 0 22px currentColor;
+      }
+
+      .wish-lyric-long {
+        display: none;
+        width: min(82vw, 360px);
+      }
+
+      .wish-lyric-short {
+        width: max-content;
+        max-width: min(68vw, 300px);
+        line-height: 1.72;
+      }
+
+      .lyric-line,
+      .lyric-short-line {
+        display: block;
+      }
+
+      .lyric-line,
+      .lyric-char {
+        opacity: 0;
+        filter: blur(5px);
+        text-shadow: 0 0 15px currentColor;
+      }
+
+      .lyric-char {
+        display: inline;
+      }
+
+      .wish-lyric.is-visible .lyric-line {
+        animation: lyric-line-bleed-in 1100ms cubic-bezier(0.18, 0.68, 0.24, 1) calc(var(--unit-index) * 560ms) both;
+      }
+
+      .wish-lyric.is-visible .lyric-char {
+        animation: lyric-char-bleed-in 720ms cubic-bezier(0.18, 0.68, 0.24, 1) calc(var(--unit-index) * 52ms) both;
+      }
+
+      @keyframes lyric-line-bleed-in {
+        0% {
+          opacity: 0;
+          filter: blur(6px);
+          transform: translateY(4px);
+          text-shadow: 0 0 18px currentColor;
+        }
+        42% {
+          opacity: 0.62;
+          filter: blur(2px);
+          text-shadow: 0 0 11px currentColor;
+        }
+        100% {
+          opacity: 1;
+          filter: blur(0);
+          transform: translateY(0);
+          text-shadow: 0 0 0 transparent;
+        }
+      }
+
+      @keyframes lyric-char-bleed-in {
+        0% {
+          opacity: 0;
+          filter: blur(5px);
+          text-shadow: 0 0 13px currentColor;
+        }
+        48% {
+          opacity: 0.7;
+          filter: blur(1.7px);
+        }
+        100% {
+          opacity: 1;
+          filter: blur(0);
+          text-shadow: 0 0 0 transparent;
+        }
+      }
+
+      @media (min-width: 720px) and (min-aspect-ratio: 4/3) {
+        .wish-lyric-long {
+          display: block;
+          width: min(26vw, 360px);
+        }
+
+        .wish-lyric-short {
+          width: max-content;
+          max-width: min(25vw, 340px);
+          line-height: 1.82;
+        }
+      }
+
+      /*
+        拉灯：绳被拉长 → 弹回 → 整盏灯带着回弹向上飞出，只留下一片光。
+        灯是「被拉了一下然后弹上去」，所以先有一点下沉再上飞，
+        上飞用 back 类曲线，读起来才有绳子的弹性而不是被平移走。
+      */
+      #wish-act-one.is-pulling .lantern-hang {
+        animation: lantern-recoil 900ms cubic-bezier(0.36, -0.24, 0.3, 1) 320ms both;
+      }
+
+      @keyframes lantern-recoil {
+        0% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        14% {
+          transform: translateY(14px);
+          opacity: 1;
+        }
+        62% {
+          opacity: 0.85;
+        }
+        100% {
+          transform: translateY(-118vh);
+          opacity: 0;
+        }
+      }
+
+      /* 引导文案与微尘随灯一起退场，别留在光池里。 */
+      #wish-act-one.is-pulling .lantern-hint,
+      #wish-act-one.is-pulling .wish-prelude,
+      #wish-act-one.is-pulling .wish-lyrics,
+      #wish-act-one.is-pulling .dust {
+        animation: none;
+        opacity: 0;
+        transition: opacity 320ms ease-out;
+      }
+
+      #wish-act-one.is-leaving {
+        opacity: 0;
+        transition: opacity 320ms ease-out;
+        pointer-events: none;
+      }
+
+      .lantern-hang {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: min(74vw, 46vh, 420px);
+      }
+
+      /*
+        绕灯的萤火。只有 5 点，亮度峰值压到 0.55、周期 26–37s——
+        它要像「偶尔有一点在那儿亮了一下」，不是一圈跑马灯。
+        位移只走 translate（独立属性，不与别处的 transform 打架），
+        明灭走 opacity，两条动画各自的周期互不整除，五点因此不会同步。
+      */
+      .fireflies {
+        position: absolute;
+        inset: 6% -14% 10%;
+        pointer-events: none;
+      }
+
+      .firefly {
+        position: absolute;
+        left: var(--fx);
+        top: var(--fy);
+        width: var(--fsize);
+        height: var(--fsize);
+        border-radius: 50%;
+        background: #ffe9b8;
+        box-shadow: 0 0 6px 1px rgba(255, 196, 90, 0.5);
+        opacity: 0;
+        animation-name: firefly-glow, firefly-drift-a;
+        animation-duration: var(--fpulse), var(--fdur);
+        animation-timing-function: ease-in-out, ease-in-out;
+        animation-iteration-count: infinite, infinite;
+        animation-delay: var(--fdelay), var(--fdelay);
+      }
+
+      .firefly-p1 {
+        animation-name: firefly-glow, firefly-drift-b;
+      }
+
+      .firefly-p2 {
+        animation-name: firefly-glow, firefly-drift-c;
+      }
+
+      /* 明灭不对称：亮起来快、暗下去慢，中间还有一次半明的停顿。 */
+      @keyframes firefly-glow {
+        0%,
+        100% {
+          opacity: 0.05;
+        }
+        38% {
+          opacity: 0.55;
+        }
+        58% {
+          opacity: 0.18;
+        }
+        74% {
+          opacity: 0.34;
+        }
+      }
+
+      @keyframes firefly-drift-a {
+        0%,
+        100% {
+          translate: 0 0;
+        }
+        24% {
+          translate: 26px -18px;
+        }
+        49% {
+          translate: 7px -37px;
+        }
+        73% {
+          translate: -21px -13px;
+        }
+      }
+
+      @keyframes firefly-drift-b {
+        0%,
+        100% {
+          translate: 0 0;
+        }
+        27% {
+          translate: -24px -9px;
+        }
+        53% {
+          translate: -9px -32px;
+        }
+        79% {
+          translate: 18px -21px;
+        }
+      }
+
+      @keyframes firefly-drift-c {
+        0%,
+        100% {
+          translate: 0 0;
+        }
+        31% {
+          translate: 15px 14px;
+        }
+        56% {
+          translate: -18px 22px;
+        }
+        82% {
+          translate: -27px -6px;
+        }
+      }
+
+      /* 从画面顶端垂下来的吊绳，灯是挂着的而不是浮着的。 */
+      .lantern-cord {
+        width: 1px;
+        height: min(16vh, 120px);
+        background: linear-gradient(180deg, transparent, rgba(239, 224, 196, 0.5) 40%, rgba(239, 224, 196, 0.72));
+      }
+
+      /* 极慢摇晃：支点在吊绳顶端，所以灯是「荡」而不是「转」。 */
+      .lantern-sway {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        transform-origin: 50% -18%;
+        animation: lantern-sway 7s ease-in-out infinite;
+      }
+
+      /* 19 颗愿望星围住灯面，下方故意断开，让立体拉绳仍是清楚的唯一入口。 */
+      .wish-nineteen {
+        position: absolute;
+        z-index: 0;
+        top: 4%;
+        left: 50%;
+        width: 118%;
+        height: 72%;
+        pointer-events: none;
+        transform: translateX(-50%);
+      }
+
+      .wish-star {
+        position: absolute;
+        left: var(--wish-left);
+        top: var(--wish-top);
+        width: var(--wish-size);
+        height: var(--wish-size);
+        clip-path: polygon(50% 0, 59% 41%, 100% 50%, 59% 59%, 50% 100%, 41% 59%, 0 50%, 41% 41%);
+        opacity: 0.24;
+        transform: translate(-50%, -50%);
+        animation: wish-star-sequence 5.7s ease-in-out var(--wish-delay) infinite;
+      }
+
+      .wish-star-warm {
+        background: #ffd9a0;
+        box-shadow: 0 0 8px rgba(255, 173, 65, 0.52);
+      }
+
+      .wish-star-teal {
+        background: #7fe8d2;
+        box-shadow: 0 0 8px rgba(127, 232, 210, 0.44);
+      }
+
+      @keyframes wish-star-sequence {
+        0%,
+        12%,
+        100% {
+          opacity: 0.22;
+          scale: 0.82;
+        }
+        21% {
+          opacity: 0.92;
+          scale: 1.18;
+        }
+        34% {
+          opacity: 0.36;
+          scale: 1;
+        }
+      }
+
+      @keyframes lantern-sway {
+        0%,
+        100% {
+          rotate: -1.5deg;
+        }
+        50% {
+          rotate: 1.5deg;
+        }
+      }
+
+      .lantern-stage {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        /* 把三维拉绳与挂件一起纳入取景，而不是接一截 DOM 在 canvas 下面。 */
+        aspect-ratio: 0.82;
+      }
+
+      .lantern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        /*
+          画布向下多留一段取景余量：拉绳被拉到最长时木珠与流苏会落到灯底
+          以下，只按灯体取景的话那一截会掉出视锥、在暗底里凭空消失。
+          这个 16% 与 lantern3d.ts 的 CORD_HEADROOM 是同一个数，改一处
+          就得改另一处；相机在脚本里按同样的比例补偿，灯体的成像不变。
+          余量段会盖到引导文案上，所以画布不接指针事件（入口是那个按钮）。
+        */
+        height: 116%;
+        pointer-events: none;
+        /* 光的呼吸：灯本身的外泄辉光跟着一起明暗，幅度刻意很小。 */
+        animation: lantern-breathe 5.2s ease-in-out infinite;
+      }
+
+      @keyframes lantern-breathe {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 26px rgba(255, 140, 26, 0.28)) drop-shadow(0 0 70px rgba(255, 106, 19, 0.16));
+        }
+        50% {
+          filter: drop-shadow(0 0 38px rgba(255, 170, 60, 0.46)) drop-shadow(0 0 110px rgba(255, 120, 30, 0.26));
+        }
+      }
+
+      /* 只在纸灯自己的 WebGL 失败时出现；正常路径始终是八个真实三维纸面。 */
+      .lantern-fallback {
+        position: absolute;
+        inset: 7%;
+        display: none;
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        background:
+          linear-gradient(45deg, transparent 49.2%, #2b1a0e 49.5% 50.5%, transparent 50.8%),
+          linear-gradient(-45deg, transparent 49.2%, #2b1a0e 49.5% 50.5%, transparent 50.8%),
+          radial-gradient(circle at 48% 50%, #fff3bf, #f5a42c 48%, #3c8b82 78%, #225e82);
+        border: 5px solid #2b1a0e;
+        filter: drop-shadow(0 0 32px rgba(255, 140, 26, 0.38));
+      }
+
+      .lantern-stage.lantern-webgl-fallback .lantern {
+        display: none;
+      }
+
+      .lantern-stage.lantern-webgl-fallback .lantern-fallback {
+        display: block;
+      }
+
+      /* 拉绳：第一幕唯一的可点元素。 */
+      #lantern-pull {
+        position: absolute;
+        z-index: 2;
+        left: 50%;
+        bottom: 0;
+        width: max(64px, 22%);
+        height: 35%;
+        padding: 0;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        cursor: pointer;
+        translate: -50% 0;
+        animation: pull-invite 3.8s ease-in-out infinite;
+      }
+
+      #lantern-pull:focus-visible {
+        outline: 0;
+      }
+
+      /*
+        键盘焦点只圈住三维木珠，不用胶囊框把整块透明热区画成 U 形绳。
+
+        **必须锁在有键盘鼠标的设备上。** 进祝福页时脚本会把焦点交给拉绳
+        （读屏与键盘都需要这一步），而 WebKit 把这种程序化 focus 也判成
+        `:focus-visible` —— iPhone 上于是凭空多出一枚套住木珠的金色光环，
+        看起来像个没头没尾的按钮提示。触屏本来就不该出现键盘焦点环。
+      */
+      @media (hover: hover) and (pointer: fine) {
+        #lantern-pull:focus-visible::after {
+          position: absolute;
+          left: 50%;
+          bottom: 13%;
+          width: 32px;
+          height: 32px;
+          content: '';
+          border: 2px solid rgba(255, 224, 158, 0.9);
+          border-radius: 50%;
+          translate: -50% 0;
+          box-shadow: 0 0 13px rgba(255, 170, 60, 0.35);
+        }
+      }
+
+      /* 引导：拉绳自己极轻地上下呼吸，暗示它可以被拉。 */
+      @keyframes pull-invite {
+        0%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.8;
+        }
+        50% {
+          transform: translateY(5px);
+          opacity: 1;
+        }
+      }
+
+      /* WebGL 异常时保留一根可见拉绳；正常路径不会显示这层 CSS 降级。 */
+      .lantern-stage.lantern-webgl-fallback #lantern-pull::before {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 22px;
+        height: 82%;
+        content: '';
+        translate: -50% 0;
+        background:
+          radial-gradient(circle at 50% 58%, #c96a2e 0 7px, transparent 7.5px),
+          linear-gradient(90deg, transparent calc(50% - 0.5px), rgba(239, 224, 196, 0.72) 0 calc(50% + 0.5px), transparent 0);
+        filter: drop-shadow(0 0 8px rgba(255, 140, 26, 0.45));
+      }
+
+      /* 文字引导晚几秒才浮现：先让她看灯，看够了再提示。 */
+      .lantern-hint {
+        margin: 0;
+        font-size: 0.82rem;
+        letter-spacing: 0.3em;
+        text-indent: 0.3em;
+        color: rgba(239, 224, 196, 0.5);
+        opacity: 0;
+        animation: hint-appear 1.6s ease-out 4.5s both, hint-breathe 4s ease-in-out 6.1s infinite;
+      }
+
+      @keyframes hint-appear {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 0.62;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes hint-breathe {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 0.78;
+        }
+      }
+
+      /* 暖色微尘：只在灯的高度范围内可见，极慢上浮。 */
+      .dust {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .dust-mote {
+        position: absolute;
+        left: var(--dust-left);
+        bottom: -6%;
+        width: var(--dust-size);
+        height: var(--dust-size);
+        border-radius: 50%;
+        background: rgba(255, 196, 120, 0.9);
+        box-shadow: 0 0 6px rgba(255, 170, 60, 0.7);
+        opacity: 0;
+        animation: dust-rise var(--dust-duration) linear var(--dust-delay) infinite;
+      }
+
+      @keyframes dust-rise {
+        0% {
+          transform: translate(0, 0);
+          opacity: 0;
+        }
+        14% {
+          opacity: 0.5;
+        }
+        72% {
+          opacity: 0.34;
+        }
+        100% {
+          transform: translate(var(--dust-drift), -108vh);
+          opacity: 0;
+        }
+      }
+
+      /*
+        台灯光池：拉灯之后留下的那片光，随后一直作为第二幕的照明。
+        分成两层是有原因的——第二幕有大量文字，单靠一层「中间亮四周黑」
+        会把边角的字压到读不清。高光走 screen 只加亮，暗角走 multiply 但
+        封顶很低，两者叠出「桌上一盏灯」的感觉而不牺牲可读性。
+      */
+      #lamp-pool {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .lamp-glow,
+      .lamp-vignette {
+        position: absolute;
+        inset: 0;
+      }
+
+      .lamp-glow {
+        mix-blend-mode: screen;
+        background: radial-gradient(
+          ellipse calc(var(--pool-scale, 1) * 62%) calc(var(--pool-scale, 1) * 52%) at 50% 42%,
+          rgba(255, 236, 196, 0.5) 0%,
+          rgba(255, 206, 130, 0.28) 42%,
+          rgba(255, 170, 70, 0.1) 68%,
+          transparent 86%
+        );
+      }
+
+      .lamp-vignette {
+        mix-blend-mode: multiply;
+        background: radial-gradient(
+          ellipse calc(var(--pool-scale, 1) * 78%) calc(var(--pool-scale, 1) * 70%) at 50% 42%,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(120, 84, 48, 0.06) 54%,
+          rgba(58, 36, 18, 0.24) 78%,
+          rgba(28, 16, 8, 0.38) 100%
+        );
+      }
+
+      /*
+        回主界面：信纸碎成的青绿与暖金粒子。画在两个面之外，
+        换回正面那一刻它还继续盖在上面，与银河的开场聚拢无缝交棒。
+      */
+      #letter-dust {
+        position: absolute;
+        inset: 0;
+        z-index: 7;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /*
+        碎裂起手就把祝福面的中央暖色径向底换成深空。信纸尚未退完时看不见这次
+        换底；等纸粒露出背景时，视野中心已经是隧道的暗色消失点。
+      */
+      #face-back.is-dissolving {
+        background: var(--void);
+      }
+
+      /*
+        破口和纸屑使用同一个左下起点、同一段 2.6s 墙钟。纸面不是整体淡掉，而是
+        沿带羽化的边缘逐步被挖空，因此每一批米白纸屑都能从仍可见的纸边剥离。
+      */
+      #face-back.is-dissolving .letter,
+      #face-back.is-dissolving .paper-grain {
+        --letter-cut: 0%;
+        mask-image: radial-gradient(
+          circle farthest-corner at 0% 100%,
+          transparent 0 var(--letter-cut),
+          rgba(0, 0, 0, 0.1) calc(var(--letter-cut) + 1.5%),
+          rgba(0, 0, 0, 0.76) calc(var(--letter-cut) + 5%),
+          #000 calc(var(--letter-cut) + 8%)
+        );
+        -webkit-mask-image: radial-gradient(
+          circle farthest-corner at 0% 100%,
+          transparent 0 var(--letter-cut),
+          rgba(0, 0, 0, 0.1) calc(var(--letter-cut) + 1.5%),
+          rgba(0, 0, 0, 0.76) calc(var(--letter-cut) + 5%),
+          #000 calc(var(--letter-cut) + 8%)
+        );
+        animation: letter-erode var(--dissolve-ms, 2600ms) cubic-bezier(0.34, 0.04, 0.62, 1) forwards;
+      }
+
+      @keyframes letter-erode {
+        to {
+          --letter-cut: 106%;
+        }
+      }
+
+      /*
+        台灯光池必须**先走**，而且要快。
+        它的高光层是 `screen` 混合的一片暖光，钉在画面正中；纸一暗下去，
+        它就成了屏幕中央一团发光——那正是去程星门那段的语言，回程绝不能有。
+        所以这里是 180ms 直接撤掉，不跟着纸一起慢慢淡。
+      */
+      #face-back.is-dissolving #lamp-pool {
+        opacity: 0;
+        transition: opacity 180ms linear;
+      }
+
+      /*
+        两个折角：右下角去下一页、左下角回上一页，各自只在真的还有那一页时出现。
+        左下角是右下角**整个镜像**过去的：`scaleX(-1)` 之后连 hover 与掀起的
+        旋转方向都自动翻正，两边因此共用同一套 clip-path、渐变与动画。
+      */
+      #letter-turn,
+      #letter-turn-prev {
+        position: absolute;
+        right: 0;
+        /*
+          折角**不能贴在 bottom: 0**。信纸铺的是固定层，而固定层按「工具栏收起」
+          的布局视口算：iOS 上地址栏展开时，下缘那一条整个压在工具栏底下，
+          再叠上 home 指示条的手势区，两个角就成了看不见也点不着的死角
+          —— 真机上表现为「信纸无法翻页」。
+          --chrome-bottom 是实测出来的工具栏遮挡（viewport.ts），
+          env() 接手工具栏收起后的指示条；两者同一时刻只有一个非零。
+        */
+        bottom: calc(var(--chrome-bottom, 0px) + env(safe-area-inset-bottom, 0px));
+        width: clamp(56px, 13vw, 76px);
+        height: clamp(56px, 13vw, 76px);
+        padding: 0;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      /* 触屏没有 hover 可以试探，热区给足；折角的可见性在下面单独补。
+         两个条件取并集：个别 Android 定制浏览器会因为支持触控笔而自报
+         `pointer: fine`，但 `hover: none` 仍然成立，不能漏掉那一档。 */
+      @media (hover: none), (pointer: coarse) {
+        #letter-turn,
+        #letter-turn-prev {
+          width: clamp(64px, 18vw, 88px);
+          height: clamp(64px, 18vw, 88px);
+        }
+      }
+
+      #letter-turn-prev {
+        right: auto;
+        left: 0;
+        transform: scaleX(-1);
+      }
+
+      /* 掀起后露出的下层纸：比正面深一点，边上带一道折痕的影。 */
+      .dogear-under {
+        position: absolute;
+        inset: 0;
+        clip-path: polygon(100% 0, 100% 100%, 0 100%);
+        background: linear-gradient(225deg, rgba(58, 36, 18, 0.3), rgba(58, 36, 18, 0.06) 42%, transparent 62%);
+      }
+
+      /* 翻折起来的那一角：背面朝上，所以更亮、带纸的厚度感。 */
+      .dogear-flap {
+        position: absolute;
+        inset: 0;
+        clip-path: polygon(100% 0, 100% 100%, 0 100%);
+        background: linear-gradient(225deg, #fdf6e6 0%, var(--paper) 46%, var(--paper-deep) 100%);
+        box-shadow: -2px -2px 8px -2px rgba(58, 36, 18, 0.45);
+        transform-origin: 100% 100%;
+        transition: transform 260ms cubic-bezier(0.3, 0.72, 0.24, 1);
+        animation: dogear-invite 4.2s ease-in-out infinite;
+      }
+
+      /* 两个折角别同时抽动：错开半个周期，看起来才是两处独立的纸角。 */
+      #letter-turn-prev .dogear-flap {
+        animation-delay: -2.1s;
+      }
+
+      /* 引导：折角自己极轻地掀一下再落回，暗示它可以被掰起来。 */
+      @keyframes dogear-invite {
+        0%,
+        88%,
+        100% {
+          transform: scale(1);
+        }
+        94% {
+          transform: scale(0.86) rotate(-3deg);
+        }
+      }
+
+      #letter-turn:hover .dogear-flap,
+      #letter-turn-prev:hover .dogear-flap {
+        transform: scale(0.82) rotate(-5deg);
+      }
+
+      /* 点下时先把折角整个掰起来，翻页的横移紧跟其后。 */
+      #letter-turn.is-turning .dogear-flap,
+      #letter-turn-prev.is-turning .dogear-flap {
+        animation: none;
+        transform: scale(0.3) rotate(-16deg);
+      }
+
+      /*
+        触屏上必须把折角**画出来**。它原本只靠自己那层米色渐变和一道 box-shadow
+        提示存在，但 `clip-path` 会把 box-shadow 连同其他绘制一起裁掉 ——
+        剩下的就是一块和纸几乎同色的三角，小屏上根本读不出来，
+        真机上于是读作「这封信只有一页」。
+
+        这里在斜边内侧补一道折痕的影：315deg 的等值线正好与斜边平行，50%
+        就落在斜边上，再往后一点是三角形内侧。**必须写在基础规则之后**，
+        否则同为 (0,1,0) 的 .dogear-flap 会按源码顺序把它盖掉。
+        桌面一行不动，站主验收过的观感保持原样。
+
+        翻页本身还多了一条横划（wish.ts），折角只是提示，不是唯一入口。
+      */
+      /*
+        第二幕第一次落定时，右下角那枚折角明显地掀两下再落回。
+        触屏没有 hover 可以试探，常驻的 dogear-invite 太轻 —— 站主实测时
+        根本没注意到折角的存在。只演已有的那枚角，不加新元素、不加文案。
+        触屏专属：桌面有 hover，不需要这一下。
+      */
+      @media (hover: none), (pointer: coarse) {
+        #letter-turn.is-first-hint .dogear-flap {
+          animation: dogear-first-hint 1300ms cubic-bezier(0.32, 0.7, 0.26, 1) 2;
+        }
+
+        @keyframes dogear-first-hint {
+          0%,
+          100% {
+            transform: scale(1);
+          }
+          34% {
+            transform: scale(0.62) rotate(-11deg);
+          }
+          62% {
+            transform: scale(0.72) rotate(-8deg);
+          }
+        }
+      }
+
+      @media (hover: none), (pointer: coarse) {
+        .dogear-flap {
+          background-image:
+            linear-gradient(
+              315deg,
+              transparent 49.5%,
+              rgba(58, 36, 18, 0.46) 50%,
+              rgba(58, 36, 18, 0.18) 55%,
+              rgba(58, 36, 18, 0) 68%
+            ),
+            /*
+              整片比纸底亮一档：折起来的是纸背，本来就该比压在下面的纸浅。
+              最暗处停在 --paper，不能落到 --paper-deep —— 那是右下角纸底自己的
+              颜色，一撞上就又糊成一块了。
+            */
+            linear-gradient(225deg, #fffaef 0%, #f8ecd6 52%, var(--paper) 100%);
+        }
+      }
+
+      /* ---------------- 第二幕：信 ---------------- */
+      /* 信纸铺满整屏，桌面两栏、移动端单栏；超出的内容顺着多栏溢出成后续页。 */
+      #wish-act-two {
+        /* 一条横线的间距，同时就是正文行高——字才落得到线上。
+           这里只给「大约多高」，真正生效的值由 wish.ts 的 snapRule() 取整后
+           写成行内样式盖回来：行盒会被引擎向下取整而条纹不会，带小数就会逐行
+           累积错位。改这一行要连 snapRule() 一起看。 */
+        --rule: clamp(1.95rem, 4.4vh, 2.35rem);
+        --letter-pad-x: clamp(26px, 6vw, 76px);
+        --letter-pad-y: clamp(40px, 7vh, 78px);
+        --col-gap: clamp(28px, 5vw, 64px);
+      }
+
+      .letter {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(168deg, #fdf3dd, var(--paper) 54%, var(--paper-deep));
+      }
+
+      /*
+        青色浸染：不规则的几片，压在左下与右上，透明度压到不碍阅读。
+        暖色两片是**静止的底**（纸本身的旧色），只有青晕在游走——两者都动的话
+        整张纸会像在晃。
+      */
+      .letter-stain {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        opacity: 0.5;
+        background:
+          radial-gradient(42% 34% at 92% 12%, rgba(90, 154, 85, 0.26), transparent 72%),
+          radial-gradient(70% 52% at 96% 88%, rgba(255, 179, 71, 0.22), transparent 70%);
+      }
+
+      /*
+        游走的青晕。三片各自一个**互质的周期**（53s / 71s / 89s），合起来在肉眼
+        尺度上不重复，看着就是随机漂移；用三条真随机路径反而要挂 JS 帧循环，
+        为一层背景不值得。位移只走 transform，不动 background-position——
+        后者每帧都要重画整片渐变。
+      */
+      .stain-drift {
+        position: absolute;
+        /* 比信纸大一圈：漂出去时边上不会露出渐变的收口。 */
+        inset: -22%;
+        will-change: transform;
+      }
+
+      /* 百分比都是相对这个放大过的盒子算的，换算回信纸约等于原来那三片的位置。 */
+      .stain-drift-a {
+        background: radial-gradient(40% 32% at 22% 76%, rgba(42, 127, 168, 0.5), transparent 70%);
+        animation: stain-wander-a 53s ease-in-out infinite;
+      }
+
+      .stain-drift-b {
+        background: radial-gradient(21% 18% at 32% 67%, rgba(42, 127, 168, 0.34), transparent 72%);
+        animation: stain-wander-b 71s ease-in-out infinite;
+      }
+
+      .stain-drift-c {
+        background: radial-gradient(24% 20% at 50% 58%, rgba(56, 140, 172, 0.2), transparent 74%);
+        animation: stain-wander-c 89s ease-in-out infinite;
+      }
+
+      /* 幅度都很小：这是纸上的一片湿痕在慢慢洇开，不是一颗在飘的球。 */
+      @keyframes stain-wander-a {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        23% {
+          transform: translate3d(4.5%, -3%, 0) scale(1.07);
+        }
+        46% {
+          transform: translate3d(1.5%, -7%, 0) scale(0.96);
+        }
+        72% {
+          transform: translate3d(-4%, -2.5%, 0) scale(1.05);
+        }
+      }
+
+      @keyframes stain-wander-b {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        29% {
+          transform: translate3d(-5%, 4%, 0) scale(1.1);
+        }
+        54% {
+          transform: translate3d(3%, 6.5%, 0) scale(0.94);
+        }
+        81% {
+          transform: translate3d(6%, 1%, 0) scale(1.04);
+        }
+      }
+
+      @keyframes stain-wander-c {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        34% {
+          transform: translate3d(-6.5%, 3.5%, 0) scale(0.93);
+        }
+        61% {
+          transform: translate3d(-2%, 8%, 0) scale(1.08);
+        }
+        86% {
+          transform: translate3d(4%, 5%, 0) scale(1.02);
+        }
+      }
+
+      /*
+        夹在信里的干花。压在右上角的空处，尺寸跟着边距走，
+        窄屏上自动缩小；不透明度压到 0.42，它是纸的一部分而不是一枚图标。
+      */
+      .letter-pressed {
+        position: absolute;
+        top: calc(var(--letter-pad-y) * 0.55);
+        right: calc(var(--letter-pad-x) * 0.5);
+        width: clamp(44px, 8vw, 68px);
+        height: clamp(44px, 8vw, 68px);
+        overflow: visible;
+        opacity: 0.42;
+        pointer-events: none;
+      }
+
+      .pressed-petal,
+      .pressed-leaf {
+        fill: rgba(64, 132, 158, 0.16);
+        stroke: rgba(52, 104, 126, 0.5);
+        stroke-width: 0.8;
+        stroke-linejoin: round;
+      }
+
+      .pressed-leaf {
+        fill: rgba(86, 138, 96, 0.16);
+        stroke: rgba(70, 112, 78, 0.42);
+      }
+
+      .pressed-heart {
+        fill: rgba(120, 92, 58, 0.3);
+        stroke: rgba(90, 68, 42, 0.42);
+        stroke-width: 0.7;
+      }
+
+      /*
+        对折过一次的折痕。上缘提亮、正中压暗、下缘再提一点，
+        三道都极浅——纸上的折痕就是这样，看得出来但读不出边。
+        整层盖满信纸，所以翻页时它**不动**，与横线同一个道理。
+      */
+      .letter-fold {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+          180deg,
+          transparent calc(50% - 30px),
+          rgba(255, 252, 242, 0.34) calc(50% - 4px),
+          rgba(96, 68, 38, 0.14) calc(50% - 0.5px),
+          rgba(96, 68, 38, 0.14) calc(50% + 0.5px),
+          rgba(255, 250, 236, 0.28) calc(50% + 5px),
+          transparent calc(50% + 30px)
+        );
+      }
+
+      /* 磨砂颗粒。混合模式用 overlay，颗粒才是压在纸里而不是浮在纸上。 */
+      .letter-frost {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.5;
+        mix-blend-mode: overlay;
+        pointer-events: none;
+      }
+
+      /*
+        横线画在这一层，不画在 .letter-body 上。
+        .letter-body 是多栏溢出的，它的背景只覆盖自身那一个视口宽的盒子；
+        一旦横移到后面的页，就滚出了背景绘制区、横线整片消失。
+        横线本来也该是「纸上的」而不是「跟着文字走的」——翻页时它不该动。
+      */
+      .letter-viewport {
+        position: absolute;
+        inset: var(--letter-pad-y) var(--letter-pad-x);
+        /* 正文同样不能钻到手机工具栏底下：末行会被吃掉，页数也跟着算错。 */
+        bottom: calc(var(--letter-pad-y) + var(--chrome-bottom, 0px) + env(safe-area-inset-bottom, 0px));
+        overflow: hidden;
+        /* 信是手写的；这一页别处仍然用 --serif。 */
+        font-family: var(--hand);
+        font-weight: 400;
+        font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+        line-height: var(--rule);
+        background-image: repeating-linear-gradient(
+          180deg,
+          transparent 0,
+          transparent calc(var(--rule) - 1px),
+          rgba(120, 92, 58, 0.26) calc(var(--rule) - 1px),
+          rgba(120, 92, 58, 0.26) var(--rule)
+        );
+        /*
+          横线要贴着字脚。落点由 `wish.ts` **实测基线**后写进 --rule-offset：
+          网络字体载入前后的基线会差几像素，写死就一定会错；实测也让字体加载
+          失败后的衬线回退仍能保持字脚与横线对齐。
+
+          下面的 calc 是 JS 量出来之前的兜底（也兼顾 JS 失败的情况）：
+          0.411em 是 Noto Serif SC「上伸部 − 半个内容高」的实测值，减掉半个行高
+          之后字脚到线的间距与 --rule 无关。
+        */
+        --rule-gap: 3.5px;
+        background-position: 0 var(--rule-offset, calc(0.411em + var(--rule-gap) - var(--rule) / 2));
+      }
+
+      /*
+        双栏中缝：一条线 + 几朵白描小花。整块位置由脚本算好，单栏时整块藏起来。
+        容器本身零宽，钉在中缝那条竖线上，线与花都相对它定位。
+      */
+      #letter-seam {
+        position: absolute;
+        top: var(--letter-pad-y);
+        /* 与 .letter-viewport 同底，中缝才不会比正文多伸出一截。 */
+        bottom: calc(var(--letter-pad-y) + var(--chrome-bottom, 0px) + env(safe-area-inset-bottom, 0px));
+        left: var(--divider-x, 50%);
+        width: 0;
+        pointer-events: none;
+      }
+
+      /*
+        高度必须写死，不能只给 top/bottom：SVG 有来自 viewBox 的固有宽高比，
+        height 为 auto 时它会按 12:1000 自己算出 1000px，直接冲出视口。
+      */
+      #letter-divider {
+        position: absolute;
+        inset: 0 auto 0 -6px;
+        height: 100%;
+        width: 12px;
+        overflow: visible;
+      }
+
+      #letter-divider path {
+        fill: none;
+        stroke: rgba(120, 92, 58, 0.34);
+        stroke-width: 1;
+        stroke-linecap: round;
+      }
+
+      /* 极淡的第二道，错开一点点，读起来像印上去的而不是画上去的。 */
+      #letter-divider .divider-echo {
+        stroke: rgba(120, 92, 58, 0.14);
+        transform: translateX(2.5px);
+      }
+
+      /*
+        中缝小花。每朵是一张独立的正常比例小图，`--at` 定沿线的位置、
+        `--shift` 定落在线的左边还是右边、`--spin` 是那点让它不对称的零头角度。
+        整朵画在 52 单位见方的 viewBox 里，渲染成 68px × --scale 的方框。
+      */
+      .seam-bloom {
+        position: absolute;
+        top: var(--at);
+        left: 0;
+        width: calc(68px * var(--scale, 1));
+        height: calc(68px * var(--scale, 1));
+        translate: calc(-50% + var(--shift)) -50%;
+        rotate: var(--spin, 0deg);
+        overflow: visible;
+        fill: none;
+        stroke: rgba(120, 92, 58, 0.4);
+        /* 线随缩放变细会糊；stroke-width 按 --scale 反算，五朵的笔触因此一样粗。 */
+        stroke-width: calc(0.72 / var(--scale, 1));
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* 花瓣比枝叶实一点，花心最实——白描花的层次全在这三档深浅上。 */
+      .bloom-petal,
+      .bloom-bud {
+        stroke: rgba(120, 92, 58, 0.46);
+      }
+
+      .bloom-heart {
+        fill: rgba(120, 92, 58, 0.2);
+        stroke: rgba(120, 92, 58, 0.5);
+      }
+
+      .bloom-stamen,
+      .bloom-vein {
+        stroke: rgba(120, 92, 58, 0.3);
+        stroke-width: calc(0.52 / var(--scale, 1));
+      }
+
+      .bloom-leaf {
+        stroke: rgba(120, 92, 58, 0.34);
+      }
+
+      /*
+        分页靠多栏溢出：容器高度固定 + column-fill:auto，放不下的内容会继续
+        向右生成新的一栏并溢出盒子，翻页就是把整块横移一个「页宽」。
+        桌面两栏、移动端单栏，只是栏数不同，机制完全一样。
+
+        栏数由 wish.ts 写进 --col-count，**不能改回 column-width**：那要浏览器
+        自己反推栏数，而半栏宽正好卡在 2 栏的边界上，实际宽度只要带小数就会
+        塌成单栏（见 wish.ts 里的注释）。
+      */
+      .letter-body {
+        height: 100%;
+        column-gap: var(--col-gap);
+        column-fill: auto;
+        column-count: var(--col-count, 1);
+        color: var(--paper-ink);
+        text-align: left;
+        transform: translateX(calc(var(--page, 0) * -1 * var(--page-advance, 0px)));
+        transition: transform 620ms cubic-bezier(0.3, 0.72, 0.24, 1);
+      }
+
+      .wish-salutation {
+        margin: 0;
+        font-weight: 400;
+        color: var(--paper-ink);
+      }
+
+      /* 中文段落规范：每段首行缩进两个字。 */
+      .wish-line {
+        margin: 0;
+        text-indent: 2em;
+        color: var(--paper-ink);
+      }
+
+      .wish-sign {
+        /* 落款仍然占整数格，否则后面的横线会整体错位。多行同理：行高就是
+           横线间距，两行正好占两格。换行靠 pre-line 认字符串里的 \n，
+           不塞 <br>，落款因此仍是站主可以直接改的一个纯文本数组。 */
+        margin: var(--rule) 0 0;
+        text-align: right;
+        white-space: pre-line;
+        /* 落款被拆到两栏（或两页）上会很难看，整块一起走。 */
+        break-inside: avoid;
+        letter-spacing: 0.24em;
+        color: var(--paper-ink-soft);
+      }
+
+      /*
+        墨迹渗现：透明度渐显 + 三片从不同位置涨开的遮罩 + 1.5px 极轻模糊收实。
+        三片而不是一片，渗开的前沿才是分瓣的，读作墨在宣纸上洇，
+        而不是一个圆形的聚光灯。全程 900ms，末态必须是完全锐利的。
+      */
+      .letter-body {
+        opacity: 0;
+        mask-image:
+          radial-gradient(circle, #000 34%, rgba(0, 0, 0, 0.35) 62%, transparent 82%),
+          radial-gradient(circle, #000 34%, rgba(0, 0, 0, 0.35) 62%, transparent 82%),
+          radial-gradient(circle, #000 34%, rgba(0, 0, 0, 0.35) 62%, transparent 82%);
+        -webkit-mask-image:
+          radial-gradient(circle, #000 34%, rgba(0, 0, 0, 0.35) 62%, transparent 82%),
+          radial-gradient(circle, #000 34%, rgba(0, 0, 0, 0.35) 62%, transparent 82%),
+          radial-gradient(circle, #000 34%, rgba(0, 0, 0, 0.35) 62%, transparent 82%);
+        mask-repeat: no-repeat;
+        -webkit-mask-repeat: no-repeat;
+        mask-position: 26% 22%, 74% 56%, 44% 92%;
+        -webkit-mask-position: 26% 22%, 74% 56%, 44% 92%;
+        mask-size: 0 0, 0 0, 0 0;
+        -webkit-mask-size: 0 0, 0 0, 0 0;
+      }
+
+      #wish-act-two.is-inking .letter-body {
+        /* will-change 只在这 1600ms 里挂着，动画一结束就由脚本摘掉。 */
+        will-change: opacity, filter;
+        animation: ink-bleed 1600ms cubic-bezier(0.25, 0.66, 0.28, 1) both;
+      }
+
+      /* 渗完之后的常驻状态：无遮罩、无模糊、完全锐利。 */
+      #wish-act-two.is-inked .letter-body {
+        opacity: 1;
+        filter: none;
+        mask-image: none;
+        -webkit-mask-image: none;
+      }
+
+      @keyframes ink-bleed {
+        0% {
+          opacity: 0;
+          filter: blur(1.5px);
+          mask-size: 0 0, 0 0, 0 0;
+          -webkit-mask-size: 0 0, 0 0, 0 0;
+        }
+        38% {
+          opacity: 0.72;
+          filter: blur(1.1px);
+        }
+        100% {
+          opacity: 1;
+          filter: blur(0);
+          mask-size: 230% 230%, 210% 210%, 240% 240%;
+          -webkit-mask-size: 230% 230%, 210% 210%, 240% 240%;
+        }
+      }
+
+      /* 信末的银河印记：回主界面的入口。断栏会让它落到奇怪的位置。 */
+      #postcard-back-button {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        /* 贴着落款走，不再空出整整一格。印记后面没有正文，
+           这里不占整数格也不会让任何横线错位。 */
+        margin: calc(var(--rule) * 0.4) 0 0 auto;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+        break-inside: avoid;
+      }
+
+      #postcard-back-button svg {
+        width: 22px;
+        height: 22px;
+        overflow: visible;
+        animation: back-star-breathe 3.4s ease-in-out infinite;
+      }
+
+      #postcard-back-button path {
+        fill: url(#letter-galaxy-gradient);
+      }
+
+      .back-star-stop {
+        animation: back-star-gradient 6.6s ease-in-out infinite;
+      }
+
+      .back-star-stop-cold {
+        stop-color: #1b5b82;
+      }
+
+      .back-star-stop-teal {
+        stop-color: #3fd0b4;
+        animation-delay: -2.2s;
+      }
+
+      .back-star-stop-warm {
+        stop-color: #ffd9a0;
+        animation-delay: -4.4s;
+      }
+
+      @keyframes back-star-gradient {
+        0%,
+        100% {
+          stop-color: #1b5b82;
+        }
+        33% {
+          stop-color: #3fd0b4;
+        }
+        66% {
+          stop-color: #ffd9a0;
+        }
+      }
+
+      @keyframes back-star-breathe {
+        0%,
+        100% {
+          opacity: 0.5;
+          transform: scale(0.9) rotate(0deg);
+          filter: drop-shadow(0 0 0 rgba(27, 91, 130, 0));
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.1) rotate(8deg);
+          filter:
+            drop-shadow(0 0 6px rgba(63, 208, 180, 0.58))
+            drop-shadow(0 0 10px rgba(255, 217, 160, 0.28));
+        }
+      }
+
+      #postcard-back-button:hover svg {
+        opacity: 1;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--warm);
+        outline-offset: 4px;
+      }
+
+      #wish-act-two :focus-visible {
+        outline-color: #a4713a;
+      }
+
+      /*
+        分页的救生圈。`wish.ts` 里那轮「求总栏数」的迭代如果没能收敛
+        （多栏行为完全在意料之外的引擎），整封信退成竖向可滚动的单栏：
+        翻页的观感没了，但**信一个字都不会丢**。正常路径永远不会加上这个类。
+        选择器带 `#wish-act-two` 才压得过 `.letter-body` 自己那几条。
+      */
+      #wish-act-two.is-scroll-fallback .letter-viewport {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+      }
+
+      #wish-act-two.is-scroll-fallback .letter-body {
+        width: auto;
+        height: auto;
+        column-count: 1;
+        transform: none;
+      }
+
+      /* 竖屏：展开层横向铺满，第一幕上移让出银河。 */
+      @media (max-width: 719px) {
+        #act-one {
+          top: 62%;
+        }
+
+        #node-panel {
+          width: calc(100vw - 32px);
+        }
+
+        .node.is-detail-launch .node-star-mark::after {
+          content: '';
+          position: absolute;
+          left: 50%;
+          top: calc(100% + 1px);
+          width: 2px;
+          height: 2px;
+          border-radius: 50%;
+          background: var(--warm);
+          box-shadow: 0 0 6px rgba(255, 217, 160, 0.7);
+          animation: node-detail-drop 480ms ease-out;
+        }
+
+        @keyframes node-detail-drop {
+          0% {
+            transform: translate(-50%, -2px);
+            opacity: 0;
+          }
+          28% {
+            opacity: 0.82;
+          }
+          100% {
+            transform: translate(-50%, 9px);
+            opacity: 0;
+          }
+        }
+      }
+
+      /* ---------------- 减弱动效：全部静止 ---------------- */
+      @media (prefers-reduced-motion: reduce) {
+        #face-back,
+        #face-back.is-present,
+        #act-one,
+        #node-panel,
+        .node,
+        .node-star-mark,
+        #memory-stream,
+        #wish-button,
+        .fill,
+        #scroll-hint,
+        #postcard-back-button {
+          transition: none !important;
+        }
+
+        .num-s.beat,
+        .hint-arrow,
+        .ambient-twinkle,
+        #node-panel,
+        #music-hint,
+        .lantern,
+        .lantern-sway,
+        #lantern-pull,
+        .lantern-hint,
+        .wish-star,
+        .memory-lane,
+        .memory-track,
+        .memory-glint,
+        #memory-stream::before,
+        #memory-stream::after,
+        .memory-cell::after,
+        .lyric-line,
+        .lyric-char,
+        .dust-mote,
+        .firefly,
+        #postcard-back-button svg,
+        .back-star-stop,
+        .letter-body,
+        .stain-drift,
+        .dogear-flap,
+        .milestone-echo,
+        .node.is-detail-launch .node-star-mark,
+        .node.is-detail-launch .node-star-mark::after,
+        .panel-surface,
+        .panel-trace,
+        .panel-mobile-edge,
+        .star-core,
+        .star-core::after {
+          animation: none !important;
+        }
+
+        .panel-surface {
+          mask-image: none !important;
+          -webkit-mask-image: none !important;
+          opacity: 1 !important;
+        }
+
+        #node-panel {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+
+        /* 减弱动效下不做穿越：背面直接就位，白光永不出现。 */
+        #face-back {
+          transform: none !important;
+        }
+
+        #gate-flash,
+        #letter-dust,
+        .dust {
+          display: none !important;
+        }
+
+        /* 祝福页全部静止：灯不摇不呼吸，信直接是渗完的锐利状态。 */
+        .lantern-hint {
+          opacity: 1 !important;
+        }
+
+        .letter-body {
+          opacity: 1 !important;
+          filter: none !important;
+          mask-image: none !important;
+          -webkit-mask-image: none !important;
+          transition: none !important;
+        }
+
+        .dogear-flap {
+          transform: none !important;
+        }
+
+        /* 青晕停在起点，`will-change` 也一并摘掉：静止的层不该常驻合成层。 */
+        .stain-drift {
+          transform: none !important;
+          will-change: auto !important;
+        }
+
+        /* 萤火的常驻亮度写在动画里，停掉动画得把它补回来，否则五点全是透明的。 */
+        .firefly {
+          opacity: 0.36 !important;
+          translate: none !important;
+        }
+
+        .wish-lyric {
+          filter: none !important;
+          transform: none !important;
+          transition: none !important;
+        }
+
+        .wish-lyric.is-visible,
+        .lyric-line,
+        .lyric-char {
+          opacity: 1 !important;
+          filter: none !important;
+          text-shadow: none !important;
+        }
+
+        .panel-border-trace,
+        .panel-mobile-edge {
+          display: none !important;
+        }
+
+        .ambient-twinkle {
+          opacity: 0.5;
+          transform: none;
+        }
+
+        .memory-track {
+          transform: none !important;
+          will-change: auto;
+        }
+
+        .memory-lane {
+          translate: none !important;
+          will-change: auto;
+        }
+
+        .memory-glint {
+          opacity: 0.26 !important;
+          transform: none !important;
+        }
+
+        .wish-star {
+          opacity: 0.5;
+          scale: 1;
+        }
+      }
+    </style>
+  </body>
+</html>

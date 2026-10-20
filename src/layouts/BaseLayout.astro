@@ -1,0 +1,139 @@
+---
+import '../styles/global.css';
+import fontStylesheet from '../styles/fonts.css?url';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { discoveryPaths, getAlternateLocale, getAlternatePath, getPagePath, localeConfig, type Locale, type PageKey } from '../data/site';
+import { toPublicAssetUrl } from '../lib/assets';
+
+interface Props {
+  title?: string;
+  description?: string;
+  locale?: Locale;
+  pageKey?: PageKey;
+  /** Override the canonical path for pages outside the core page map, e.g. Wander detail pages. */
+  path?: string;
+  /** Override the translated counterpart used by hreflang metadata. */
+  alternatePath?: string;
+  /** Override the x-default path for custom bilingual routes. */
+  xDefaultPath?: string;
+  /** Override only the header language-switch destination. */
+  languagePath?: string;
+  /** Set false for content pages that have no language counterpart. */
+  hasAlternate?: boolean;
+  ogImage?: string;
+  ogImageAlt?: string;
+  ogType?: 'website' | 'article';
+  publishedTime?: Date | string;
+  noindex?: boolean;
+}
+
+const {
+  title = 'Elen Skye',
+  description = 'A bilingual personal website for work, writing, art, and current life.',
+  locale = 'zh',
+  pageKey,
+  path,
+  alternatePath: alternatePathOverride,
+  xDefaultPath: xDefaultPathOverride,
+  languagePath,
+  hasAlternate = true,
+  ogImage,
+  ogImageAlt,
+  ogType = 'website',
+  publishedTime,
+  noindex = false,
+} = Astro.props;
+
+const lang = localeConfig[locale].lang;
+const alternateLocale = getAlternateLocale(locale);
+const currentPath = path ?? (pageKey ? getPagePath(pageKey, locale) : '/');
+const alternatePath = alternatePathOverride ?? (pageKey ? getAlternatePath(pageKey, locale) : currentPath);
+const site = Astro.site ?? new URL('https://elenskye.com');
+const canonicalUrl = new URL(currentPath, site).toString();
+const alternateUrl = new URL(alternatePath, site).toString();
+const xDefaultPath = xDefaultPathOverride ?? (pageKey ? getPagePath(pageKey, 'zh') : currentPath);
+const xDefaultUrl = new URL(xDefaultPath, site).toString();
+const usesDefaultOgImage = !ogImage;
+const ogImageUrl = new URL(toPublicAssetUrl(ogImage) ?? '/images/og/default.png', site).toString();
+const resolvedOgImageAlt =
+  ogImageAlt ??
+  (usesDefaultOgImage
+    ? locale === 'zh'
+      ? '朱红日轮、流云与深色街屋构成的「呦呦漫游」插画'
+      : 'Wander illustration with a vermilion sun, flowing clouds, and dark rooftops'
+    : title);
+const ogLocale = locale === 'zh' ? 'zh_CN' : 'en_US';
+const alternateOgLocale = locale === 'zh' ? 'en_US' : 'zh_CN';
+const publishedTimeIso = publishedTime
+  ? (publishedTime instanceof Date ? publishedTime : new Date(publishedTime)).toISOString()
+  : undefined;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <script is:inline>
+      // Set the color mode before first paint: stored choice wins,
+      // otherwise follow the system preference.
+      (() => {
+        const stored = localStorage.getItem('theme');
+        const theme =
+          stored === 'light' || stored === 'dark'
+            ? stored
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {/* Fontsource's unicode-range stylesheet is non-blocking; its default
+        `swap` behavior then replaces the fallback with the selected local
+        family as soon as each required slice is ready. */}
+    <link rel="stylesheet" href={fontStylesheet} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href={fontStylesheet} /></noscript>
+    {/* iOS home screen: Safari does not accept an SVG here, so this PNG is a
+        rasterized copy of assets/images/app-icon-180.svg. Regenerate it from
+        that SVG if the mark ever changes. */}
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={locale === 'zh' ? '呦呦漫游 RSS' : 'Elen Skye · Wander RSS'}
+      href={discoveryPaths.rss[locale]}
+    />
+    <link rel="canonical" href={canonicalUrl} />
+    {hasAlternate && <link rel="alternate" hreflang={lang} href={canonicalUrl} />}
+    {hasAlternate && <link rel="alternate" hreflang={localeConfig[alternateLocale].lang} href={alternateUrl} />}
+    {hasAlternate && <link rel="alternate" hreflang="x-default" href={xDefaultUrl} />}
+    <meta property="og:site_name" content="Elen Skye · 呦呦漫游" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content={ogLocale} />
+    {hasAlternate && <meta property="og:locale:alternate" content={alternateOgLocale} />}
+    <meta property="og:image" content={ogImageUrl} />
+    {usesDefaultOgImage && <meta property="og:image:width" content="1200" />}
+    {usesDefaultOgImage && <meta property="og:image:height" content="630" />}
+    <meta property="og:image:alt" content={resolvedOgImageAlt} />
+    {ogType === 'article' && publishedTimeIso && <meta property="article:published_time" content={publishedTimeIso} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={resolvedOgImageAlt} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">{locale === 'zh' ? '跳到主要内容' : 'Skip to main content'}</a>
+    <SiteHeader locale={locale} pageKey={pageKey} languageHref={languagePath ?? alternatePathOverride} />
+    <slot />
+    <SiteFooter locale={locale} />
+  </body>
+</html>

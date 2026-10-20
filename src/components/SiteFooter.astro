@@ -1,0 +1,100 @@
+---
+import { BriefcaseBusiness, GitBranch, Globe2, Mail, Rss, type LucideIcon } from 'lucide-react';
+import { brandMarks, brandMarkViewBox } from '../data/brand-marks';
+import {
+  discoveryPaths,
+  localeConfig,
+  navItems,
+  pagePaths,
+  socialLinks,
+  wanderCategories,
+  type Locale,
+} from '../data/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const heading = localeConfig[locale].footerHeading;
+const browseLabel = localeConfig[locale].browseLabel;
+
+// Category links intentionally point to the Wander wall until formal
+// bilingual Category pages replace these preparatory destinations.
+const wanderHome = pagePaths.wander[locale];
+const footerLinks = [
+  ...navItems[locale].map((item) => ({ label: item.label, href: item.href })),
+  { label: locale === 'zh' ? '站内搜索' : 'Search', href: discoveryPaths.search[locale] },
+  ...wanderCategories.map((category) => ({ label: category.label[locale], href: wanderHome })),
+];
+const firstColumn = footerLinks.slice(0, 6);
+const secondColumn = footerLinks.slice(6, 12);
+
+// Official brand marks win where the platform allows redistribution
+// (see src/data/brand-marks.ts). Everything else keeps a Lucide semantic
+// icon, so an unregistered platform still renders a sensible entry.
+const socialIcons: Record<string, LucideIcon> = {
+  github: GitBranch,
+  linkedin: BriefcaseBusiness,
+  email: Mail,
+};
+---
+
+<footer class="site-footer" data-pagefind-ignore>
+  <div class="footer-inner">
+    <div class="footer-intro">
+      <p class="footer-heading">{heading}</p>
+      <a class="footer-rss-link" href={discoveryPaths.rss[locale]}>
+        <Rss aria-hidden="true" size={20} strokeWidth={1.8} />
+        <span>RSS Feed</span>
+      </a>
+      <div class="footer-social" aria-label={locale === 'zh' ? '外部链接' : 'External links'}>
+        {
+          socialLinks.map((link) => {
+            const mark = brandMarks[link.key];
+            const SocialIcon = socialIcons[link.key] ?? Globe2;
+            return (
+              <a
+                href={link.href}
+                aria-label={link.label}
+                target={link.href.startsWith('http') ? '_blank' : undefined}
+                rel={link.href.startsWith('http') ? 'noreferrer' : undefined}
+              >
+                {mark ? (
+                  <svg
+                    class="brand-mark"
+                    viewBox={brandMarkViewBox(mark)}
+                    width="24"
+                    height="24"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path d={mark.path} />
+                  </svg>
+                ) : (
+                  <SocialIcon aria-hidden="true" size={24} strokeWidth={1.8} />
+                )}
+              </a>
+            );
+          })
+        }
+      </div>
+      <p class="footer-copyright">© 2026 Elen Skye</p>
+    </div>
+
+    <nav class="footer-columns" aria-label={browseLabel}>
+      <div class="footer-col">
+        {firstColumn.map((link) => <a href={link.href}>{link.label}</a>)}
+      </div>
+      {
+        secondColumn.length > 0 && (
+          <div class="footer-col">
+            {secondColumn.map((link) => (
+              <a href={link.href}>{link.label}</a>
+            ))}
+          </div>
+        )
+      }
+    </nav>
+  </div>
+</footer>

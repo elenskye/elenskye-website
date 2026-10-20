@@ -1,0 +1,33 @@
+---
+import { getCollection, render } from 'astro:content';
+import PageShell from '../components/PageShell.astro';
+import nowStatus from '../data/now-status.json';
+import { pageCopy } from '../data/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const page = pageCopy.zh.now;
+const entries = (await getCollection('now', (entry) => entry.data.language === 'zh')).sort(
+  (a, b) => b.data.year * 100 + b.data.month - (a.data.year * 100 + a.data.month)
+);
+const items = await Promise.all(
+  entries.map(async (entry) => ({ entry, Content: (await render(entry)).Content }))
+);
+---
+
+<BaseLayout title="当下 | Elen Skye" description={page.description} locale="zh" pageKey="now">
+  <PageShell eyebrow={page.eyebrow} title={page.title} description={page.description} variant="narrow" status={nowStatus.zh}>
+    <section class="now-timeline" aria-label="月度时间轴">
+      {
+        items.map(({ entry, Content }) => (
+          <article class="now-entry">
+            <span class="now-marker" aria-hidden="true" />
+            <h2>{entry.data.year} 年 {entry.data.month} 月</h2>
+            <div class="now-entry-body prose">
+              <Content />
+            </div>
+          </article>
+        ))
+      }
+    </section>
+  </PageShell>
+</BaseLayout>

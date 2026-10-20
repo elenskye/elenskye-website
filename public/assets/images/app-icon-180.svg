@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Elen Skye app icon">
+  <rect width="180" height="180" rx="36" fill="#f6efe2" />
+  <g transform="translate(18 18) scale(2.25)" fill="none" stroke="#2d6f6a" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.4">
+    <path d="M10 54c14-4 8-16 18-22s20-4 20-16" stroke-dasharray="1 8.8" />
+    <circle cx="49" cy="12" r="6.8" />
+  </g>
+</svg>

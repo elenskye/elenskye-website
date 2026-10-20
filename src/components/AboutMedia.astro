@@ -1,0 +1,102 @@
+---
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import aboutImages from '../data/about-images.json';
+import type { Locale } from '../data/site';
+import { toPublicAssetUrl } from '../lib/assets';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const portraits = [...aboutImages.portraits, ...aboutImages.portraitRefs]
+  .map((path) => toPublicAssetUrl(path))
+  .filter((path): path is string => Boolean(path));
+const artworks = [...aboutImages.artworks, ...aboutImages.artworkRefs]
+  .map((path) => toPublicAssetUrl(path))
+  .filter((path): path is string => Boolean(path));
+const labels =
+  locale === 'zh'
+    ? { portrait: '个人肖像', artwork: '画作与摄影', prev: '上一张', next: '下一张' }
+    : { portrait: 'Portrait', artwork: 'Artwork and photography', prev: 'Previous image', next: 'Next image' };
+---
+
+<aside class="about-media">
+  {
+    portraits.length > 0 && (
+      <figure class="about-portrait" data-portraits={JSON.stringify(portraits)}>
+        <img src={portraits[0]} alt={labels.portrait} decoding="async" />
+      </figure>
+    )
+  }
+  {
+    artworks.length > 0 && (
+      <figure class="about-artwork" data-artworks={JSON.stringify(artworks)}>
+        <img src={artworks[0]} alt={labels.artwork} loading="lazy" decoding="async" />
+        {artworks.length > 1 && (
+          <>
+            <button class="artwork-arrow artwork-arrow--prev" type="button" aria-label={labels.prev}>
+              <ChevronLeft aria-hidden="true" size={17} strokeWidth={1.8} />
+            </button>
+            <button class="artwork-arrow artwork-arrow--next" type="button" aria-label={labels.next}>
+              <ChevronRight aria-hidden="true" size={17} strokeWidth={1.8} />
+            </button>
+          </>
+        )}
+      </figure>
+    )
+  }
+</aside>
+<script is:inline>
+  (() => {
+    // Portrait slot: pick one at random on every page load.
+    const portrait = document.querySelector('.about-portrait');
+    if (portrait) {
+      const list = JSON.parse(portrait.dataset.portraits || '[]');
+      const img = portrait.querySelector('img');
+      const failed = new Set();
+      let index = list.length > 1 ? Math.floor(Math.random() * list.length) : 0;
+      const show = () => {
+        if (failed.size >= list.length) {
+          portrait.hidden = true;
+          return;
+        }
+        while (failed.has(list[index])) index = (index + 1) % list.length;
+        img.src = list[index];
+      };
+      img.addEventListener('error', () => {
+        failed.add(list[index]);
+        index = (index + 1) % list.length;
+        show();
+      });
+      show();
+      if (img.complete && img.naturalWidth === 0) img.dispatchEvent(new Event('error'));
+    }
+
+    // Artwork slot: arrows cycle through the list.
+    const artwork = document.querySelector('.about-artwork');
+    if (artwork) {
+      const list = JSON.parse(artwork.dataset.artworks || '[]');
+      const img = artwork.querySelector('img');
+      const failed = new Set();
+      let index = 0;
+      const show = (delta) => {
+        if (failed.size >= list.length) {
+          artwork.hidden = true;
+          return;
+        }
+        do {
+          index = (index + delta + list.length) % list.length;
+        } while (failed.has(list[index]));
+        img.src = list[index];
+      };
+      img.addEventListener('error', () => {
+        failed.add(list[index]);
+        show(1);
+      });
+      if (img.complete && img.naturalWidth === 0) img.dispatchEvent(new Event('error'));
+      artwork.querySelector('.artwork-arrow--prev')?.addEventListener('click', () => show(-1));
+      artwork.querySelector('.artwork-arrow--next')?.addEventListener('click', () => show(1));
+    }
+  })();
+</script>

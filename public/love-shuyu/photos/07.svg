@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="placeholder 07">
+  <rect width="200" height="200" fill="#101a24"/>
+  <rect x="6" y="6" width="188" height="188" fill="none" stroke="#2f4a52" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="50%" y="88" fill="#7fd8c4" font-family="sans-serif" font-size="34" font-weight="600" text-anchor="middle">07</text>
+  <text x="50%" y="116" fill="#9aa9b4" font-family="sans-serif" font-size="15" text-anchor="middle">2026.02.25</text>
+  <text x="50%" y="138" fill="#5d6f7a" font-family="sans-serif" font-size="12" text-anchor="middle">1:1 占位图</text>
+</svg>

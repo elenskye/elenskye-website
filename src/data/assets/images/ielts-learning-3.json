@@ -1,0 +1,12 @@
+{
+  "title": "ielts-learning-3",
+  "asset": {
+    "discriminant": "existingImage",
+    "value": {
+      "file": "public/images/wander/ielts-excel-ai.zh/ielts-3.jpeg",
+      "alt": "Persona Corpus"
+    }
+  },
+  "usage": "Wander 卡片内容",
+  "deletionRequested": false
+}

@@ -1,0 +1,32 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+  variant?: 'wide' | 'standard' | 'narrow' | 'split';
+  count?: number;
+  countLabel?: string;
+  /** Small text badge next to the title, e.g. the Now page status. */
+  status?: string;
+}
+
+const { eyebrow, title, description, variant = 'standard', count, countLabel, status } = Astro.props;
+const formattedCount = typeof count === 'number' ? count.toString().padStart(2, '0') : undefined;
+---
+
+<main id="main-content" tabindex="-1" class:list={['page-shell', `page-shell--${variant}`]}>
+  <p class="page-eyebrow">{eyebrow}</p>
+  <div class="page-title-row">
+    <h1>{title}</h1>
+    {
+      formattedCount && (
+        <span class="page-count" aria-label={countLabel ?? `${formattedCount} items`}>
+          {formattedCount}
+        </span>
+      )
+    }
+    {status && <span class="page-count page-count--text">{status}</span>}
+  </div>
+  <p class="page-intro">{description}</p>
+  <slot />
+</main>

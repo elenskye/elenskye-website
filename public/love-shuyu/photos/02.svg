@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" width="300" height="200" role="img" aria-label="placeholder 02">
+  <rect width="300" height="200" fill="#101a24"/>
+  <rect x="6" y="6" width="288" height="188" fill="none" stroke="#2f4a52" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="50%" y="88" fill="#7fd8c4" font-family="sans-serif" font-size="34" font-weight="600" text-anchor="middle">02</text>
+  <text x="50%" y="116" fill="#9aa9b4" font-family="sans-serif" font-size="15" text-anchor="middle">2025.10.03</text>
+  <text x="50%" y="138" fill="#5d6f7a" font-family="sans-serif" font-size="12" text-anchor="middle">3:2 占位图</text>
+</svg>

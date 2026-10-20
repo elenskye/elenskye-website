@@ -1,0 +1,64 @@
+---
+import { getCollection, render } from 'astro:content';
+import { missingEntryNotice, requireEntry } from '../../lib/require-entry';
+import AboutMedia from '../../components/AboutMedia.astro';
+import PageShell from '../../components/PageShell.astro';
+import { pageCopy } from '../../data/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const page = pageCopy.en.about;
+const [rawEntry] = await getCollection('about', (item) => item.data.language === 'en');
+// Survives the dev-server content re-sync that follows every Keystatic save.
+const entry = requireEntry(rawEntry, 'about', 'en');
+const Story = entry ? (await render(entry)).Content : undefined;
+const contextParagraphs = (entry?.data.contextIntro ?? '').split(/\n{2,}/).filter(Boolean);
+---
+
+<BaseLayout title="About | Elen Skye" description={page.description} locale="en" pageKey="about">
+  <PageShell eyebrow={page.eyebrow} title={page.title} description={page.description} variant="split">
+    <div class="about-layout">
+      <div class="about-main">
+        <section class="about-block" aria-label="A little context">
+          <h2 class="about-heading">
+            <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+              <path d="M5 27c7-2 4-8 9-11s10-2 10-8" stroke-dasharray="0.5 4.4"></path>
+              <circle cx="24.5" cy="6" r="3.2"></circle>
+            </svg>
+            A LITTLE CONTEXT
+          </h2>
+          <div class="about-context-intro">
+            {contextParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+          </div>
+          <ol class="about-timeline">
+            {
+              (entry?.data.timeline ?? []).map((item) => (
+                <li>
+                  <span class="about-marker" aria-hidden="true" />
+                  <h3 class="about-role">
+                    {item.role} at <span class="about-org">{item.org}</span>
+                  </h3>
+                  <p class="about-period">{item.period}</p>
+                  {item.description && <p class="about-desc">{item.description}</p>}
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+
+        <section class="about-block" aria-label="A little history">
+          <h2 class="about-heading">
+            <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+              <path d="M5 27c7-2 4-8 9-11s10-2 10-8" stroke-dasharray="0.5 4.4"></path>
+              <circle cx="24.5" cy="6" r="3.2"></circle>
+            </svg>
+            A LITTLE HISTORY
+          </h2>
+          <div class="about-story prose">
+            {Story ? <Story /> : <p class="content-resync-notice">{missingEntryNotice.en}</p>}
+          </div>
+        </section>
+      </div>
+      <AboutMedia locale="en" />
+    </div>
+  </PageShell>
+</BaseLayout>

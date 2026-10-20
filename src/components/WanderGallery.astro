@@ -1,0 +1,335 @@
+---
+import { X } from 'lucide-react';
+import type { Locale } from '../data/site';
+import type { GalleryImage } from '../lib/wander';
+
+interface Props {
+  images: GalleryImage[];
+  locale: Locale;
+}
+
+const { images, locale } = Astro.props;
+
+const copy =
+  locale === 'zh'
+    ? {
+        region: '作品集',
+        prev: '上一张',
+        next: '下一张',
+        zoom: '放大查看',
+        close: '关闭放大查看',
+        counter: (index: number, total: number) => `${index} / ${total}`,
+      }
+    : {
+        region: 'Photo set',
+        prev: 'Previous image',
+        next: 'Next image',
+        zoom: 'View larger',
+        close: 'Close larger view',
+        counter: (index: number, total: number) => `${index} / ${total}`,
+      };
+
+const hasMany = images.length > 1;
+const initialPrevious = images.at(-1);
+const initialNext = images[1];
+---
+
+{
+  images.length > 0 && (
+    <section
+      class="wander-gallery"
+      aria-roledescription="carousel"
+      aria-label={copy.region}
+      data-gallery
+      data-gallery-animation="slide"
+    >
+      <div class:list={['gallery-stage', { 'gallery-stage--single': !hasMany }]}>
+        {hasMany && initialPrevious && (
+          <button class="gallery-preview gallery-preview--page gallery-preview--prev" type="button" data-gallery-step="-1" aria-label={copy.prev}>
+            <img src={initialPrevious.src} alt="" loading="lazy" decoding="async" draggable="false" data-gallery-preview-offset="-1" />
+          </button>
+        )}
+
+        <div class="gallery-frame">
+          {images.map((image, index) => (
+            <figure class="gallery-slide" data-gallery-slide hidden={index !== 0}>
+              {/* The button is what makes zoom keyboard-reachable; the image
+                  itself is decorative once the button carries the label. */}
+              <button class="gallery-zoom" type="button" data-gallery-zoom aria-label={copy.zoom}>
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  draggable="false"
+                />
+              </button>
+              {image.caption && <figcaption>{image.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+
+        {hasMany && initialNext && (
+          <button class="gallery-preview gallery-preview--page gallery-preview--next" type="button" data-gallery-step="1" aria-label={copy.next}>
+            <img src={initialNext.src} alt="" loading="lazy" decoding="async" draggable="false" data-gallery-preview-offset="1" />
+          </button>
+        )}
+      </div>
+
+      {hasMany && (
+        <p class="gallery-counter" aria-live="polite" data-gallery-counter>
+          {copy.counter(1, images.length)}
+        </p>
+      )}
+
+      <div class="gallery-lightbox" data-gallery-lightbox data-gallery-lightbox-mode="single" hidden>
+        <div class="gallery-lightbox-inner" role="dialog" aria-modal="true" aria-label={copy.region}>
+          <div class="gallery-lightbox-media">
+            <img alt="" data-gallery-lightbox-image draggable="false" />
+          </div>
+          <button class="gallery-lightbox-close" type="button" data-gallery-close aria-label={copy.close}>
+            <X aria-hidden="true" size={22} strokeWidth={1.8} />
+          </button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script is:inline>
+  (() => {
+    document.querySelectorAll('[data-gallery]').forEach((gallery) => {
+      const slides = [...gallery.querySelectorAll('[data-gallery-slide]')];
+      if (slides.length === 0) return;
+
+      const counter = gallery.querySelector('[data-gallery-counter]');
+      const lightbox = gallery.querySelector('[data-gallery-lightbox]');
+      const lightboxImage = gallery.querySelector('[data-gallery-lightbox-image]');
+      const previewImages = [...gallery.querySelectorAll('[data-gallery-preview-offset]')];
+      const closeButton = gallery.querySelector('[data-gallery-close]');
+      let index = 0;
+      let lastFocused = null;
+      let isAnimating = false;
+
+      const sourceImage = (offset = 0) =>
+        slides[(index + offset + slides.length) % slides.length].querySelector('img');
+
+      const syncPreviews = () => {
+        previewImages.forEach((preview) => {
+          const source = sourceImage(Number(preview.dataset.galleryPreviewOffset));
+          const sourcePath = source.getAttribute('src');
+          if (preview.getAttribute('src') !== sourcePath) preview.setAttribute('src', sourcePath);
+        });
+      };
+
+      const syncLightbox = () => {
+        const image = sourceImage();
+        lightboxImage.src = image.src;
+        lightboxImage.alt = image.alt;
+      };
+
+      const commit = (next) => {
+        index = (next + slides.length) % slides.length;
+        slides.forEach((slide, position) => {
+          slide.hidden = position !== index;
+        });
+        if (counter) counter.textContent = `${index + 1} / ${slides.length}`;
+        syncPreviews();
+        if (!lightbox.hidden) syncLightbox();
+      };
+
+      const previewIn = (root, offset) =>
+        [...root.querySelectorAll('[data-gallery-preview-offset]')].find(
+          (image) => Number(image.dataset.galleryPreviewOffset) === offset
+        );
+
+      const motionFrame = (source, rect) => {
+        const frame = document.createElement('span');
+        frame.className = 'gallery-motion-frame';
+        frame.setAttribute('aria-hidden', 'true');
+        Object.assign(frame.style, {
+          left: `${rect.left}px`,
+          top: `${rect.top}px`,
+          width: `${rect.width}px`,
+          height: `${rect.height}px`,
+        });
+        const image = source.cloneNode(false);
+        image.alt = '';
+        image.removeAttribute('data-gallery-preview-offset');
+        frame.append(image);
+        document.body.append(frame);
+        return frame;
+      };
+
+      const frameValues = (rect, opacity) => ({
+        left: `${rect.left}px`,
+        top: `${rect.top}px`,
+        width: `${rect.width}px`,
+        height: `${rect.height}px`,
+        opacity,
+      });
+
+      const animateGalleryStep = async (next, direction, root) => {
+        if (
+          isAnimating ||
+          slides.length < 2 ||
+          direction === 0 ||
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+          if (!isAnimating) commit(next);
+          return;
+        }
+
+        const incoming = previewIn(root, direction);
+        const outgoingTarget = previewIn(root, -direction);
+        const current = slides[index].querySelector('.gallery-zoom img');
+        const centerBox = current.closest('.gallery-zoom');
+        const incomingBox = incoming?.closest('.gallery-preview');
+        const outgoingBox = outgoingTarget?.closest('.gallery-preview');
+
+        if (!incoming || !outgoingTarget || !current || !centerBox || !incomingBox || !outgoingBox) {
+          commit(next);
+          return;
+        }
+
+        isAnimating = true;
+        const incomingRect = incomingBox.getBoundingClientRect();
+        const centerRect = centerBox.getBoundingClientRect();
+        const outgoingRect = outgoingBox.getBoundingClientRect();
+        const incomingMotion = motionFrame(incoming, incomingRect);
+        const outgoingMotion = motionFrame(current, centerRect);
+        const hiddenElements = [incomingBox, centerBox, outgoingBox];
+        hiddenElements.forEach((element) => {
+          element.dataset.galleryPreviousVisibility = element.style.visibility;
+          element.style.visibility = 'hidden';
+        });
+
+        const options = {
+          duration: 320,
+          easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+          fill: 'both',
+        };
+        const incomingAnimation = incomingMotion.animate(
+          [frameValues(incomingRect, 0.32), frameValues(centerRect, 1)],
+          options
+        );
+        const outgoingAnimation = outgoingMotion.animate(
+          [frameValues(centerRect, 1), frameValues(outgoingRect, 0.32)],
+          options
+        );
+
+        await Promise.all([
+          incomingAnimation.finished.catch(() => undefined),
+          outgoingAnimation.finished.catch(() => undefined),
+        ]);
+        commit(next);
+        hiddenElements.forEach((element) => {
+          element.style.visibility = element.dataset.galleryPreviousVisibility || '';
+          delete element.dataset.galleryPreviousVisibility;
+        });
+        incomingMotion.remove();
+        outgoingMotion.remove();
+        isAnimating = false;
+      };
+
+      const show = (next, direction = 0, sourceControl) => {
+        const root = sourceControl?.closest('.gallery-stage') ?? gallery.querySelector('.gallery-stage');
+        void animateGalleryStep(next, direction, root);
+      };
+
+      const openLightbox = (trigger) => {
+        lastFocused = trigger;
+        syncLightbox();
+        lightbox.hidden = false;
+        document.body.style.overflow = 'hidden';
+        closeButton.focus();
+      };
+
+      const closeLightbox = () => {
+        lightbox.hidden = true;
+        document.body.style.overflow = '';
+        // Return focus to the thumbnail that opened it, not to the top of
+        // the page — otherwise keyboard users lose their place in the set.
+        (lastFocused ?? slides[index].querySelector('[data-gallery-zoom]'))?.focus();
+      };
+
+      gallery.querySelectorAll('[data-gallery-step]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const direction = Number(button.dataset.galleryStep);
+          show(index + direction, direction, button);
+        });
+      });
+
+      gallery.querySelectorAll('[data-gallery-zoom]').forEach((button) => {
+        button.addEventListener('click', () => openLightbox(button));
+      });
+
+      closeButton.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', (event) => {
+        if (event.target === lightbox) closeLightbox();
+      });
+
+      // A deterrent, not protection: anyone can still read the file off the
+      // network panel.
+      gallery.querySelectorAll('img').forEach((image) => {
+        image.addEventListener('contextmenu', (event) => event.preventDefault());
+        image.addEventListener('dragstart', (event) => event.preventDefault());
+      });
+
+      gallery.addEventListener('keydown', (event) => {
+        if (!lightbox.hidden) {
+          if (event.key === 'Escape') {
+            closeLightbox();
+          } else if (event.key === 'Tab') {
+            event.preventDefault();
+            closeButton.focus();
+          }
+          return;
+        }
+
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          show(index - 1, -1);
+        } else if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          show(index + 1, 1);
+        }
+      });
+
+      // Horizontal swipe on touch devices. The threshold and the axis check
+      // keep a vertical page scroll from flipping the image.
+      let startX = null;
+      let startY = null;
+      gallery.addEventListener(
+        'touchstart',
+        (event) => {
+          startX = event.changedTouches[0].clientX;
+          startY = event.changedTouches[0].clientY;
+        },
+        { passive: true }
+      );
+      gallery.addEventListener(
+        'touchend',
+        (event) => {
+          if (startX === null) return;
+          if (!lightbox.hidden) {
+            startX = null;
+            startY = null;
+            return;
+          }
+          const deltaX = event.changedTouches[0].clientX - startX;
+          const deltaY = event.changedTouches[0].clientY - startY;
+          if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
+            const direction = deltaX < 0 ? 1 : -1;
+            show(index + direction, direction);
+          }
+          startX = null;
+          startY = null;
+        },
+        { passive: true }
+      );
+
+      commit(0);
+    });
+  })();
+</script>

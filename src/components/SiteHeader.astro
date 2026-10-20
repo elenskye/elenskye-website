@@ -1,0 +1,83 @@
+---
+import { Globe2, Moon, Search, Sun } from 'lucide-react';
+import { discoveryPaths, getAlternatePath, localeConfig, navItems, type Locale, type PageKey } from '../data/site';
+
+interface Props {
+  locale: Locale;
+  pageKey?: PageKey;
+  languageHref?: string;
+}
+
+const { locale, pageKey, languageHref: languageHrefOverride } = Astro.props;
+const items = navItems[locale];
+const languageHref = languageHrefOverride ?? (pageKey ? getAlternatePath(pageKey, locale) : locale === 'zh' ? '/en/' : '/');
+const languageLabel = localeConfig[locale].languageTooltip;
+const themeLabel = localeConfig[locale].themeToggleLabel;
+const searchLabel = locale === 'zh' ? '搜索本站' : 'Search this site';
+const searchHref = discoveryPaths.search[locale];
+const homeHref = locale === 'zh' ? '/' : '/en/';
+---
+
+<header class="site-header" data-pagefind-ignore>
+  {/*
+    Logo A v1.0.0 (owner-approved 2026-07-25). Inlined rather than <img> so the
+    hover/focus animation can be driven by this link, per the delivery README.
+    The delivered file colors itself with prefers-color-scheme; that is dropped
+    here on purpose, because the site's theme is a manual data-theme toggle —
+    the media query would show a light-mode logo to someone who switched the
+    site to dark on a light OS. Colors come from the palette tokens instead.
+    Stable class names (.logo-route-mask / .logo-route / .logo-destination)
+    are kept so the source file stays traceable.
+  */}
+  <a class="site-mark" href={homeHref} aria-label="Elen Skye">
+    <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+      <defs>
+        <mask id="logo-route-reveal-mask">
+          <path
+            class="logo-route-mask"
+            d="M10 54c14-4 8-16 18-22s20-4 20-16"
+            fill="none"
+            stroke="white"
+            stroke-linecap="round"
+            stroke-width="10"
+            pathLength="1"
+            stroke-dasharray="1"
+            stroke-dashoffset="0"
+          ></path>
+        </mask>
+      </defs>
+      <path class="logo-route" d="M10 54c14-4 8-16 18-22s20-4 20-16" mask="url(#logo-route-reveal-mask)"></path>
+      <circle class="logo-destination" cx="49" cy="12" r="6.8"></circle>
+    </svg>
+  </a>
+  <nav class="site-nav" aria-label="Main navigation">
+    {
+      items.map((item) => (
+        <a class:list={['nav-link', { 'is-active': item.key === pageKey }]} href={item.href} aria-current={item.key === pageKey ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+  <div class="header-actions">
+    <a class="icon-toggle" href={searchHref} aria-label={searchLabel}>
+      <Search aria-hidden="true" size={20} strokeWidth={1.8} />
+    </a>
+    <a class="icon-toggle" href={languageHref} aria-label={languageLabel}>
+      <Globe2 aria-hidden="true" size={20} strokeWidth={1.8} />
+    </a>
+    <button class="icon-toggle theme-toggle" type="button" aria-label={themeLabel}>
+      <Moon className="icon-moon" aria-hidden="true" size={20} strokeWidth={1.8} />
+      <Sun className="icon-sun" aria-hidden="true" size={20} strokeWidth={1.8} />
+    </button>
+  </div>
+</header>
+<script is:inline>
+  document.querySelectorAll('.theme-toggle').forEach((button) => {
+    button.addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem('theme', next);
+    });
+  });
+</script>

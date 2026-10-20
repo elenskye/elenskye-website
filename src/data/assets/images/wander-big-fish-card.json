@@ -1,0 +1,12 @@
+{
+  "title": "wander-big-fish-card",
+  "asset": {
+    "discriminant": "existingImage",
+    "value": {
+      "file": "public/images/wander/big-fish.zh/big-fish-card.webp",
+      "alt": ""
+    }
+  },
+  "usage": "Wander 性能缩略图（由原图无裁切缩放生成）",
+  "deletionRequested": false
+}

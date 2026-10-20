@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.astro/
+.vercel/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Local credentials and certificates
+.npmrc
+.netrc
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor and local workspace settings
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Local caches and test output
+coverage/
+.cache/
+.playwright-cli/
+output/playwright/
+*.tsbuildinfo
+
+# Root Markdown files are project source and intentionally remain tracked.
+DEPLOY.md
+
+# Local-only visual system lab
+src/pages/design-preview.astro
+
+# Raw originals for the /love-shuyu/ timeline; only the compressed output is tracked.
+public/love-shuyu/photos/_incoming/
+# Same for audio: drop the untranscoded source here, only the .m4a is tracked.
+public/love-shuyu/audio/_incoming/

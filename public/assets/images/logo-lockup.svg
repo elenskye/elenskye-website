@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 292 64" role="img" aria-label="Elen Skye logo">
+  <g transform="translate(2)" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.4">
+    <path d="M10 54c14-4 8-16 18-22s20-4 20-16" stroke-dasharray="1 8.8" /><circle cx="49" cy="12" r="6.8" />
+  </g>
+  <text x="78" y="42" fill="currentColor" font-family="Noto Serif SC, Georgia, serif" font-size="30" font-weight="600" letter-spacing=".2">Elen Skye</text>
+</svg>

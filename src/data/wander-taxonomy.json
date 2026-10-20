@@ -1,0 +1,71 @@
+{
+  "categories": [
+    {
+      "slug": "notes",
+      "zh": "写作",
+      "en": "Notes"
+    },
+    {
+      "slug": "project",
+      "zh": "项目",
+      "en": "Projects"
+    },
+    {
+      "slug": "gallery",
+      "zh": "画廊",
+      "en": "Gallery"
+    },
+    {
+      "slug": "literature",
+      "zh": "创作",
+      "en": "Literature"
+    }
+  ],
+  "topics": [
+    {
+      "slug": "travelogue",
+      "zh": "游记",
+      "en": "Travelogue"
+    },
+    {
+      "slug": "poetry",
+      "zh": "诗歌",
+      "en": "Poetry"
+    },
+    {
+      "slug": "stories",
+      "zh": "故事",
+      "en": "Stories"
+    },
+    {
+      "slug": "essays",
+      "zh": "随笔",
+      "en": "Essays"
+    },
+    {
+      "slug": "learning-methods",
+      "zh": "学习方法",
+      "en": "Learning Methods"
+    },
+    {
+      "slug": "machine-learning",
+      "zh": "机器学习",
+      "en": "Machine Learning"
+    },
+    {
+      "slug": "software-engineering",
+      "zh": "软件工程",
+      "en": "Software Engineering"
+    },
+    {
+      "slug": "finance",
+      "zh": "财富",
+      "en": "Finance"
+    },
+    {
+      "slug": "multidisciplinary",
+      "zh": "时间与空间与世界",
+      "en": "Multidisciplinary"
+    }
+  ]
+}

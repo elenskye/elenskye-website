@@ -1,0 +1,80 @@
+---
+import type { Locale } from '../data/site';
+import type { SearchDocument } from '../lib/search-documents';
+
+interface Props {
+  locale: Locale;
+  documents: SearchDocument[];
+}
+
+const { locale, documents } = Astro.props;
+const fallbackDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
+const copy = locale === 'zh'
+  ? {
+      label: '搜索关键词',
+      placeholder: '例如：机器学习、旅行、绘画',
+      button: '搜索',
+      loading: '正在搜索……',
+      empty: '没有找到相关内容。换一个词试试。',
+      error: '搜索索引暂时不可用。请刷新页面后重试。',
+      resultLanguage: '语言',
+      resultLanguageValue: '中文',
+    }
+  : {
+      label: 'Search terms',
+      placeholder: 'Try machine learning, travel, or painting',
+      button: 'Search',
+      loading: 'Searching…',
+      empty: 'No matching pages. Try a different term.',
+      error: 'The search index is temporarily unavailable. Please refresh and try again.',
+      resultLanguage: 'Language',
+      resultLanguageValue: 'English',
+    };
+---
+
+<section
+  class="site-search"
+  data-search-root
+  data-locale={locale}
+  data-pagefind-ready={import.meta.env.PROD ? 'true' : 'false'}
+  data-loading={copy.loading}
+  data-empty={copy.empty}
+  data-count-one={locale === 'zh' ? '找到 1 条结果' : '1 result'}
+  data-count-many={locale === 'zh' ? '找到 {count} 条结果' : '{count} results'}
+  data-error={copy.error}
+  data-language-label={copy.resultLanguage}
+  data-language-value={copy.resultLanguageValue}
+  data-pagefind-ignore
+>
+  <form class="site-search-form" role="search" data-search-form>
+    <label for={`site-search-${locale}`}>{copy.label}</label>
+    <div class="site-search-controls">
+      <input
+        id={`site-search-${locale}`}
+        name="q"
+        type="search"
+        inputmode="search"
+        autocomplete="off"
+        placeholder={copy.placeholder}
+        data-search-input
+      />
+      <button class="button-link" type="submit">{copy.button}</button>
+    </div>
+  </form>
+  <p class="site-search-status" aria-live="polite" data-search-status></p>
+  <div class="site-search-empty" data-search-empty-visual hidden aria-hidden="true">
+    <img
+      class="status-illustration status-illustration--empty"
+      src="/images/status/wander-empty-cloud-pages-oops.png"
+      alt=""
+      width="480"
+      height="300"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <ol class="site-search-results" data-search-results></ol>
+  <script type="application/json" data-search-documents set:html={fallbackDocuments}></script>
+</section>
+
+<script is:inline type="module" src="/scripts/site-search.js"></script>

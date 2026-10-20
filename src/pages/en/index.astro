@@ -1,0 +1,20 @@
+---
+import PageShell from '../../components/PageShell.astro';
+import WanderWall from '../../components/WanderWall.astro';
+import { getCollection } from 'astro:content';
+import { pageCopy } from '../../data/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCategoryCounts, getUniqueWanderCount, toWanderCards } from '../../lib/wander';
+
+const page = pageCopy.en.wander;
+const wanderEntries = await getCollection('wander');
+const wanderCards = toWanderCards(wanderEntries, 'en');
+const wanderCount = getUniqueWanderCount(wanderEntries);
+const categoryCounts = getCategoryCounts(wanderEntries);
+---
+
+<BaseLayout title="Wander | Elen Skye" description={page.description} locale="en" pageKey="wander">
+  <PageShell eyebrow={page.eyebrow} title={page.title} description={page.description} variant="wide" count={wanderCount} countLabel={`Wander currently holds ${wanderCount} pieces`}>
+    <WanderWall cards={wanderCards} emptyText="Projects, writing, art, and notes will appear here soon." locale="en" categoryCounts={categoryCounts} />
+  </PageShell>
+</BaseLayout>

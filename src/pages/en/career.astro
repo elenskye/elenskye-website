@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from 'astro:content';
+import { missingEntryNotice, requireEntry } from '../../lib/require-entry';
+import CareerCv from '../../components/CareerCv.astro';
+import PageShell from '../../components/PageShell.astro';
+import { pageCopy } from '../../data/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const page = pageCopy.en.career;
+const [rawEntry] = await getCollection('career', (item) => item.data.language === 'en');
+// Survives the dev-server content re-sync that follows every Keystatic save.
+const entry = requireEntry(rawEntry, 'career', 'en');
+const Extra = entry ? (await render(entry)).Content : undefined;
+const summary = entry?.data.summary.trim() || page.description;
+---
+
+<BaseLayout title="Career | Elen Skye" description={summary} locale="en" pageKey="career">
+  <PageShell eyebrow={page.eyebrow} title={page.title} description={summary} variant="standard">
+    {
+      entry ? (
+        <CareerCv locale="en" data={entry.data}>
+          <div class="cv-extra prose">{Extra && <Extra />}</div>
+        </CareerCv>
+      ) : (
+        <p class="content-resync-notice">{missingEntryNotice.en}</p>
+      )
+    }
+  </PageShell>
+</BaseLayout>

@@ -1,0 +1,12 @@
+{
+  "title": "ielts-learning-2",
+  "asset": {
+    "discriminant": "existingImage",
+    "value": {
+      "file": "public/images/wander/ielts-excel-ai.zh/ielts-2.jpeg",
+      "alt": "Persona Chat Prompt"
+    }
+  },
+  "usage": "Wander 卡片内容",
+  "deletionRequested": false
+}

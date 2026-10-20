@@ -1,0 +1,173 @@
+---
+import {
+  BookOpen,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Flag,
+  Image,
+  PenLine,
+  Route,
+  type LucideIcon,
+} from 'lucide-react';
+import { filterBarCopy, wanderCategories, wanderTopics, type Locale } from '../data/site';
+import { WANDER_WALL_LIMIT } from '../lib/wander-filter.js';
+import type { WanderCard } from '../lib/wander';
+import ContentLabel from './ContentLabel.astro';
+
+interface Props {
+  cards: WanderCard[];
+  emptyText: string;
+  locale: Locale;
+  categoryCounts: Record<string, number>;
+}
+
+const { cards, emptyText, locale, categoryCounts } = Astro.props;
+const copy = filterBarCopy[locale];
+
+// The wall shows the newest cards up to this cap; the rest stay hidden
+// behind an expand button.
+const hasOverflow = cards.length > WANDER_WALL_LIMIT;
+const expandLabel = locale === 'zh' ? `展开全部（${cards.length}）` : `Show all (${cards.length})`;
+const categoryPanelId = `wander-category-panel-${locale}`;
+const firstImageCardIndex = cards.findIndex((card) => Boolean(card.thumbnail));
+
+// Lucide owns generic interface icons; the custom wandering-path mark remains
+// a separate brand asset. Keys must match the Category slugs in
+// src/data/wander-taxonomy.json; an unmapped or retired slug falls back to
+// the Route icon at the call site, so this map never needs stale entries.
+const categoryIcons: Record<string, LucideIcon> = {
+  notes: PenLine,
+  project: Flag,
+  literature: BookOpen,
+  gallery: Image,
+};
+
+const arrowLabels =
+  locale === 'zh' ? { prev: '向左滚动话题', next: '向右滚动话题' } : { prev: 'Scroll topics left', next: 'Scroll topics right' };
+---
+
+{
+  cards.length > 0 ? (
+    <>
+      <div class="wander-filter">
+        <div class="filter-topics">
+          <span class="filter-eyebrow">{copy.topics}</span>
+          <button class="topic-arrow" type="button" data-topic-scroll="-1" aria-label={arrowLabels.prev}>
+            <ChevronLeft aria-hidden="true" size={15} strokeWidth={1.8} />
+          </button>
+          <div class="topic-scroll" data-topic-track>
+            {wanderTopics.map((topic) => (
+              <button class="topic-chip" type="button" data-topic={topic.slug} aria-pressed="false">
+                {topic.label[locale]}
+              </button>
+            ))}
+          </div>
+          <button class="topic-arrow" type="button" data-topic-scroll="1" aria-label={arrowLabels.next}>
+            <ChevronRight aria-hidden="true" size={15} strokeWidth={1.8} />
+          </button>
+        </div>
+        <div class="filter-category" data-all-label={copy.allCategories} data-selected-suffix={copy.selectedSuffix}>
+          <button class="category-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-controls={categoryPanelId}>
+            <span class="category-toggle-label">{copy.allCategories}</span>
+            <ChevronDown aria-hidden="true" size={15} strokeWidth={1.8} />
+          </button>
+          <div class="category-panel" id={categoryPanelId} hidden>
+            <button class="category-clear" type="button">{copy.allCategories}</button>
+            {wanderCategories.map((category) => (
+              <label class="category-option">
+                <input type="checkbox" value={category.slug} />
+                <span class="category-option-label">{category.label[locale]}</span>
+                <span class="category-option-count">{categoryCounts[category.slug] ?? 0}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+      <section class="wander-wall" aria-label="Wander content wall">
+        {cards.map((card, index) => {
+          const variant = card.thumbnail ? 'wander-card--image' : 'wander-card--plain';
+          const overflow = index >= WANDER_WALL_LIMIT;
+          const CardIcon = categoryIcons[card.category] ?? Route;
+          return (
+            <a
+              class:list={['wander-card', variant]}
+              data-category={card.category}
+              data-topics={card.topics.join(',')}
+              data-overflow={overflow ? 'true' : undefined}
+              hidden={overflow}
+              href={card.href}
+            >
+              {card.thumbnail ? (
+                <>
+                  <figure class="wander-card-media">
+                    <img
+                      src={card.thumbnail}
+                      alt={card.title}
+                      loading={index === firstImageCardIndex ? 'eager' : 'lazy'}
+                      fetchpriority={index === firstImageCardIndex ? 'high' : undefined}
+                      decoding="async"
+                    />
+                  </figure>
+                  <span class="wander-card-icon wander-card-icon--fallback">
+                    <CardIcon aria-hidden="true" size={22} strokeWidth={1.8} />
+                  </span>
+                </>
+              ) : (
+                <span class="wander-card-icon">
+                  <CardIcon aria-hidden="true" size={22} strokeWidth={1.8} />
+                </span>
+              )}
+              <div class="wander-card-body">
+                <h2>{card.title}</h2>
+                <p>{card.summary}</p>
+                <div class="wander-card-meta">
+                  {card.categoryLabel && <ContentLabel label={card.categoryLabel} />}
+                  <span>{card.languageLabel}</span>
+                  {card.dateLabel && <span>{card.dateLabel}</span>}
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </section>
+      {
+        hasOverflow && (
+          <div class="wander-expand">
+            <button class="button-link" type="button" data-expand-wall>
+              {expandLabel}
+            </button>
+          </div>
+        )
+      }
+      <section class="wander-empty" data-filter-empty hidden role="status" aria-live="polite">
+        <img
+          class="status-illustration status-illustration--empty"
+          src="/images/status/wander-empty-cloud-pages-oops.png"
+          alt=""
+          width="480"
+          height="300"
+          loading="lazy"
+          decoding="async"
+        />
+        <p>{locale === 'zh' ? '没有符合当前筛选的内容。' : 'Nothing matches the current filters.'}</p>
+      </section>
+      <script>
+        import '../scripts/wander-wall';
+      </script>
+    </>
+  ) : (
+    <section class="wander-empty" aria-label="Empty Wander state">
+      <img
+        class="status-illustration status-illustration--empty"
+        src="/images/status/wander-empty-cloud-pages-oops.png"
+        alt=""
+        width="480"
+        height="300"
+        loading="lazy"
+        decoding="async"
+      />
+      <p>{emptyText}</p>
+    </section>
+  )
+}

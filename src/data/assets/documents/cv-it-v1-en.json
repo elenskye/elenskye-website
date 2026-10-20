@@ -1,0 +1,12 @@
+{
+  "title": "cv-it-v1-en",
+  "asset": {
+    "discriminant": "existingDocument",
+    "value": {
+      "file": "public/cv/en/resumeDownloads/0/cv-it-v1-en.pdf",
+      "description": "英文 IT 简历（第一版）"
+    }
+  },
+  "usage": "Career 简历",
+  "deletionRequested": false
+}

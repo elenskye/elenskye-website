@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://elenskye.com/sitemap.xml

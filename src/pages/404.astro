@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="页面未找到 | Page not found | Elen Skye"
+  description="这条漫游路径暂时不存在 · This wandering path does not exist yet"
+  locale="zh"
+  path="/404/"
+  hasAlternate={false}
+  noindex
+>
+  <main id="main-content" tabindex="-1" class="page-shell page-shell--narrow not-found" data-pagefind-ignore>
+    <p class="page-eyebrow">404</p>
+    <h1>走到了地图之外</h1>
+    <p class="page-intro">这里暂时没有路径，回到漫游的起点吧</p>
+
+    <figure class="status-illustration status-illustration--404" aria-hidden="true">
+      <img
+        src="/images/status/wander-error-cloud-pages-404.png"
+        alt=""
+        width="640"
+        height="420"
+        decoding="async"
+      />
+    </figure>
+
+    <div class="not-found-en" lang="en">
+      <h2>Beyond the edge of the map</h2>
+      <p>This path does not exist yet. Let’s return to the beginning.</p>
+    </div>
+
+    <nav class="not-found-actions" aria-label="返回首页 · Return home">
+      <a class="button-link" href="/">返回呦呦漫游</a>
+      <a class="button-link" href="/en/" lang="en">Back to Wander</a>
+    </nav>
+  </main>
+</BaseLayout>

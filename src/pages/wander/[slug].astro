@@ -1,0 +1,87 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WanderGallery from '../../components/WanderGallery.astro';
+import { pagePaths } from '../../data/site';
+import {
+  formatWanderMonth,
+  getCategoryLabel,
+  getTopicLabel,
+  getWanderDetailPath,
+  getWanderSlug,
+  extractFirstImage,
+  getGalleryImages,
+  languageLabels,
+  makeExcerpt,
+} from '../../lib/wander';
+
+// Chinese detail pages: pure Chinese, no English extras.
+export async function getStaticPaths() {
+  const entries = await getCollection('wander', (entry) => entry.data.language === 'zh');
+  return entries.map((entry) => ({ params: { slug: getWanderSlug(entry) } }));
+}
+
+// Fetched at render time (not passed through getStaticPaths props) so that
+// frontmatter edits show up in dev without a server restart.
+const { slug } = Astro.params;
+const zhEntries = await getCollection('wander', (item) => item.data.language === 'zh');
+const entry = zhEntries.find((item) => getWanderSlug(item) === slug);
+// The dev server empties the content store while re-syncing after a Keystatic
+// save, so a path that getStaticPaths matched can momentarily resolve to
+// nothing. Redirecting beats a 500 that makes the whole site look broken.
+if (!entry) return Astro.redirect(pagePaths.wander.zh, 302);
+const { Content } = await render(entry);
+
+// Meta description only; the on-page intro paragraph below stays opt-in
+// (a hand-written summary), since the article body already opens with these
+// same words when auto-excerpted.
+const description = entry.data.summary || makeExcerpt(entry.body, 'zh', 140) || entry.data.title;
+const categoryLabel = getCategoryLabel(entry.data.category, 'zh');
+const topicLabels = entry.data.topics.flatMap((topic) => getTopicLabel(topic, 'zh') ?? []);
+const languageLabel = languageLabels.zh[entry.data.language];
+const dateLabel = formatWanderMonth(entry.data.month, 'zh');
+const galleryImages = getGalleryImages(entry, entry.data.title);
+const ogImageCandidate =
+  entry.data.thumbnailRef ?? entry.data.thumbnail ?? galleryImages[0]?.src ?? extractFirstImage(entry.body);
+const ogImage = ogImageCandidate?.toLowerCase().endsWith('.svg') ? undefined : ogImageCandidate;
+const currentPath = getWanderDetailPath(entry);
+const englishPath = `/en/wander/${getWanderSlug(entry)}/`;
+---
+
+<BaseLayout
+  title={`${entry.data.title} | Elen Skye`}
+  description={description}
+  locale="zh"
+  pageKey="wander"
+  path={currentPath}
+  alternatePath={englishPath}
+  xDefaultPath={currentPath}
+  languagePath={englishPath}
+  ogImage={ogImage}
+  ogImageAlt={entry.data.title}
+  ogType="article"
+>
+  <main id="main-content" tabindex="-1" class="page-shell page-shell--narrow" data-pagefind-body>
+    <article class="wander-article">
+      <h1>{entry.data.title}</h1>
+      <div class="wander-article-meta">
+        {categoryLabel && <span class="content-label">{categoryLabel}</span>}
+        {topicLabels.map((label) => (
+          <span>{label}</span>
+        ))}
+        <span>{languageLabel}</span>
+        {dateLabel && <span>{dateLabel}</span>}
+      </div>
+      {entry.data.summary && <p class="wander-article-summary">{entry.data.summary}</p>}
+      {/* Gallery works put the lightbox above the prose: the images are the
+          subject, the body text is the note underneath them. */}
+      <WanderGallery images={galleryImages} locale="zh" />
+      <div class="wander-article-body prose">
+        <Content />
+      </div>
+      <footer class="wander-article-footer">
+        <a class="quiet-link" href={pagePaths.wander.zh}>← 返回呦呦漫游</a>
+      </footer>
+    </article>
+  </main>
+</BaseLayout>

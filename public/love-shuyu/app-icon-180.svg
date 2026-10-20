@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="致舒宇 app icon">
+  <!--
+    /love-shuyu/ 的主屏／书签图标源文件，rasterize 成 apple-touch-icon.png。
+    与 favicon.svg 是同一颗四芒星，但**刻意不做圆角**：iOS 与 Android 都会自己
+    套一层圆角遮罩，源图再倒一次角，四角会露出底下的黑边。
+    星只占 60%，四周留出 20% 的安全边，圆角遮罩不会啃到星尖。
+  -->
+  <rect width="180" height="180" fill="#03050c" />
+  <g transform="translate(36 36) scale(4.5)">
+    <path
+      d="M12 0C13.1 7.7 16.3 10.9 24 12C16.3 13.1 13.1 16.3 12 24C10.9 16.3 7.7 13.1 0 12C7.7 10.9 10.9 7.7 12 0Z"
+      fill="#ffd9a0"
+    />
+  </g>
+</svg>

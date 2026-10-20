@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from 'astro:content';
+import PageShell from '../../components/PageShell.astro';
+import nowStatus from '../../data/now-status.json';
+import { pageCopy } from '../../data/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const page = pageCopy.en.now;
+const entries = (await getCollection('now', (entry) => entry.data.language === 'en')).sort(
+  (a, b) => b.data.year * 100 + b.data.month - (a.data.year * 100 + a.data.month)
+);
+const monthLabel = (year: number, month: number) =>
+  new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long' }).format(new Date(year, month - 1));
+const items = await Promise.all(
+  entries.map(async (entry) => ({ entry, Content: (await render(entry)).Content }))
+);
+---
+
+<BaseLayout title="Now | Elen Skye" description={page.description} locale="en" pageKey="now">
+  <PageShell eyebrow={page.eyebrow} title={page.title} description={page.description} variant="narrow" status={nowStatus.en}>
+    <section class="now-timeline" aria-label="Monthly timeline">
+      {
+        items.map(({ entry, Content }) => (
+          <article class="now-entry">
+            <span class="now-marker" aria-hidden="true" />
+            <h2>{monthLabel(entry.data.year, entry.data.month)}</h2>
+            <div class="now-entry-body prose">
+              <Content />
+            </div>
+          </article>
+        ))
+      }
+    </section>
+  </PageShell>
+</BaseLayout>

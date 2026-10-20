@@ -1,0 +1,12 @@
+{
+  "title": "wander-big-fish",
+  "asset": {
+    "discriminant": "existingImage",
+    "value": {
+      "file": "public/images/wander/big-fish.zh/big-fish.jpg",
+      "alt": ""
+    }
+  },
+  "usage": "Wander 封面",
+  "deletionRequested": false
+}

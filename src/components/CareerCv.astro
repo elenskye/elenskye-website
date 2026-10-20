@@ -1,0 +1,92 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { pagePaths, type Locale } from '../data/site';
+import { toPublicAssetUrl } from '../lib/assets';
+import { normalizeCareerSections } from '../lib/career-sections.js';
+
+interface Props {
+  locale: Locale;
+  data: CollectionEntry<'career'>['data'];
+}
+
+const { locale, data } = Astro.props;
+const wanderHref = pagePaths.wander[locale];
+const resumeDownloads = data.resumeDownloads.flatMap((item) => {
+  const label = item.label?.trim();
+  const href = toPublicAssetUrl(item.fileRef || item.file);
+  return label && href ? [{ label, href }] : [];
+});
+const sections = normalizeCareerSections(data.sections);
+
+const labels =
+  locale === 'zh'
+    ? {
+        email: '邮件联系',
+        // Trailing/leading spacing is embedded here on purpose; Chinese
+        // needs none around the inline link.
+        wanderPrefix: '部分项目与研究的完整记录会陆续收录进',
+        wanderLink: '呦呦漫游',
+        wanderSuffix: '。',
+      }
+    : {
+        email: 'Email Me',
+        // English needs a space before and none after the link text.
+        wanderPrefix: 'Full write-ups of selected projects and research will gradually land in ',
+        wanderLink: 'Wander',
+        wanderSuffix: '.',
+      };
+---
+
+<div class="cv">
+  <div class="cv-actions">
+    <a class="button-link" href={`mailto:${data.email}`}>{labels.email}</a>
+    {resumeDownloads.map((resume) => (
+      <a class="button-link" href={resume.href} download>
+        {resume.label}
+      </a>
+    ))}
+  </div>
+
+  {
+    sections.map((section) => (
+      <section class="cv-section" aria-label={section.title}>
+        <h2>{section.title}</h2>
+        {
+          section.mode === 'simple' ? (
+            <dl class="cv-skills">
+              {section.items.map((item) => (
+                <>
+                  <dt>{item.heading}</dt>
+                  <dd>{item.items}</dd>
+                </>
+              ))}
+            </dl>
+          ) : (
+            section.entries.map((entry) => (
+              <article class:list={['cv-entry', !entry.period && 'cv-entry--undated']}>
+                {entry.period && <span class="cv-period">{entry.period}</span>}
+                <div class="cv-entry-body">
+                  {entry.role && <h3>{entry.role}</h3>}
+                  {entry.org && <p class="cv-org">{entry.org}</p>}
+                  {entry.bullets.length > 0 && (
+                    <ul>
+                      {entry.bullets.map((bullet) => (
+                        <li>{bullet}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </article>
+            ))
+          )
+        }
+      </section>
+    ))
+  }
+
+  <slot />
+
+  {/* Rendered with the pieces adjacent so no stray whitespace collapses
+      between text and the link (the earlier "inWander" bug). */}
+  <p class="cv-wander-note">{labels.wanderPrefix}<a class="text-link" href={wanderHref}>{labels.wanderLink}</a>{labels.wanderSuffix}</p>
+</div>

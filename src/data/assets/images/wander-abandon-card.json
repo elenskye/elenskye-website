@@ -1,0 +1,12 @@
+{
+  "title": "wander-abandon-card",
+  "asset": {
+    "discriminant": "existingImage",
+    "value": {
+      "file": "public/images/wander/abandon/photo-abandon-1-card.webp",
+      "alt": ""
+    }
+  },
+  "usage": "Wander 性能缩略图（由原图无裁切缩放生成）",
+  "deletionRequested": false
+}

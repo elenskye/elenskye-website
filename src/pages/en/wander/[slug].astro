@@ -1,0 +1,107 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import WanderGallery from '../../../components/WanderGallery.astro';
+import { pagePaths } from '../../../data/site';
+import {
+  formatWanderMonth,
+  extractFirstImage,
+  getCategoryLabel,
+  getGalleryImages,
+  getTopicLabel,
+  getWanderSlug,
+  groupWanderWorks,
+  languageLabels,
+  makeExcerpt,
+} from '../../../lib/wander';
+
+// English side of every work: a full English detail page when an English
+// version exists, otherwise a stub with the translated title and summary
+// that links to the Chinese original.
+export async function getStaticPaths() {
+  const entries = await getCollection('wander');
+  return groupWanderWorks(entries).map((work) => ({ params: { slug: work.slug } }));
+}
+
+// Fetched at render time (not passed through getStaticPaths props) so that
+// frontmatter edits show up in dev without a server restart.
+const { slug } = Astro.params;
+const allEntries = await getCollection('wander');
+const work = groupWanderWorks(allEntries).find((item) => item.slug === slug);
+const entry = work?.en ?? work?.zh;
+// Same dev-server re-sync guard as the Chinese detail page.
+if (!work || !entry) return Astro.redirect(pagePaths.wander.en, 302);
+const isStub = !work.en;
+const Content = isStub ? undefined : (await render(entry)).Content;
+
+const title = isStub ? (entry.data.englishTitle ?? entry.data.title) : entry.data.title;
+// On-page intro paragraph: opt-in only (hand-written summary), same
+// reasoning as the Chinese detail page.
+const summary = isStub ? (entry.data.englishSummary ?? entry.data.summary ?? '') : (entry.data.summary ?? '');
+const description = isStub
+  ? summary || title
+  : entry.data.summary || makeExcerpt(entry.body, 'en', 140) || title;
+const categoryLabel = getCategoryLabel(entry.data.category, 'en');
+const topicLabels = entry.data.topics.flatMap((topic) => getTopicLabel(topic, 'en') ?? []);
+const languageLabel = languageLabels.en[entry.data.language];
+const dateLabel = formatWanderMonth(entry.data.month, 'en');
+const originalHref = `/wander/${getWanderSlug(entry)}/`;
+// Gallery images are language-neutral, so an English stub still renders the
+// full lightbox rather than degrading to a text-only redirect — for a photo
+// set the pictures ARE the content, and the stub note sits below them.
+const galleryImages = getGalleryImages(entry, title);
+const ogImageCandidate =
+  entry.data.thumbnailRef ?? entry.data.thumbnail ?? galleryImages[0]?.src ?? extractFirstImage(entry.body);
+const ogImage = ogImageCandidate?.toLowerCase().endsWith('.svg') ? undefined : ogImageCandidate;
+const currentPath = `/en/wander/${work.slug}/`;
+const chinesePath = `/wander/${work.slug}/`;
+const hasChineseCounterpart = Boolean(work.zh);
+---
+
+<BaseLayout
+  title={`${title} | Elen Skye`}
+  description={description}
+  locale="en"
+  pageKey="wander"
+  path={currentPath}
+  alternatePath={hasChineseCounterpart ? chinesePath : undefined}
+  xDefaultPath={hasChineseCounterpart ? chinesePath : currentPath}
+  languagePath={hasChineseCounterpart ? chinesePath : pagePaths.wander.zh}
+  hasAlternate={hasChineseCounterpart}
+  ogImage={ogImage}
+  ogImageAlt={title}
+  ogType="article"
+>
+  <main id="main-content" tabindex="-1" class="page-shell page-shell--narrow" data-pagefind-body>
+    <article class="wander-article">
+      <h1>{title}</h1>
+      <div class="wander-article-meta">
+        {categoryLabel && <span class="content-label">{categoryLabel}</span>}
+        {topicLabels.map((label) => (
+          <span>{label}</span>
+        ))}
+        <span>{languageLabel}</span>
+        {dateLabel && <span>{dateLabel}</span>}
+      </div>
+      {summary && <p class="wander-article-summary">{summary}</p>}
+      <WanderGallery images={galleryImages} locale="en" />
+      {
+        isStub ? (
+          <div class="wander-article-original">
+            <p>This piece is written in Chinese and has not been translated in full.</p>
+            <a class="quiet-link" href={originalHref} lang="zh-CN">
+              阅读中文原文 · Read the original →
+            </a>
+          </div>
+        ) : (
+          <div class="wander-article-body prose">
+            <Content />
+          </div>
+        )
+      }
+      <footer class="wander-article-footer">
+        <a class="quiet-link" href={pagePaths.wander.en}>← Back to Wander</a>
+      </footer>
+    </article>
+  </main>
+</BaseLayout>
