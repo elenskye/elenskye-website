@@ -51,7 +51,7 @@ const originalHref = `/wander/${getWanderSlug(entry)}/`;
 // set the pictures ARE the content, and the stub note sits below them.
 const galleryImages = getGalleryImages(entry, title);
 const ogImageCandidate =
-  entry.data.thumbnailRef ?? entry.data.thumbnail ?? galleryImages[0]?.src ?? extractFirstImage(entry.body);
+  entry.data.thumbnailRef ?? galleryImages[0]?.src ?? extractFirstImage(entry.body);
 const ogImage = ogImageCandidate?.toLowerCase().endsWith('.svg') ? undefined : ogImageCandidate;
 const currentPath = `/en/wander/${work.slug}/`;
 const chinesePath = `/wander/${work.slug}/`;

@@ -46,7 +46,7 @@
 - 通用图标使用 Lucide，尺寸 `16 / 20 / 24px`、线宽 `1.8`；按钮提供 `aria-label`，不用 Emoji 代替。
 - GitHub / LinkedIn 使用 `src/data/brand-marks.ts` 的单色官方品牌图形与光学归一 viewBox。
 - Logo A v1.0.0 是虚线路径与终点圆圈；页头内联 SVG，颜色跟随本站主题，减弱动效时静态显示。
-- Logo 交付版本位于 `public/assets/images/`；favicon 与 apple-touch-icon 使用各自正式文件。
+- Logo 源文件位于 `design/brand/`（不发布）；favicon 与 apple-touch-icon 使用各自正式文件。
 - `/love-shuyu/` 是唯一不用主站 favicon 的页面：它有自己的 `public/love-shuyu/favicon.svg`（深空底 + 一颗暖金实心四芒星，复用页面那条自绘星路径）。**故意不做描边、渐变或双色**——16px 标签页下这些细节全会糊掉，只有实心剪影认得出。它不是 iOS 主屏图标（Safari 不接受 SVG），这一页也不需要。
 
 ## 6. 图像与 Gallery

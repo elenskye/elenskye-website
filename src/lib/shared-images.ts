@@ -1,7 +1,9 @@
+import { toPublicAssetUrl } from './gallery.js';
+
 interface ImageAssetRecord {
   title: string;
   asset: {
-    discriminant: 'image' | 'existingImage';
+    discriminant: 'existingImage';
     value: {
       file?: string;
       alt?: string;
@@ -20,19 +22,11 @@ const assetModules = import.meta.glob<{ default: ImageAssetRecord }>(
   { eager: true }
 );
 
-function toPublicUrl(record: ImageAssetRecord): string | undefined {
-  const file = record.asset?.value?.file;
-  if (!file) return undefined;
-  if (file.startsWith('public/')) return `/${file.slice('public/'.length)}`;
-  if (file.startsWith('/')) return file;
-  return record.asset.discriminant === 'image' ? `/assets/images/${file}` : `/${file}`;
-}
-
 const sharedImages = new Map<string, SharedImageAsset>();
 
 for (const module of Object.values(assetModules)) {
   const record = module.default;
-  const src = toPublicUrl(record);
+  const src = toPublicAssetUrl(record.asset?.value?.file);
   if (!record?.title || !src) continue;
   sharedImages.set(record.title, {
     slug: record.title,

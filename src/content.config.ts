@@ -34,9 +34,7 @@ const wander = defineCollection({
     // name, `.en` suffix) replaces the stub entirely.
     englishTitle: z.string().optional(),
     englishSummary: z.string().optional(),
-    thumbnail: z.string().optional(),
-    // Optional reference to any existing image under public/, so shared
-    // assets are reused rather than uploaded again. Wins over `thumbnail`.
+    // Files are referenced from the library (public/assets/images/…).
     thumbnailRef: z.string().optional(),
     // Gallery works: an ordered image set rendered as a lightbox above the
     // body text. Empty for every other kind of work. Kept deliberately
@@ -45,7 +43,6 @@ const wander = defineCollection({
     gallery: z
       .array(
         z.object({
-          image: z.string().optional(),
           imageRef: z.string().optional(),
           alt: z.string().optional(),
           caption: z.string().optional(),
@@ -91,9 +88,9 @@ const careerSection = z.object({
   ]),
 });
 
+// A document of the library (public/assets/documents/…).
 const resumeDownload = z.object({
   label: z.string().optional(),
-  file: z.string().optional(),
   fileRef: z.string().optional(),
 });
 
@@ -113,7 +110,7 @@ const career = defineCollection({
 
 // One file per language (zh.md / en.md). The context intro and background
 // timeline live in frontmatter; the markdown body is the
-// "一点故事 / A LITTLE HISTORY" prose. Shared image slots live in
+// "一点故事 / A LITTLE HISTORY" prose. The pictures (library references) live in
 // src/data/about-images.json.
 const about = defineCollection({
   loader: glob({ pattern: CONTENT_PATTERN, base: './src/content/about' }),

@@ -3,7 +3,7 @@ language: zh
 email: 2711690016@qq.com
 resumeDownloads:
   - label: ❗️中文页面简历仍在完善中❗️
-    fileRef: public/cv/zh/resumeDownloads/0/cv-it-v0-zh.rtf
+    fileRef: public/assets/documents/cv-it-v0-zh.rtf
 summary: >-
   重庆大学（985）本科，新加坡国立大学系统分析研究生（GDipSA, NUS-ISS），机器学习与全栈软件工程并行：设计并评测过多个深度学习模型，也以
   Java/Spring Boot/ReactJS 交付生产级系统

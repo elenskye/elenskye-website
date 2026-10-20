@@ -2,6 +2,14 @@
 
 这里只记录已完成且验证过的阶段结果；状态与待办见 `ROADMAP.md`。
 
+## 2026-10-20 —— 内容文件统一进资源库
+
+- 作品、About、简历用到的 23 个文件从 `public/images/wander/…`、`public/images/about/…`、`public/cv/…` 搬进资源库 `public/assets/images`、`public/assets/documents`，内容里的引用全部改好；原来没登记的 14 个补上登记，登记里不再写 `deletionRequested`。
+- 字段只留引用式：去掉 `thumbnail`、画廊的 `image`、简历的 `file` 和 About 的两个上传列表，显示代码和三处各写一份的登记路径解析一起简化。
+- `audit:assets` 加查资源库的每个文件都登记了、登记都指向资源库；`qa:refs` 改成查内容只引用资源库里的文件；构建检查不再要求简历在 `/cv/{zh,en}/`，改为必须是资源库里的文档。
+- 5 个没被用到的 Logo / 主屏图标源文件移到 `design/brand/`，不再发布。`/love-shuyu/` 没有任何改动。
+- **验证**：改前改后各构建一次逐页比对，34 个页面和订阅在把旧文件网址换成新网址后完全一致；完整 `npm run qa` 通过；Pomelo 在副本上编辑各页、加文件后网站检查通过。
+
 ## 2026-10-20 —— 拿掉 Keystatic，内容改由 Pomelo 编辑与发布
 
 - 内容的编辑、预览和发布都搬进了 Pomelo 的「呦呦漫游」；网站里删掉 Keystatic（`keystatic.config.ts`、`@keystatic/*`、开发时的资源引用预览接口），以及只为它在线模式准备的 `build:remote-check`、`qa-remote-build.mjs` 和 `@astrojs/vercel`。

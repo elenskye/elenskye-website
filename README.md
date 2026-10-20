@@ -10,12 +10,14 @@ Elen Skye 的双语个人网站，以「漫游」连接写作、项目、画作�
 | --- | --- |
 | `src/components/` | 页头、页脚、Wander 墙、筛选、搜索与 Gallery |
 | `src/content/` | About、Career、Now、Wander 双语内容 |
-| `src/data/` | 站点文案、分类、社交入口、资源登记与 `/love-shuyu/` 时间线数据 |
+| `src/data/` | 站点文案、分类、社交入口、资源登记（`assets/`）与 `/love-shuyu/` 时间线数据 |
 | `src/layouts/`、`src/pages/` | 公共布局、双语路由、RSS、404 与 sitemap |
 | `src/lib/` | 内容、资源、Gallery、搜索与 RSS 逻辑 |
 | `src/scripts/` | 页面端脚本：Wander 墙与 `/love-shuyu/` 各模块 |
 | `src/styles/` | 字体、Vermilion 主题、排版与响应式样式 |
-| `public/` | 简历、图片、Logo、图标与原样发布的静态文件 |
+| `public/assets/` | 资源库：内容用到的全部图片（`images/`）和文档（`documents/`，含简历），每个都已登记 |
+| `public/` 其余 | 网站自己的图标、分享图与状态插图（`images/og`、`images/status`）、搜索脚本，及 `/love-shuyu/` 的文件 |
+| `design/brand/` | Logo 与主屏图标的源文件，不发布 |
 | `scripts/` | QA、资源审计、删除预览与 `/love-shuyu/` 照片压缩 |
 
 `/love-shuyu/` 是 Phase 18 的隐藏页（仅中文、无站内入口、`noindex`），构成如下：
@@ -49,7 +51,7 @@ Elen Skye 的双语个人网站，以「漫游」连接写作、项目、画作�
 
 | 要改的东西 | 去哪里 |
 | --- | --- |
-| Wander 作品、Now 与当下状态、About、Career 与简历、资源登记、Wander 分类词表、外部链接 | Pomelo →「呦呦漫游」 |
+| Wander 作品、Now 与当下状态、About、Career 与简历、资源库、Wander 分类词表、外部链接 | Pomelo →「呦呦漫游」 |
 | 站点文案、导航 | `src/data/site.ts` |
 | `/love-shuyu/` 的信、称谓、按钮文案 | `src/pages/love-shuyu.astro` 顶部的 `copy` 常量 |
 | `/love-shuyu/` 的 11 个时间线节点 | `src/data/love-shuyu-timeline.ts`（`place` / `body` / `alt` 都是必填，漏写会在 `tsc` 报错） |
@@ -70,8 +72,8 @@ Elen Skye 的双语个人网站，以「漫游」连接写作、项目、画作�
 | `npm run preview` | 预览构建产物。**视觉验收走这里，不是 `npm run dev`**：dev 不压缩 CSS，压缩器改写简写导致的问题只在构建产物里出现 |
 | `npm run qa` | 阶段收尾、发布候选或部署前的完整检查 |
 | `npm run qa:workspace` | 检查内容文件命名 |
-| `npm run audit:assets` | 检查资源体积、重复与坏引用 |
-| `npm run qa:refs` | 检查内容里引用的文件存在、共享图片已登记 |
+| `npm run audit:assets` | 检查文件体积、重复，以及资源库的每个文件都登记了 |
+| `npm run qa:refs` | 检查内容只引用资源库里的文件，且文件都在 |
 | `npm run assets:delete-preview` | 只读预览资源引用，不执行删除 |
 | `node scripts/love-shuyu-photos.mjs` | 压缩 `/love-shuyu/` 时间线照片到 1.5 MB 内 |
 | `node scripts/love-memory-photos.mjs /绝对路径/love-memory` | 用 Quick Look 解码 HDR／HEIC，按原比例生成 1280px、JPEG Q76 的照片流副本并逐张检查 |

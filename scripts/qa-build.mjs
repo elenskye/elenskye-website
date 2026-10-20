@@ -143,17 +143,12 @@ for (const file of htmlFiles) {
     errors.push(`${label}: missing the approved empty-state illustration`);
   }
 
-  const resumeTargets = [...html.matchAll(/href="(\/cv\/[^"?#]+)"/g)].map((match) => match[1]);
-  if (label === 'career/index.html') {
-    if (resumeTargets.length === 0) errors.push('career/index.html: expected at least one Chinese resume target');
-    if (resumeTargets.some((target) => !target.startsWith('/cv/zh/'))) {
-      errors.push('career/index.html: found a non-Chinese resume target');
-    }
-  }
-  if (label === 'en/career/index.html') {
-    if (resumeTargets.length === 0) errors.push('en/career/index.html: expected at least one English resume target');
-    if (resumeTargets.some((target) => !target.startsWith('/cv/en/'))) {
-      errors.push('en/career/index.html: found a non-English resume target');
+  // Résumé downloads are documents of the library.
+  if (label === 'career/index.html' || label === 'en/career/index.html') {
+    const resumeTargets = [...html.matchAll(/<a [^>]*href="([^"]+)"[^>]*\bdownload\b/g)].map((match) => match[1]);
+    if (resumeTargets.length === 0) errors.push(`${label}: expected at least one resume download`);
+    if (resumeTargets.some((target) => !target.startsWith('/assets/documents/'))) {
+      errors.push(`${label}: a resume download is not a library document`);
     }
   }
 

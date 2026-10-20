@@ -1,0 +1,11 @@
+{
+  "title": "profile-test-2",
+  "asset": {
+    "discriminant": "existingImage",
+    "value": {
+      "file": "public/assets/images/profile-test-2.jpg",
+      "alt": ""
+    }
+  },
+  "usage": "关于我 · 肖像"
+}

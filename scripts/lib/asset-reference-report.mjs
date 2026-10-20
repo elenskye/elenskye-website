@@ -48,8 +48,7 @@ function physicalAssetFile(record) {
   if (!stored) return undefined;
   if (stored.startsWith('public/')) return resolve(projectRoot, stored);
   if (stored.startsWith('/')) return join(projectRoot, 'public', stored.slice(1));
-  const directory = record.asset.discriminant === 'image' ? 'assets/images' : 'assets/documents';
-  return join(projectRoot, 'public', directory, stored);
+  return undefined;
 }
 
 export async function loadAssetRecords() {

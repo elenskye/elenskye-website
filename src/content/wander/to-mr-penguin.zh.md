@@ -9,6 +9,7 @@ englishTitle: To Mr. Penguin
 englishSummary: >-
   A New Year poem addressed to Mr. Penguin — about another kind of winter,
   hollow circles, and survivors of a different blizzard.
+thumbnailRef: public/assets/images/cornelius-ventures-ak81vc-kcf4-unsplash.jpg
 gallery: []
 ---
 新年快乐，企鹅先生\

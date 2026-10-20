@@ -3,10 +3,9 @@
   "asset": {
     "discriminant": "existingDocument",
     "value": {
-      "file": "public/cv/zh/resumeDownloads/0/cv-it-v0-zh.rtf",
+      "file": "public/assets/documents/cv-it-v0-zh.rtf",
       "description": "中文 IT 简历（测试版）"
     }
   },
-  "usage": "Career 简历",
-  "deletionRequested": true
+  "usage": "Career 简历"
 }

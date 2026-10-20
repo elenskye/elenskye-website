@@ -8,9 +8,9 @@ month: 2025-10
 summary: >-
   An essay written after watching Big Fish — on true versions, fancy versions,
   and why the story itself is the best answer.
-thumbnailRef: public/images/wander/big-fish.zh/big-fish-card.webp
+thumbnailRef: public/assets/images/big-fish-card.webp
 ---
-![](/images/wander/big-fish.zh/big-fish.jpg)
+![](/assets/images/big-fish.jpg)
 
 > "And I suppose if I had to choose between the true version and an elaborate one involving a fish and a wedding ring, **I might choose the fancy version.**"
 

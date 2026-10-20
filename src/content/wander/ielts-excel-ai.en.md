@@ -5,7 +5,7 @@ category: notes
 topics:
   - learning-methods
 month: '2025-05'
-thumbnailRef: public/images/wander/ielts-excel-ai.zh/ielts-1-card.webp
+thumbnailRef: public/assets/images/ielts-1-card.webp
 summary: >-
   How I went from a mock 5.5 to a first-attempt IELTS 7.5 in five months, using
   an Excel spaced-repetition sheet and AI-generated personal scripts.
@@ -14,15 +14,15 @@ From late December to early May, over nearly half a year, I passed NUS's written
 
 The method is very direct. In one word: **memorise**. But do not memorise model phrases mechanically. Memorise **your own material**, according to a plan.
 
-![An Excel sheet scheduling review dates for each set of speaking material](/images/wander/ielts-excel-ai.zh/ielts-1.jpeg)
+![An Excel sheet scheduling review dates for each set of speaking material](/assets/images/ielts-1.jpeg)
 
 Figure 1 shows the Excel sheet I made. Each row set review dates according to the Ebbinghaus forgetting curve, while each column represented one set of speaking material. Language learning requires more input than output. Many students struggle to speak or hesitate to express themselves partly because of confidence—be more confident! Once you study abroad, you realise that you do not need to sound like a TED speaker before you are allowed to speak, and even native speakers make grammatical mistakes. The other reason is simpler: there is not enough material in their heads. They think of a sentence in Chinese but have no idea how to express it in English.
 
 The first step, then, is to secure effective input. Reading and listening alone can be slow. If you memorise useful material thoroughly and reinforce it with a spaced-repetition schedule, you retain more than the individual sentences. Once you have memorised several sets, you will be surprised to find yourself freely retrieving and recombining the expressions inside them. For example, after preparing an answer to “Why is teamwork important?”, you can reuse the structure for “Why is anything important?” or to describe someone who is a good leader or team member. The more material you internalise, the stronger this “1 + 1 > 2” effect becomes. An hour every morning is a worthwhile investment.
 
-![A prompt used to develop personalised English speaking material with AI](/images/wander/ielts-excel-ai.zh/ielts-2.jpeg)
+![A prompt used to develop personalised English speaking material with AI](/assets/images/ielts-2.jpeg)
 
-![A prompt used to ask AI to polish English phrasing](/images/wander/ielts-excel-ai.zh/ielts-3.jpeg)
+![A prompt used to ask AI to polish English phrasing](/assets/images/ielts-3.jpeg)
 
 The more important question is how to create **your own material**, and why it needs to be **your own**.
 

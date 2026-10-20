@@ -3,10 +3,9 @@
   "asset": {
     "discriminant": "existingImage",
     "value": {
-      "file": "public/images/wander/big-fish.zh/big-fish.jpg",
+      "file": "public/assets/images/big-fish.jpg",
       "alt": ""
     }
   },
-  "usage": "Wander 封面",
-  "deletionRequested": false
+  "usage": "Wander 封面"
 }

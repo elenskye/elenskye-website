@@ -9,10 +9,10 @@ interface Props {
 }
 
 const { locale } = Astro.props;
-const portraits = [...aboutImages.portraits, ...aboutImages.portraitRefs]
+const portraits = aboutImages.portraitRefs
   .map((path) => toPublicAssetUrl(path))
   .filter((path): path is string => Boolean(path));
-const artworks = [...aboutImages.artworks, ...aboutImages.artworkRefs]
+const artworks = aboutImages.artworkRefs
   .map((path) => toPublicAssetUrl(path))
   .filter((path): path is string => Boolean(path));
 const labels =

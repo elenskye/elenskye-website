@@ -1,6 +1,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { toPublicAssetUrl } from './gallery.js';
 
 // Content bridge: convert the Markdoc-style tags the content uses into
 // ordinary mdast nodes that Astro's Markdown renderer understands.
@@ -61,14 +62,6 @@ const CLOSE_TAG = /\s*\{%\s*\/table\s*%\}\s*$/;
 const SHARED_IMAGE_TAG = /^\s*\{%\s*sharedImage\b([\s\S]*?)\/%\}\s*$/;
 const imageRegistryDirectory = fileURLToPath(new URL('../data/assets/images/', import.meta.url));
 
-function toPublicUrl(record) {
-  const file = record?.asset?.value?.file;
-  if (!file) return undefined;
-  if (file.startsWith('public/')) return `/${file.slice('public/'.length)}`;
-  if (file.startsWith('/')) return file;
-  return record.asset.discriminant === 'image' ? `/assets/images/${file}` : `/${file}`;
-}
-
 function loadSharedImages() {
   const registry = new Map();
   let filenames = [];
@@ -82,7 +75,7 @@ function loadSharedImages() {
   for (const filename of filenames) {
     if (extname(filename) !== '.json') continue;
     const record = JSON.parse(readFileSync(join(imageRegistryDirectory, filename), 'utf8'));
-    const src = toPublicUrl(record);
+    const src = toPublicAssetUrl(record?.asset?.value?.file);
     if (!record?.title || !src) continue;
     registry.set(record.title, { src, alt: record.asset?.value?.alt ?? '' });
   }

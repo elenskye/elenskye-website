@@ -5,7 +5,7 @@ category: notes
 topics:
   - learning-methods
 month: '2025-05'
-thumbnailRef: public/images/wander/ielts-excel-ai.zh/ielts-1-card.webp
+thumbnailRef: public/assets/images/ielts-1-card.webp
 englishTitle: 'Excel&AI: One Method to Quickly Master IELTS'
 englishSummary: >-
   How I went from a mock 5.5 to a first-attempt IELTS 7.5 in five months, using
@@ -15,15 +15,15 @@ englishSummary: >-
 
 方法非常直接，一个字总结，"背"，但不是死背高分表达，而是**有规划**地背**自己的东西**。
 
-![](/images/wander/ielts-excel-ai.zh/ielts-1.jpeg)
+![](/assets/images/ielts-1.jpeg)
 
 图1是我当时制作的Excel表格，每一行按照艾宾浩斯曲线确定复习日期，每一列都是一期语料。英语学习是输入大于输出的，很多同学口语不好，不敢表达，一方面有心态原因（自信一点！出国后你会发现，你并不需要练到TED演讲的水平才有资格，很多母语者都会犯语法错误），另一方面是脑子里没有货，想到一句中文，根本不知道如何对应着表达。
 
 因此，第一步，就是保证有效输入，只是读和听收效很慢，把语料扎实背下来，用记忆曲线刻在脑子里，你其实记住的不仅仅是你背下来的那句话，当你背了多个语料后，你会惊喜地发现，自己开始把其中的表达进行自由调用和重组。打个比方，你背完Why teamwork is important，在交流时完全可以换成Anything is important，或者描述one person who is a good leader/team member。你背得越多，这种"1 + 1 > 2"的效果就越好，每天早上投入一个小时，很划算的！
 
-![](/images/wander/ielts-excel-ai.zh/ielts-2.jpeg)
+![](/assets/images/ielts-2.jpeg)
 
-![](/images/wander/ielts-excel-ai.zh/ielts-3.jpeg)
+![](/assets/images/ielts-3.jpeg)
 
 接下来说更重要的部分，如何制作"**自己的语料**"，以及为什么要用"**自己的语料**"？
 

@@ -258,28 +258,28 @@ for (const metadataFile of ['rss.xml', 'en/rss.xml', 'sitemap.xml']) {
 assert.deepEqual(resolveGalleryImages([], 'fallback'), [], 'empty gallery must yield no images');
 
 assert.deepEqual(
-  resolveGalleryImages([{ imageRef: 'public/images/wander/a.jpg', alt: 'A' }], 'fallback'),
-  [{ src: '/images/wander/a.jpg', alt: 'A', caption: undefined }],
+  resolveGalleryImages([{ imageRef: 'public/assets/images/a.jpg', alt: 'A' }], 'fallback'),
+  [{ src: '/assets/images/a.jpg', alt: 'A', caption: undefined }],
   'single image: imageRef must resolve to a public URL'
 );
 
 assert.deepEqual(
   resolveGalleryImages(
     [
-      { imageRef: 'public/images/wander/a.jpg', image: 'public/images/wander/ignored.jpg', alt: 'A' },
-      { image: 'public/images/wander/b.jpg', alt: '', caption: 'B caption' },
+      { imageRef: 'public/assets/images/a.jpg', alt: 'A' },
+      { imageRef: 'public/assets/images/b.jpg', alt: '', caption: 'B caption' },
     ],
     'fallback'
   ),
   [
-    { src: '/images/wander/a.jpg', alt: 'A', caption: undefined },
-    { src: '/images/wander/b.jpg', alt: 'fallback', caption: 'B caption' },
+    { src: '/assets/images/a.jpg', alt: 'A', caption: undefined },
+    { src: '/assets/images/b.jpg', alt: 'fallback', caption: 'B caption' },
   ],
-  'multi image: imageRef wins over image, blank alt falls back to the title'
+  'multi image: in order, blank alt falls back to the title'
 );
 
 assert.deepEqual(
-  resolveGalleryImages([{ alt: 'orphan' }, { image: '', imageRef: '' }], 'fallback'),
+  resolveGalleryImages([{ alt: 'orphan' }, { imageRef: '' }], 'fallback'),
   [],
   'rows with no usable image path must be dropped, not rendered broken'
 );

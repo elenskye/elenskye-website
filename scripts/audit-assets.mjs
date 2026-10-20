@@ -5,9 +5,11 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../public/', import.meta.url));
 const projectRoot = fileURLToPath(new URL('../', import.meta.url));
-const registryDirectories = [
-  fileURLToPath(new URL('../src/data/assets/images/', import.meta.url)),
-  fileURLToPath(new URL('../src/data/assets/documents/', import.meta.url)),
+// The library: every content file lives in public/assets/{images,documents} and is registered once in
+// src/data/assets/{images,documents}; content refers to nothing else (qa-references.mjs).
+const library = [
+  { registry: fileURLToPath(new URL('../src/data/assets/images/', import.meta.url)), folder: 'assets/images' },
+  { registry: fileURLToPath(new URL('../src/data/assets/documents/', import.meta.url)), folder: 'assets/documents' },
 ];
 const imageExtensions = new Set(['.avif', '.gif', '.jpeg', '.jpg', '.png', '.svg', '.webp']);
 const maxImageBytes = 1.5 * 1024 * 1024;
@@ -56,8 +58,8 @@ const duplicates = [...byHash.values()].filter((paths) => paths.length > 1);
 const missingRegistrations = [];
 const registrationsByFile = new Map();
 
-for (const directory of registryDirectories) {
-  for (const registryFile of await walk(directory)) {
+for (const { registry, folder } of library) {
+  for (const registryFile of await walk(registry)) {
     if (extname(registryFile) !== '.json') continue;
     const record = JSON.parse(await readFile(registryFile, 'utf8'));
     const stored = record.asset?.value?.file;
@@ -65,13 +67,11 @@ for (const directory of registryDirectories) {
       missingRegistrations.push(`${relative(projectRoot, registryFile)}: 未登记实际文件`);
       continue;
     }
-    let target;
-    if (stored.startsWith('public/')) target = resolve(projectRoot, stored);
-    else if (stored.startsWith('/')) target = join(root, stored.slice(1));
-    else {
-      const directoryName = record.asset.discriminant === 'image' ? 'assets/images' : 'assets/documents';
-      target = join(root, directoryName, stored);
+    if (!stored.startsWith(`public/${folder}/`)) {
+      missingRegistrations.push(`${relative(projectRoot, registryFile)}: 文件不在 public/${folder}/ 里（${stored}）`);
+      continue;
     }
+    const target = resolve(projectRoot, stored);
     try {
       await access(target);
     } catch {
@@ -86,6 +86,12 @@ for (const directory of registryDirectories) {
 }
 
 const duplicateRegistrations = [...registrationsByFile.values()].filter((paths) => paths.length > 1);
+const unregisteredFiles = [];
+for (const { folder } of library) {
+  for (const file of await walk(join(root, folder))) {
+    if (!file.endsWith('.DS_Store') && !registrationsByFile.has(file)) unregisteredFiles.push(relative(root, file));
+  }
+}
 console.log(`Assets: ${files.length} files, ${(totalBytes / 1024 / 1024).toFixed(1)} MB`);
 if (largestImage) {
   console.log(`Largest image: ${(largestImage.size / 1024 / 1024).toFixed(1)} MB  ${largestImage.file}`);
@@ -117,6 +123,14 @@ if (missingRegistrations.length) {
   process.exitCode = 1;
 } else {
   console.log(`Resource registrations: ${registrationsByFile.size} valid`);
+}
+
+if (unregisteredFiles.length) {
+  console.error('Library files without a registration:');
+  for (const file of unregisteredFiles) console.error(`- ${file}`);
+  process.exitCode = 1;
+} else {
+  console.log('Unregistered library files: none');
 }
 
 if (duplicateRegistrations.length) {

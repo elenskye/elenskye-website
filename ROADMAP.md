@@ -60,3 +60,4 @@
 - 视觉复核由站主自行进行，Agent 不列清单。
 - 内容编辑与发布用 Pomelo 取代 Keystatic：发布直接推 `main`，不走 PR；提交说明由站主自己写，内容和代码改动一起提交。
 - 图标用 `@lucide/astro`，网站不再带 React；内容只用 Markdown，不支持 MDX。
+- 内容文件统一放在资源库（`public/assets/images`、`public/assets/documents`），每个都登记，内容只用引用式字段（`thumbnailRef`、`imageRef`、`fileRef`、About 的两个 Refs 列表）；旧的图片和简历网址不做跳转。Logo 源文件移到 `design/brand/`。

@@ -42,7 +42,7 @@ const languageLabel = languageLabels.zh[entry.data.language];
 const dateLabel = formatWanderMonth(entry.data.month, 'zh');
 const galleryImages = getGalleryImages(entry, entry.data.title);
 const ogImageCandidate =
-  entry.data.thumbnailRef ?? entry.data.thumbnail ?? galleryImages[0]?.src ?? extractFirstImage(entry.body);
+  entry.data.thumbnailRef ?? galleryImages[0]?.src ?? extractFirstImage(entry.body);
 const ogImage = ogImageCandidate?.toLowerCase().endsWith('.svg') ? undefined : ogImageCandidate;
 const currentPath = getWanderDetailPath(entry);
 const englishPath = `/en/wander/${getWanderSlug(entry)}/`;

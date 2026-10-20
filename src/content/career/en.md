@@ -3,7 +3,7 @@ language: en
 email: tianyou.lei@u.nus.edu
 resumeDownloads:
   - label: Download IT CV
-    fileRef: public/cv/en/resumeDownloads/0/cv-it-v1-en.pdf
+    fileRef: public/assets/documents/cv-it-v1-en.pdf
 summary: >-
   Chongqing University undergraduate and GDipSA (NUS-ISS) student combining
   machine learning with full-stack software engineering — from benchmarked

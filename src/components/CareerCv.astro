@@ -13,7 +13,7 @@ const { locale, data } = Astro.props;
 const wanderHref = pagePaths.wander[locale];
 const resumeDownloads = data.resumeDownloads.flatMap((item) => {
   const label = item.label?.trim();
-  const href = toPublicAssetUrl(item.fileRef || item.file);
+  const href = toPublicAssetUrl(item.fileRef);
   return label && href ? [{ label, href }] : [];
 });
 const sections = normalizeCareerSections(data.sections);

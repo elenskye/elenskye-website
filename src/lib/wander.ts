@@ -207,11 +207,7 @@ export function toWanderCards(entries: WanderEntry[], locale: Locale): WanderCar
         // work usually has no image in its body at all), then the first image
         // found in the piece's own body.
         thumbnail: toPublicAssetUrl(
-          entry.data.thumbnailRef ??
-            entry.data.thumbnail ??
-            entry.data.gallery.find((item) => item.imageRef || item.image)?.imageRef ??
-            entry.data.gallery.find((item) => item.imageRef || item.image)?.image ??
-            extractFirstImage(entry.body)
+          entry.data.thumbnailRef ?? entry.data.gallery.find((item) => item.imageRef)?.imageRef ?? extractFirstImage(entry.body)
         ),
       };
     });

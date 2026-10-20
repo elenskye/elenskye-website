@@ -1,0 +1,11 @@
+{
+  "title": "photo-abandon-3",
+  "asset": {
+    "discriminant": "existingImage",
+    "value": {
+      "file": "public/assets/images/photo-abandon-3.jpg",
+      "alt": ""
+    }
+  },
+  "usage": "作品《个人摄影集：ABANDON 其一》"
+}

@@ -3,10 +3,9 @@
   "asset": {
     "discriminant": "existingImage",
     "value": {
-      "file": "public/images/wander/ielts-excel-ai.zh/ielts-2.jpeg",
+      "file": "public/assets/images/ielts-2.jpeg",
       "alt": "Persona Chat Prompt"
     }
   },
-  "usage": "Wander 卡片内容",
-  "deletionRequested": false
+  "usage": "Wander 卡片内容"
 }

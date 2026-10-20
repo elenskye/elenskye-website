@@ -1,0 +1,11 @@
+{
+  "title": "art-test-1",
+  "asset": {
+    "discriminant": "existingImage",
+    "value": {
+      "file": "public/assets/images/art-test-1.jpg",
+      "alt": ""
+    }
+  },
+  "usage": "关于我 · 画作 / 摄影"
+}
