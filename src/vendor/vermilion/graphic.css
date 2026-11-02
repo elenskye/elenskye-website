@@ -1,0 +1,49 @@
+/* 笔势与纸片 —— 内联 SVG 的上色（DESIGN.md §4「纸片」「笔势」）。
+ *
+ * 用法：内联 marks/graphic/ 里的 SVG（或动效片段），给 <svg> 或它的外层加上 va-graphic；
+ * 图形放在表面底上（卡片悬停、空状态框、面板）时，外层再加 va-on-surface。
+ * 依赖网页方言的颜色变量 --color-*（tokens/web.css），暗色由 [data-theme='dark'] 切换。
+ * 用 <img> 显示时这里的规则不生效，请改用构建产物里上好色的 themed/ 版本。
+ */
+.va-graphic {
+  --va-ink: var(--color-accent);
+  --va-paper: var(--color-surface-cool);
+  --va-paper-2: var(--color-line);
+  --va-ember: var(--color-ember);
+}
+
+/* 第一层纸取「与所在底色相邻的一层面色」：页面底上，浅色用分区色、暗色用表面色 */
+[data-theme='dark'] .va-graphic {
+  --va-paper: var(--color-surface);
+}
+
+/* 表面底上，两种模式都用分区色 */
+.va-on-surface .va-graphic,
+.va-graphic.va-on-surface,
+[data-theme='dark'] .va-on-surface .va-graphic,
+[data-theme='dark'] .va-graphic.va-on-surface {
+  --va-paper: var(--color-surface-cool);
+}
+
+.va-graphic .va-ink { fill: var(--va-ink); }
+.va-graphic .va-paper { fill: var(--va-paper); }
+.va-graphic .va-paper-2 { fill: var(--va-paper-2); }
+
+/* 动效用的部件：纸片的错位、遮罩描边、朱红点（静态时不可见） */
+.va-graphic .va-paper,
+.va-graphic .va-paper-2 {
+  transform-box: fill-box;
+}
+
+.va-graphic .va-mk {
+  fill: none;
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: 0;
+}
+
+.va-graphic .va-ember {
+  fill: var(--va-ember);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}

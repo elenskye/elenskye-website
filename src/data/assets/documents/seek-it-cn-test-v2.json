@@ -1,0 +1,11 @@
+{
+  "title": "seek-it-cn-test-v2",
+  "asset": {
+    "discriminant": "existingDocument",
+    "value": {
+      "file": "public/assets/documents/seek-it-cn-test-v2.pdf",
+      "description": ""
+    }
+  },
+  "usage": ""
+}

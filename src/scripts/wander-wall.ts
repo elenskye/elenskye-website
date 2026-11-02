@@ -1,4 +1,5 @@
 import { isWanderCardVisible } from '../lib/wander-filter.js';
+import { moveSlideIndicator } from '../vendor/vermilion/selection-slide/selection-slide.js';
 
 type FilterState = {
   topic: string | null;
@@ -88,6 +89,18 @@ const setupWanderWall = () => {
     applyFilter();
   });
 
+  // The selected topic carries the Vermilion selection slide (synced from
+  // visual-assets): a cyan underline that slides to the newly selected topic
+  // and fades out when the topic is cleared. The 6px inset hugs the label.
+  const topicTrack = document.querySelector<HTMLElement>('[data-topic-track]');
+  const topicIndicator = topicTrack?.querySelector<HTMLElement>('.va-slide-indicator');
+  const syncTopicIndicator = (instant = false) => {
+    if (!topicTrack || !topicIndicator) return;
+    const active = topicTrack.querySelector<HTMLElement>('.topic-chip[aria-pressed="true"]');
+    moveSlideIndicator(topicIndicator, active, { inset: 6, instant });
+  };
+  window.addEventListener('resize', () => syncTopicIndicator(true));
+
   document.querySelectorAll<HTMLButtonElement>('.topic-chip').forEach((chip) => {
     chip.addEventListener('click', () => {
       const next = state.topic === chip.dataset.topic ? null : (chip.dataset.topic ?? null);
@@ -95,6 +108,7 @@ const setupWanderWall = () => {
       document.querySelectorAll<HTMLButtonElement>('.topic-chip').forEach((other) => {
         other.setAttribute('aria-pressed', other.dataset.topic === next ? 'true' : 'false');
       });
+      syncTopicIndicator();
       applyFilter();
     });
   });

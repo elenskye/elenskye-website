@@ -1,0 +1,56 @@
+/* 数字计数 —— calm。
+ *
+ * 数字徽标从 00 数到实际值（320ms ease-out），每次打开网站只数一次。
+ * 结构：span.va-count.is-playing，style="--va-count-to: <数值>"，里面放真实数字 span.va-count-value（补零到两位）。
+ * 数的过程：用 @property 注册的整数 --va-count 做动画，由 ::before 用 counter 显示（decimal-leading-zero 补零到两位），
+ * 真实数字暂时隐藏；数字用等宽数字，数的时候徽标宽度不跳。读屏读徽标自己的 aria-label。
+ * 不支持 @property 的浏览器会在一半时直接跳到终值。
+ * 同一次访问的后续页面（根元素带 data-va-visited，见 ../visit-once.js）与减弱动效时，直接显示真实数字。
+ * 依赖：无（颜色与字号由徽标自己的样式决定）。
+ */
+@property --va-count {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+
+.va-count {
+  font-variant-numeric: tabular-nums;
+}
+
+:root:not([data-va-visited]) .va-count.is-playing {
+  counter-reset: va-count var(--va-count);
+  animation: va-count-up 320ms ease-out both;
+}
+
+:root:not([data-va-visited]) .va-count.is-playing > .va-count-value {
+  display: none;
+}
+
+:root:not([data-va-visited]) .va-count.is-playing::before {
+  content: counter(va-count, decimal-leading-zero);
+}
+
+@keyframes va-count-up {
+  from {
+    --va-count: 0;
+  }
+  to {
+    --va-count: var(--va-count-to);
+  }
+}
+
+/* 减弱动效：不数，直接显示真实数字。 */
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-va-visited]) .va-count.is-playing {
+    animation: none;
+  }
+
+  :root:not([data-va-visited]) .va-count.is-playing > .va-count-value {
+    display: inline;
+  }
+
+  :root:not([data-va-visited]) .va-count.is-playing::before {
+    content: none;
+  }
+}

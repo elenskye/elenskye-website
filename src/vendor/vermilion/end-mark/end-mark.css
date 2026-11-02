@@ -1,0 +1,40 @@
+/* 文末落款 —— calm，用描边绘制 v2（640ms，calm 时长例外）。
+ *
+ * 三版落款：抵达、远山、三点（DESIGN.md §4），64 网格，显示 40px，放在文章正文结尾、居中。静态不用朱红。
+ * 结构：.va-end-mark 里放三版，每版是一个 .va-draw-v2（data-variant）。片段由 tooling/graphic/build.mjs 生成，不手改。
+ * end-mark.js：每次打开页面随机挑一版，其余两版加 hidden；落款第一次滚进视口时写一次。
+ *   打开页面时不在屏幕里的落款先藏起来（.is-waiting），滚到时再写；已在屏幕里的直接静态显示，不先藏再写。
+ * 没有脚本时只显示第一版（静态）。.is-all 是三版并排（目录页与导出用）。
+ * 依赖：marks/graphic/graphic.css、motion/stroke-draw-v2/stroke-draw-v2.css，--color-*（tokens/web.css）。
+ */
+.va-end-mark {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.va-end-mark > .va-draw-v2 {
+  width: 40px;
+}
+
+.va-end-mark > .va-draw-v2[hidden],
+.va-end-mark:not([data-pick], .is-all) > .va-draw-v2 ~ .va-draw-v2 {
+  display: none;
+}
+
+/* 等待滚到：整版先藏起来（占位不变），加上 .is-playing 后由描边绘制从头写出。
+ * 不只是把笔画倒回起点：倒回的笔画在起点还留着圆头，会露出一个小点。 */
+.va-end-mark > .va-draw-v2.is-waiting {
+  visibility: hidden;
+}
+
+/* 减弱动效：不藏、不写，直接显示完整落款。 */
+@media (prefers-reduced-motion: reduce) {
+  .va-end-mark > .va-draw-v2.is-waiting {
+    visibility: visible;
+  }
+
+  .va-end-mark > .va-draw-v2 :is(.va-paper, .va-paper-2, .va-mk) {
+    animation: none;
+  }
+}

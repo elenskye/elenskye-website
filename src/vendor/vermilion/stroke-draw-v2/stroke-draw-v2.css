@@ -1,0 +1,53 @@
+/* 描边绘制 v2 —— calm（时长例外，tokens/motion.json 的 calmExceptions）。
+ *
+ * 和 v1（stroke-draw，320ms）写法相同，只是慢一倍：纸片淡入 320ms，笔画沿中心线依次写出，整段 640ms；没有朱红点，也不滑动纸片。
+ * 站主 2026-11-01 比较 320 / 480 / 640 / 800 / 1000ms 后选定 640ms（v1 太快，看不清笔顺）。v1 留档，不再使用。
+ * 类名与 v1 分开（.va-draw-v2），两版的样式同页出现时互不干扰。
+ * 结构：外层 .va-draw-v2 里放带遮罩的内联 SVG（generator 产出的片段：笔势用遮罩里沿中心线的描边写出，.va-mk 带 --i 笔顺），
+ * 外层写 --va-draw-n：笔画数，每笔分到 640ms / 笔画数。
+ * 触发：外层加 .is-playing。不加就是静态图。
+ * 依赖：marks/graphic/graphic.css，--color-*（tokens/web.css）。
+ */
+.va-draw-v2 {
+  display: block;
+}
+
+.va-draw-v2 svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.va-draw-v2.is-playing :is(.va-paper, .va-paper-2) {
+  animation: va-draw2-paper 320ms ease-out both;
+}
+
+.va-draw-v2.is-playing .va-mk {
+  animation: va-draw2-write calc(640ms / var(--va-draw-n, 1)) cubic-bezier(0.5, 0, 0.2, 1) both;
+  animation-delay: calc((var(--i) - 1) * 640ms / var(--va-draw-n, 1));
+}
+
+@keyframes va-draw2-paper {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes va-draw2-write {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* 减弱动效：直接显示完整图形。 */
+@media (prefers-reduced-motion: reduce) {
+  .va-draw-v2.is-playing :is(.va-paper, .va-paper-2, .va-mk) {
+    animation: none;
+  }
+}

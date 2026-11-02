@@ -3,7 +3,7 @@ language: en
 email: tianyou.lei@u.nus.edu
 resumeDownloads:
   - label: Download IT CV
-    fileRef: public/assets/documents/cv-it-v1-en.pdf
+    fileRef: public/assets/documents/seek-it-iss-cv-v3.pdf
 summary: >-
   Chongqing University undergraduate and GDipSA (NUS-ISS) student combining
   machine learning with full-stack software engineering — from benchmarked
@@ -23,8 +23,8 @@ sections:
           items: Spring Boot, JPA/Hibernate, ReactJS
         - heading: Business Analysis
           items: >-
-            ACCA Diploma in Accounting and Business, financial statement analysis,
-            industry research
+            ACCA Diploma in Accounting and Business, financial statement
+            analysis, industry research
         - heading: Languages
           items: English (IELTS 7.5, 2025), Chinese (native), Japanese (basic)
   - title: Education
@@ -36,16 +36,17 @@ sections:
           org: National University of Singapore
           bullets:
             - >-
-              Coursework: Machine Learning, Agent, Web Application Development, Mobile
-              Application Development, DevSecOps, Big Data
+              Coursework: Machine Learning, Agent, Web Application Development,
+              Mobile Application Development, DevSecOps, Big Data
         - period: Sep 2022 – Jun 2026
           role: Bachelor of Management, Administration Management
           org: Chongqing University
           bullets:
             - >-
-              Designed and executed a supervised ML study predicting internal and
-              external political efficacy using European Social Survey (ESS) Round 11
-              data covering ~39,000 respondents across 23 European countries
+              Designed and executed a supervised ML study predicting internal
+              and external political efficacy using European Social Survey (ESS)
+              Round 11 data covering ~39,000 respondents across 23 European
+              countries
   - title: Research
     content:
       discriminant: detailed
@@ -55,9 +56,9 @@ sections:
           org: 'Thesis: Key Predictors of Political Efficacy Based on ML'
           bullets:
             - >-
-              Benchmarked 11 models (tree-based ensembles, gradient boosting, SVR,
-              KNN, neural network) and selected CatBoost as the final model based on
-              R², MAE, and RMSE
+              Benchmarked 11 models (tree-based ensembles, gradient boosting,
+              SVR, KNN, neural network) and selected CatBoost as the final model
+              based on R², MAE, and RMSE
             - >-
               Built a reproducible modelling pipeline in Python & R, including
               complete-case cleaning and categorical encoding
@@ -73,37 +74,38 @@ sections:
           org: DevSecOps CI/CD Pipeline Design
           bullets:
             - >-
-              Owned Plan-stage design and coordinated with another team member to
-              align the Plan↔Monitor feedback loop
+              Owned Plan-stage design and coordinated with another team member
+              to align the Plan↔Monitor feedback loop
             - >-
               Exceeded the Plan-stage scope to help shape team-wide toolchain
-              decisions across containerisation, IaC, and GitOps, and co-designed one
-              end-to-end DevSecOps CI/CD pipeline
+              decisions across containerisation, IaC, and GitOps, and
+              co-designed one end-to-end DevSecOps CI/CD pipeline
         - period: Dec 2025 – Jan 2026
           role: Team Leader
           org: 'Fruit Image Classifier: CNN with Transfer Learning'
           bullets:
             - >-
-              Developed a custom PIL-based pre-processing and augmentation pipeline,
-              corrected severe class imbalance (20 vs 75 samples) via weighted
-              sampling and class-weighted loss, and tuned hyperparameters with
-              multi-seed robustness validation
+              Developed a custom PIL-based pre-processing and augmentation
+              pipeline, corrected severe class imbalance (20 vs 75 samples) via
+              weighted sampling and class-weighted loss, and tuned
+              hyperparameters with multi-seed robustness validation
             - >-
-              Led the Version 2 and final optimisation iterations of a 5-person team
-              building a CNN for four-class fruit image classification, applying
-              transfer learning with MobileNetV2 to reach 0.92 accuracy / 0.87 F1
+              Led the Version 2 and final optimisation iterations of a 5-person
+              team building a CNN for four-class fruit image classification,
+              applying transfer learning with MobileNetV2 to reach 0.92 accuracy
+              / 0.87 F1
         - period: Sep 2025 – Nov 2025
           role: Backend Developer
           org: Full-Stack Shopping-Cart Web Application
           bullets:
             - >-
-              Co-owned backend development with two other teammates, building RESTful
-              API services on a Spring Boot backend with JPA/Hibernate ORM persistence
-              over a SQL database
+              Co-owned backend development with two other teammates, building
+              RESTful API services on a Spring Boot backend with JPA/Hibernate
+              ORM persistence over a SQL database
             - >-
-              Bridged the front-end/back-end boundary by defining API contracts with a
-              2-person ReactJS frontend team, integrating components into a single
-              e-commerce application spanning 6 core features
+              Bridged the front-end/back-end boundary by defining API contracts
+              with a 2-person ReactJS frontend team, integrating components into
+              a single e-commerce application spanning 6 core features
   - title: Experience
     content:
       discriminant: detailed
@@ -113,13 +115,14 @@ sections:
           org: CITIC Securities, Hubei Branch
           bullets:
             - >-
-              Studied extensive internal industry research reports and produced basic
-              industry research reports
+              Studied extensive internal industry research reports and produced
+              basic industry research reports
             - >-
-              Led a 3-member team to design diversified investment strategies tailored
-              to client needs
+              Led a 3-member team to design diversified investment strategies
+              tailored to client needs
             - >-
               Created 2 ChatGPT-assisted scripts for portfolio-return analysis,
-              applying Python for calculations and Excel VBA for automated reporting,
-              and devised an innovative workflow for the final investment decision
+              applying Python for calculations and Excel VBA for automated
+              reporting, and devised an innovative workflow for the final
+              investment decision
 ---

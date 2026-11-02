@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import WanderGallery from '../../../components/WanderGallery.astro';
+import endMarkFragment from '../../../vendor/vermilion/end-mark/end-mark.fragment.html?raw';
 import { pagePaths } from '../../../data/site';
 import {
   formatWanderMonth,
@@ -56,6 +57,9 @@ const ogImage = ogImageCandidate?.toLowerCase().endsWith('.svg') ? undefined : o
 const currentPath = `/en/wander/${work.slug}/`;
 const chinesePath = `/wander/${work.slug}/`;
 const hasChineseCounterpart = Boolean(work.zh);
+// Article end mark (Vermilion), same as the Chinese detail page; only full
+// English articles get one, not the stub that links to the Chinese original.
+const endMark = endMarkFragment.replace(/<!--[\s\S]*?-->\s*/, '');
 ---
 
 <BaseLayout
@@ -94,9 +98,14 @@ const hasChineseCounterpart = Boolean(work.zh);
             </a>
           </div>
         ) : (
-          <div class="wander-article-body prose">
-            <Content />
-          </div>
+          <>
+            <div class="wander-article-body prose">
+              <Content />
+            </div>
+            <div class="wander-article-end">
+              <Fragment set:html={endMark} />
+            </div>
+          </>
         )
       }
       <footer class="wander-article-footer">
@@ -104,4 +113,7 @@ const hasChineseCounterpart = Boolean(work.zh);
       </footer>
     </article>
   </main>
+  <script>
+    import '../../../scripts/end-mark';
+  </script>
 </BaseLayout>

@@ -1,0 +1,43 @@
+/* 选中指示滑移 —— calm。
+ *
+ * 一组单选项（例如首页的话题栏）里，选中项下方有一条 1.5px 青绿下划线，与导航、链接的下划线同色同粗。
+ * 换选时下划线从旧位置滑到新位置（位移与横向缩放 220ms ease）；取消选中时淡出（160ms），位置不动；
+ * 第一次选中时在原地淡入，不从别处滑过来。只动 transform 与 opacity。
+ * 结构：容器加 .va-slide（作为定位参照），里面照常放选项，再放一个 span.va-slide-indicator（aria-hidden）。
+ * 位置由 selection-slide.js 量出选项的左边与宽度，写成 --va-slide-x、--va-slide-w（像素数，不带单位）。
+ * 触发：选中变化时调用 selection-slide.js；预览与导出用 .is-playing（见片段）。
+ * 依赖：--color-*（tokens/web.css）。
+ */
+.va-slide {
+  position: relative;
+}
+
+.va-slide-indicator {
+  position: absolute;
+  bottom: var(--va-slide-bottom, 5px);
+  left: 0;
+  width: 1px;
+  height: 1.5px;
+  background: var(--color-accent);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(calc(var(--va-slide-x, 0) * 1px)) scaleX(var(--va-slide-w, 0));
+  transform-origin: 0 50%;
+  transition: transform 220ms ease, opacity 160ms ease;
+}
+
+.va-slide-indicator.is-on {
+  opacity: 1;
+}
+
+/* 第一次出现、窗口尺寸变化时：直接放到位，不滑。 */
+.va-slide-indicator.is-instant {
+  transition: none;
+}
+
+/* 减弱动效：直接到位，不滑、不淡入淡出。 */
+@media (prefers-reduced-motion: reduce) {
+  .va-slide-indicator {
+    transition: none;
+  }
+}

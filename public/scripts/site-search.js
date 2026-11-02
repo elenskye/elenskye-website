@@ -5,6 +5,7 @@ for (const root of roots) {
   const input = root.querySelector('[data-search-input]');
   const status = root.querySelector('[data-search-status]');
   const emptyVisual = root.querySelector('[data-search-empty-visual]');
+  const loadingVisual = root.querySelector('[data-search-loading-visual]');
   const results = root.querySelector('[data-search-results]');
   const fallbackSource = root.querySelector('[data-search-documents]');
   if (!form || !input || !status || !emptyVisual || !results || !fallbackSource) continue;
@@ -18,6 +19,7 @@ for (const root of roots) {
 
   let pagefindPromise;
   let timer;
+  let loadingTimer;
   let requestId = 0;
 
   const text = (key, fallback = '') => root.dataset[key] ?? fallback;
@@ -45,6 +47,15 @@ for (const root of roots) {
   const clearResults = () => results.replaceChildren();
   const showEmptyVisual = (visible) => {
     emptyVisual.hidden = !visible;
+  };
+  // The loading ensō only appears when a search is still running after 250ms,
+  // so a fast Pagefind answer never flashes it. Hidden means not rendered, so
+  // its loop stops as soon as the wait is over.
+  const showLoadingVisual = (visible) => {
+    window.clearTimeout(loadingTimer);
+    if (!loadingVisual) return;
+    if (visible) loadingTimer = window.setTimeout(() => { loadingVisual.hidden = false; }, 250);
+    else loadingVisual.hidden = true;
   };
 
   const searchFallback = (query) => {
@@ -97,6 +108,7 @@ for (const root of roots) {
     updateQueryUrl(query);
     clearResults();
     showEmptyVisual(false);
+    showLoadingVisual(false);
 
     if (!query) {
       status.textContent = '';
@@ -104,6 +116,7 @@ for (const root of roots) {
     }
 
     status.textContent = text('loading');
+    showLoadingVisual(true);
     let data;
     try {
       const pagefind = await loadPagefind();
@@ -114,6 +127,7 @@ for (const root of roots) {
       data = searchFallback(query);
     }
     if (currentRequest !== requestId) return;
+    showLoadingVisual(false);
     if (!Array.isArray(data)) {
       status.textContent = text('error');
       showEmptyVisual(true);

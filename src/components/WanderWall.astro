@@ -14,6 +14,11 @@ import { filterBarCopy, wanderCategories, wanderTopics, type Locale } from '../d
 import { WANDER_WALL_LIMIT } from '../lib/wander-filter.js';
 import type { WanderCard } from '../lib/wander';
 import ContentLabel from './ContentLabel.astro';
+import glyphCreate from '../vendor/vermilion/category-glyph-hover/create.fragment.html?raw';
+import glyphGallery from '../vendor/vermilion/category-glyph-hover/gallery.fragment.html?raw';
+import glyphProject from '../vendor/vermilion/category-glyph-hover/project.fragment.html?raw';
+import glyphWrite from '../vendor/vermilion/category-glyph-hover/write.fragment.html?raw';
+import emptyGraphic from '../vendor/vermilion/empty-graphic.svg?raw';
 
 interface Props {
   cards: WanderCard[];
@@ -43,6 +48,31 @@ const categoryIcons: Record<string, AstroComponent> = {
   gallery: Image,
 };
 
+// Vermilion category glyphs (synced from visual-assets into src/vendor/vermilion/)
+// replace the Lucide icon wherever the category has one; hovering or focusing
+// the card writes the glyph. Each inline glyph carries SVG masks, so the id
+// prefix is made unique per card. The travel and other glyphs stay unused until
+// the taxonomy grows.
+const categoryGlyphs: Record<string, { name: string; html: string }> = {
+  notes: { name: 'write', html: glyphWrite },
+  project: { name: 'project', html: glyphProject },
+  gallery: { name: 'gallery', html: glyphGallery },
+  literature: { name: 'create', html: glyphCreate },
+};
+const glyphFor = (category: string, key: string, className: string) => {
+  const glyph = categoryGlyphs[category];
+  if (!glyph) return undefined;
+  return glyph.html
+    .replace(/<!--[\s\S]*?-->\s*/, '')
+    .replaceAll(`va-glyph-${glyph.name}-solo`, `va-glyph-${locale}-${key}`)
+    .replace('class="va-glyph"', `class="va-glyph ${className}"`);
+};
+// The empty state is a surface box, so the paper takes the on-surface fill.
+const emptyIllustration = emptyGraphic.replace(
+  '<svg ',
+  '<svg class="va-graphic va-on-surface status-illustration status-illustration--empty" focusable="false" '
+);
+
 const arrowLabels =
   locale === 'zh' ? { prev: '向左滚动话题', next: '向右滚动话题' } : { prev: 'Scroll topics left', next: 'Scroll topics right' };
 ---
@@ -56,12 +86,13 @@ const arrowLabels =
           <button class="topic-arrow" type="button" data-topic-scroll="-1" aria-label={arrowLabels.prev}>
             <ChevronLeft aria-hidden="true" size={15} stroke-width={1.8} />
           </button>
-          <div class="topic-scroll" data-topic-track>
+          <div class="topic-scroll va-slide" data-topic-track>
             {wanderTopics.map((topic) => (
               <button class="topic-chip" type="button" data-topic={topic.slug} aria-pressed="false">
                 {topic.label[locale]}
               </button>
             ))}
+            <span class="va-slide-indicator" aria-hidden="true"></span>
           </div>
           <button class="topic-arrow" type="button" data-topic-scroll="1" aria-label={arrowLabels.next}>
             <ChevronRight aria-hidden="true" size={15} stroke-width={1.8} />
@@ -89,9 +120,10 @@ const arrowLabels =
           const variant = card.thumbnail ? 'wander-card--image' : 'wander-card--plain';
           const overflow = index >= WANDER_WALL_LIMIT;
           const CardIcon = categoryIcons[card.category] ?? Route;
+          const glyph = glyphFor(card.category, String(index), card.thumbnail ? 'wander-card-glyph wander-card-glyph--fallback' : 'wander-card-glyph');
           return (
             <a
-              class:list={['wander-card', variant]}
+              class:list={['wander-card', variant, { 'va-glyph-trigger': glyph }]}
               data-category={card.category}
               data-topics={card.topics.join(',')}
               data-overflow={overflow ? 'true' : undefined}
@@ -109,10 +141,16 @@ const arrowLabels =
                       decoding="async"
                     />
                   </figure>
-                  <span class="wander-card-icon wander-card-icon--fallback">
-                    <CardIcon aria-hidden="true" size={22} stroke-width={1.8} />
-                  </span>
+                  {glyph ? (
+                    <Fragment set:html={glyph} />
+                  ) : (
+                    <span class="wander-card-icon wander-card-icon--fallback">
+                      <CardIcon aria-hidden="true" size={22} stroke-width={1.8} />
+                    </span>
+                  )}
                 </>
+              ) : glyph ? (
+                <Fragment set:html={glyph} />
               ) : (
                 <span class="wander-card-icon">
                   <CardIcon aria-hidden="true" size={22} stroke-width={1.8} />
@@ -141,15 +179,7 @@ const arrowLabels =
         )
       }
       <section class="wander-empty" data-filter-empty hidden role="status" aria-live="polite">
-        <img
-          class="status-illustration status-illustration--empty"
-          src="/images/status/wander-empty-cloud-pages-oops.png"
-          alt=""
-          width="480"
-          height="300"
-          loading="lazy"
-          decoding="async"
-        />
+        <Fragment set:html={emptyIllustration} />
         <p>{locale === 'zh' ? '没有符合当前筛选的内容。' : 'Nothing matches the current filters.'}</p>
       </section>
       <script>
@@ -158,15 +188,7 @@ const arrowLabels =
     </>
   ) : (
     <section class="wander-empty" aria-label="Empty Wander state">
-      <img
-        class="status-illustration status-illustration--empty"
-        src="/images/status/wander-empty-cloud-pages-oops.png"
-        alt=""
-        width="480"
-        height="300"
-        loading="lazy"
-        decoding="async"
-      />
+      <Fragment set:html={emptyIllustration} />
       <p>{emptyText}</p>
     </section>
   )

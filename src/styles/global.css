@@ -151,12 +151,14 @@ select {
   border-radius: var(--radius-sm);
   background: var(--color-surface);
   color: var(--color-text);
-  box-shadow: var(--shadow-soft);
   text-decoration: none;
   transform: translateY(calc(-100% - var(--space-5)));
 }
 
+/* The shadow only exists while the link is shown: at rest its blur used to
+   spill into the top-left corner of every page as a grey smudge. */
 .skip-link:focus {
+  box-shadow: var(--shadow-soft);
   transform: translateY(0);
 }
 
@@ -483,7 +485,7 @@ p {
    per-type icon sits at the top left. Border and surface appear on hover. */
 .wander-card--plain {
   display: grid;
-  grid-template-columns: 30px minmax(0, 1fr);
+  grid-template-columns: 44px minmax(0, 1fr);
   gap: var(--space-3);
   align-items: start;
   padding: var(--space-4);
@@ -509,6 +511,28 @@ p {
 
 .wander-card-icon--fallback {
   display: none;
+}
+
+/* Category glyphs (Vermilion graphic language) at 44px beside the title. On
+   hover the card turns into a surface, so the paper takes the on-surface fill. */
+.wander-card-glyph--fallback {
+  display: none;
+}
+
+.wander-card.has-missing-image .wander-card-glyph--fallback {
+  display: inline-grid;
+}
+
+.wander-card--plain:is(:hover, :focus-visible) .va-graphic {
+  --va-paper: var(--color-surface-cool);
+}
+
+/* Where the wall's columns get narrow (four columns below 1024px, two below
+   600px) the glyph moves above the title so the title keeps its width. */
+@media (min-width: 761px) and (max-width: 1023px), (min-width: 441px) and (max-width: 599px) {
+  .wander-card--plain {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .wander-card.has-missing-image .wander-card-media {
@@ -1012,6 +1036,12 @@ p {
   color: var(--shiki-dark);
 }
 
+/* Article end mark (Vermilion `end-mark`): one 40px mark, centred under the
+   last paragraph. Size and centring come from the synced end-mark.css. */
+.wander-article-end {
+  margin-top: var(--space-6);
+}
+
 .wander-article-footer {
   margin-top: var(--space-7);
 }
@@ -1440,12 +1470,6 @@ p {
   margin-top: var(--space-6);
 }
 
-.status-illustration--404 img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 .not-found-en {
   max-width: 660px;
   margin-top: var(--space-7);
@@ -1524,6 +1548,16 @@ p {
 
 .site-search-empty {
   margin-top: var(--space-5);
+}
+
+.site-search-loading {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-5);
+}
+
+.site-search-loading[hidden] {
+  display: none;
 }
 
 .site-search-empty[hidden],

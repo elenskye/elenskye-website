@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import WanderGallery from '../../components/WanderGallery.astro';
+import endMarkFragment from '../../vendor/vermilion/end-mark/end-mark.fragment.html?raw';
 import { pagePaths } from '../../data/site';
 import {
   formatWanderMonth,
@@ -46,6 +47,9 @@ const ogImageCandidate =
 const ogImage = ogImageCandidate?.toLowerCase().endsWith('.svg') ? undefined : ogImageCandidate;
 const currentPath = getWanderDetailPath(entry);
 const englishPath = `/en/wander/${getWanderSlug(entry)}/`;
+// Article end mark (Vermilion): three marks in one fragment, one shown at
+// random per page view by src/scripts/end-mark.ts. Drop the generator comment.
+const endMark = endMarkFragment.replace(/<!--[\s\S]*?-->\s*/, '');
 ---
 
 <BaseLayout
@@ -79,9 +83,15 @@ const englishPath = `/en/wander/${getWanderSlug(entry)}/`;
       <div class="wander-article-body prose">
         <Content />
       </div>
+      <div class="wander-article-end">
+        <Fragment set:html={endMark} />
+      </div>
       <footer class="wander-article-footer">
         <a class="quiet-link" href={pagePaths.wander.zh}>← 返回呦呦漫游</a>
       </footer>
     </article>
   </main>
+  <script>
+    import '../../scripts/end-mark';
+  </script>
 </BaseLayout>

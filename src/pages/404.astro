@@ -1,5 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+// Vermilion 404 illustration (synced from visual-assets, src/vendor/vermilion/):
+// a folded map page; writes itself once on page load (calm, 640ms), static
+// under reduced motion. Drop the generator's leading HTML comment.
+import notFoundFragment from '../vendor/vermilion/not-found-intro/not-found-intro.fragment.html?raw';
+
+const notFoundIllustration = notFoundFragment.replace(/<!--[\s\S]*?-->\s*/, '');
 ---
 
 <BaseLayout
@@ -16,13 +22,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <p class="page-intro">这里暂时没有路径，回到漫游的起点吧</p>
 
     <figure class="status-illustration status-illustration--404" aria-hidden="true">
-      <img
-        src="/images/status/wander-error-cloud-pages-404.png"
-        alt=""
-        width="640"
-        height="420"
-        decoding="async"
-      />
+      <Fragment set:html={notFoundIllustration} />
     </figure>
 
     <div class="not-found-en" lang="en">

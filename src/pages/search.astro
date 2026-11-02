@@ -1,4 +1,5 @@
 ---
+import PageShell from '../components/PageShell.astro';
 import SearchPanel from '../components/SearchPanel.astro';
 import { discoveryPaths, pageCopy } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -16,9 +17,7 @@ const documents = await getSearchDocuments('zh');
   alternatePath={discoveryPaths.search.en}
   xDefaultPath={discoveryPaths.search.zh}
 >
-  <main id="main-content" tabindex="-1" class="page-shell page-shell--narrow search-page">
-    <p class="page-eyebrow">{page.eyebrow}</p>
-    <h1>{page.title}</h1>
+  <PageShell eyebrow={page.eyebrow} title={page.title} description={page.description} variant="narrow" class="search-page">
     <SearchPanel locale="zh" documents={documents} />
-  </main>
+  </PageShell>
 </BaseLayout>

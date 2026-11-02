@@ -1,0 +1,18 @@
+/* 404 插图入场 —— calm，用描边绘制 v2（640ms，calm 时长例外）。
+ *
+ * 「折页」：一张地图纸从左下角出血、右上角折起一角，笔冲出纸边，圆相落在纸外（DESIGN.md §4）。静态不用朱红。
+ * 打开 404 页时写一次：片段外层自带 .is-playing，不需要脚本；纸片淡入 320ms，两笔各 320ms 依次写出。
+ * 片段由 tooling/graphic/build.mjs 生成，不手改。插图放在页面底上，宽度随容器，最宽 560px。
+ * 依赖：marks/graphic/graphic.css、motion/stroke-draw-v2/stroke-draw-v2.css，--color-*（tokens/web.css）。
+ */
+.va-not-found {
+  width: 100%;
+  max-width: 560px;
+}
+
+/* 减弱动效：直接显示完整插图（与 stroke-draw-v2 的回退相同，写在这里便于单独引用）。 */
+@media (prefers-reduced-motion: reduce) {
+  .va-not-found :is(.va-paper, .va-paper-2, .va-mk) {
+    animation: none;
+  }
+}

@@ -1,0 +1,85 @@
+/* 分类图形悬停 —— expressive 已登记表面 category-glyph-hover（DESIGN.md §5，tokens/motion.json）。
+ *
+ * 纸片 260ms 滑入；笔画每笔 340ms、相隔 100ms 按书写方向写出；朱红点在 82% 之后抵达；整段 700ms。
+ * 触发：图形本身（.va-glyph）或外层（.va-glyph-trigger，例如整张无封面卡片）悬停、键盘聚焦，
+ * 或加上 .is-playing（用于预览与导出）。离开即回到静态，朱红点消失。
+ * 依赖：marks/graphic/graphic.css（上色与部件），--color-*（tokens/web.css）。
+ * 只用于 64 网格的三笔版；≤ 32px 的简笔版不做动效。
+ */
+.va-glyph {
+  display: inline-grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+}
+
+.va-glyph svg {
+  width: 44px;
+  height: 44px;
+  overflow: visible;
+}
+
+.va-glyph-row {
+  display: inline-flex;
+  gap: 16px;
+}
+
+:is(.va-glyph, .va-glyph-trigger):is(:hover, :focus-visible, .is-playing) :is(.va-paper, .va-paper-2) {
+  animation: va-glyph-paper 260ms cubic-bezier(0.3, 0.6, 0.2, 1) both;
+}
+
+:is(.va-glyph, .va-glyph-trigger):is(:hover, :focus-visible, .is-playing) .va-mk {
+  animation: va-glyph-write 340ms cubic-bezier(0.5, 0, 0.2, 1) both;
+  animation-delay: calc((var(--i) - 1) * 100ms + 60ms);
+}
+
+:is(.va-glyph, .va-glyph-trigger):is(:hover, :focus-visible, .is-playing) .va-ember {
+  animation: va-glyph-arrive 700ms linear both;
+}
+
+@keyframes va-glyph-paper {
+  from {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes va-glyph-write {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes va-glyph-arrive {
+  0%,
+  82% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  92% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 减弱动效：直接显示终态——图形完整，悬停时朱红点直接出现，不滑动、不书写。 */
+@media (prefers-reduced-motion: reduce) {
+  :is(.va-glyph, .va-glyph-trigger):is(:hover, :focus-visible, .is-playing) :is(.va-paper, .va-paper-2, .va-mk, .va-ember) {
+    animation: none;
+  }
+
+  :is(.va-glyph, .va-glyph-trigger):is(:hover, :focus-visible, .is-playing) .va-ember {
+    opacity: 1;
+  }
+}

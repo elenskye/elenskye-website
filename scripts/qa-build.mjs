@@ -35,9 +35,6 @@ const required = [
   'pagefind/pagefind.js',
   'scripts/site-search.js',
   'favicon.svg',
-  'images/og/default.png',
-  'images/status/wander-error-cloud-pages-404.png',
-  'images/status/wander-empty-cloud-pages-oops.png',
 ];
 
 for (const path of required) await access(join(dist, path));
@@ -98,9 +95,15 @@ const checkPng = async (relativePath, expectedWidth, expectedHeight, maxBytes, r
   }
 };
 
-await checkPng('images/og/default.png', 1200, 630, 300_000);
-await checkPng('images/status/wander-error-cloud-pages-404.png', 640, 420, 100_000, true);
-await checkPng('images/status/wander-empty-cloud-pages-oops.png', 480, 300, 100_000, true);
+// The default share image is synced from visual-assets (src/vendor/vermilion/)
+// and bundled with a hashed name, so find it through the home page's og:image.
+const homeHtml = await readFile(join(dist, 'index.html'), 'utf8');
+const defaultOgPath = homeHtml.match(/<meta property="og:image" content="https:\/\/elenskye\.com\/([^"]+)"/)?.[1];
+if (!defaultOgPath?.startsWith('_astro/og-default.')) {
+  errors.push(`index.html: og:image should be the synced default share image, found ${defaultOgPath}`);
+} else {
+  await checkPng(defaultOgPath, 1200, 630, 300_000);
+}
 
 const targetForPath = (pathname) => {
   const decoded = decodeURIComponent(pathname);
@@ -130,15 +133,21 @@ for (const file of htmlFiles) {
   if (label === '404.html' && !/<meta name="robots" content="noindex, nofollow"/.test(html)) {
     errors.push('404.html: missing noindex');
   }
-  if (
-    label === '404.html' &&
-    !html.includes('src="/images/status/wander-error-cloud-pages-404.png"')
-  ) {
+  // The 404 illustration and the article end mark are synced from
+  // visual-assets (src/vendor/vermilion/) and inlined as SVG.
+  if (label === '404.html' && !html.includes('<div class="va-draw-v2 va-not-found is-playing"')) {
     errors.push('404.html: missing the approved 404 illustration');
+  }
+  // Every article with a body ends with exactly one end mark; English stubs
+  // that only link to the Chinese original have none.
+  if (/^(?:en\/)?wander\/[^/]+\/index\.html$/.test(label)) {
+    const marks = (html.match(/<div class="va-end-mark"/g) ?? []).length;
+    const expected = html.includes('class="wander-article-body prose"') ? 1 : 0;
+    if (marks !== expected) errors.push(`${label}: expected ${expected} article end mark(s), found ${marks}`);
   }
   if (
     ['index.html', 'en/index.html', 'search/index.html', 'en/search/index.html'].includes(label) &&
-    !html.includes('src="/images/status/wander-empty-cloud-pages-oops.png"')
+    !/<svg class="va-graphic (?:va-on-surface )?status-illustration status-illustration--empty"/.test(html)
   ) {
     errors.push(`${label}: missing the approved empty-state illustration`);
   }

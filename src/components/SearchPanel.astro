@@ -1,6 +1,8 @@
 ---
 import type { Locale } from '../data/site';
 import type { SearchDocument } from '../lib/search-documents';
+import emptyGraphic from '../vendor/vermilion/empty-graphic.svg?raw';
+import ensoFragment from '../vendor/vermilion/loading-enso/loading-enso.fragment.html?raw';
 
 interface Props {
   locale: Locale;
@@ -9,6 +11,15 @@ interface Props {
 
 const { locale, documents } = Astro.props;
 const fallbackDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
+// Vermilion graphics synced from visual-assets. The status line already
+// announces "searching" and "no results", so both visuals stay decorative.
+const emptyIllustration = emptyGraphic.replace(
+  '<svg ',
+  '<svg class="va-graphic status-illustration status-illustration--empty" focusable="false" '
+);
+const loadingEnso = ensoFragment
+  .replace(/<!--[\s\S]*?-->\s*/, '')
+  .replace(' role="status" aria-label="加载中"', ' aria-hidden="true"');
 const copy = locale === 'zh'
   ? {
       label: '搜索关键词',
@@ -62,16 +73,11 @@ const copy = locale === 'zh'
     </div>
   </form>
   <p class="site-search-status" aria-live="polite" data-search-status></p>
+  <div class="site-search-loading" data-search-loading-visual hidden>
+    <Fragment set:html={loadingEnso} />
+  </div>
   <div class="site-search-empty" data-search-empty-visual hidden aria-hidden="true">
-    <img
-      class="status-illustration status-illustration--empty"
-      src="/images/status/wander-empty-cloud-pages-oops.png"
-      alt=""
-      width="480"
-      height="300"
-      loading="lazy"
-      decoding="async"
-    />
+    <Fragment set:html={emptyIllustration} />
   </div>
   <ol class="site-search-results" data-search-results></ol>
   <script type="application/json" data-search-documents set:html={fallbackDocuments}></script>

@@ -1,4 +1,16 @@
 ---
+// Vermilion graphic language, synced from visual-assets (src/vendor/vermilion/,
+// do not edit there). Loaded before global.css so site rules can adjust layout.
+import '../vendor/vermilion/graphic.css';
+import '../vendor/vermilion/category-glyph-hover/category-glyph-hover.css';
+import '../vendor/vermilion/loading-enso/loading-enso.css';
+import '../vendor/vermilion/selection-slide/selection-slide.css';
+import '../vendor/vermilion/count-up/count-up.css';
+import '../vendor/vermilion/stroke-draw-v2/stroke-draw-v2.css';
+import '../vendor/vermilion/not-found-intro/not-found-intro.css';
+import '../vendor/vermilion/end-mark/end-mark.css';
+import ogDefaultUrl from '../vendor/vermilion/og-default.png?url';
+import visitOnce from '../vendor/vermilion/visit-once.js?raw';
 import '../styles/global.css';
 import fontStylesheet from '../styles/fonts.css?url';
 import SiteFooter from '../components/SiteFooter.astro';
@@ -55,13 +67,13 @@ const alternateUrl = new URL(alternatePath, site).toString();
 const xDefaultPath = xDefaultPathOverride ?? (pageKey ? getPagePath(pageKey, 'zh') : currentPath);
 const xDefaultUrl = new URL(xDefaultPath, site).toString();
 const usesDefaultOgImage = !ogImage;
-const ogImageUrl = new URL(toPublicAssetUrl(ogImage) ?? '/images/og/default.png', site).toString();
+const ogImageUrl = new URL(toPublicAssetUrl(ogImage) ?? ogDefaultUrl, site).toString();
 const resolvedOgImageAlt =
   ogImageAlt ??
   (usesDefaultOgImage
     ? locale === 'zh'
-      ? '朱红日轮、流云与深色街屋构成的「呦呦漫游」插画'
-      : 'Wander illustration with a vermilion sun, flowing clouds, and dark rooftops'
+      ? '「Elen Skye」字标与「呦呦漫游 · Wander」，右下是层叠的纸山、一笔青绿与一个圆相'
+      : 'The Elen Skye wordmark and “Wander”, above layered paper hills, a teal brushstroke and an ensō circle'
     : title);
 const ogLocale = locale === 'zh' ? 'zh_CN' : 'en_US';
 const alternateOgLocale = locale === 'zh' ? 'en_US' : 'zh_CN';
@@ -88,6 +100,9 @@ const publishedTimeIso = publishedTime
         document.documentElement.dataset.theme = theme;
       })();
     </script>
+    {/* Entrance motions (the Wander count badge) play once per visit; later
+        pages in the same tab show them finished. Must run before first paint. */}
+    <script is:inline set:html={visitOnce} />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
