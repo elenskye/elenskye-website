@@ -10,7 +10,9 @@
     "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
     "build:site": "ASTRO_TELEMETRY_DISABLED=1 astro build",
     "index:search": "pagefind --site dist",
-    "build": "npm run build:site && npm run index:search",
+    "watermark": "node scripts/watermark.mjs",
+    "watermark:dist": "node scripts/watermark.mjs --dist",
+    "build": "npm run build:site && npm run watermark:dist && npm run index:search",
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "astro": "ASTRO_TELEMETRY_DISABLED=1 astro",
     "check": "tsc --noEmit",
@@ -41,6 +43,7 @@
     "@lucide/astro": "^1.26.0",
     "@resvg/resvg-wasm": "^2.6.2",
     "fontkit": "^2.0.4",
+    "sharp": "^0.35.3",
     "three": "^0.185.1"
   }
 }

@@ -311,6 +311,12 @@ v1 的视觉基线已全部落定，下面两条是**留给 v2 的开放设计�
   - 文件名带标题的短哈希：改了标题就换地址，转发平台才不会一直显示旧图。
   - 构建依赖 `fontkit` 与 `@resvg/resvg-wasm`，不用浏览器；字体取 `@fontsource/source-serif-4` 与 `@fontsource/noto-serif-sc` 的 600 字重。
   - `qa-build.mjs` 检查每个文章页的 `og:image` 都是自己的分享图，并检查尺寸与体积。
+- **作品水印**（2026-11-02 起，`vermilion-v1.5.0`）：作品页 `gallery` 里的图和关于我页的「画作与摄影」上线时带一个小字标（Logo A 加 Elen Skye），默认在右下角，右下角明显更杂乱时换到左下角；亮处深墨、暗处浅墨，不加底板。已上线的作品也包括（站主定）。
+  - 不加的：第三方照片、文章正文图、封面与卡片小图、肖像；短边小于 480px 的图。
+  - 原图不动：`public/assets/images/` 里仍是原图，`npm run build` 在 Astro 之后运行 `scripts/watermark.mjs --dist`，只替换 `dist/` 里的副本。所以 `astro dev` 与 Pomelo 的预览看不到水印，要看用 `npm run preview`。改样式或撤掉只要重新构建。
+  - 带水印的副本不保留 EXIF（包括拍摄地点），保留色彩配置，不超过 1.5 MB。哪些图算作品在 `scripts/lib/artwork-refs.mjs`。
+  - 试跑自己的作品：`npm run watermark -- <图片…>`，输出 `<名字>-watermarked.<扩展名>` 放在原图旁边，不写进仓库。
+  - `qa-build.mjs` 检查作品图确实加了水印（单张没加只提示，全部没加才算错），其余资源库图片必须与原文件逐字节相同。
 - **跳到主要内容**：阴影只在链接获得焦点时出现，修掉每页左上角露出的灰影。
 - 链接下划线收拢、Logo A 悬停仍是网站自己的样式；visual-assets 里的同名零件与它们逐像素一致，不需要同步。
 - **404 插图**（2026-11-02 起，`vermilion-v1.2.0`）：「折页」——地图纸从左下角出血、右上角折起一角，一笔冲出纸边，圆相落在纸外。内联 `not-found-intro.fragment.html`，明暗跟随主题，最宽 `560px`；打开 404 页时用描边绘制写一次（`calm`，`640ms`），不需要脚本，减弱动效时静态。旧位图 `wander-error-cloud-pages-404.png` 已删除，`qa-build.mjs` 改查内联插图。

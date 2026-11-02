@@ -16,10 +16,10 @@ Elen Skye 的双语个人网站，以「漫游」连接写作、项目、画作�
 | `src/scripts/` | 页面端脚本：Wander 墙、文末落款与 `/love-shuyu/` 各模块 |
 | `src/styles/` | 字体、Vermilion 主题、排版与响应式样式 |
 | `public/assets/` | 资源库：内容用到的全部图片（`images/`）和文档（`documents/`，含简历），每个都已登记 |
-| `src/vendor/vermilion/` | 从 visual-assets 按 tag 同步来的 Vermilion 图形与动效（默认分享图与文章分享图的生成模块、状态插图、分类图形、文末落款、内容图标清单等），不手改，见 `DESIGN.md` 第 10 节 |
+| `src/vendor/vermilion/` | 从 visual-assets 按 tag 同步来的 Vermilion 图形与动效（默认分享图、文章分享图与作品水印的生成模块、状态插图、分类图形、文末落款、内容图标清单等），不手改，见 `DESIGN.md` 第 10 节 |
 | `public/` 其余 | 网站自己的图标、搜索脚本，及 `/love-shuyu/` 的文件 |
 | `design/brand/` | Logo 与主屏图标的源文件，不发布 |
-| `scripts/` | QA、资源审计、删除预览与 `/love-shuyu/` 照片压缩 |
+| `scripts/` | QA、资源审计、删除预览、作品水印（`watermark.mjs`）与 `/love-shuyu/` 照片压缩 |
 
 `/love-shuyu/` 是 Phase 18 的隐藏页（仅中文、无站内入口、`noindex`），构成如下：
 

@@ -2,6 +2,7 @@ import { access, readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { inflateSync } from 'node:zlib';
+import { listArtworkFiles } from './lib/artwork-refs.mjs';
 
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 
@@ -121,6 +122,28 @@ for (const file of wanderPages) {
   if (!html.includes('<meta property="og:image:width" content="1200"') || !html.includes('<meta property="og:image:height" content="630"')) {
     errors.push(`${label}: og:image should declare its size`);
   }
+}
+
+// Artwork ships watermarked while the library keeps the clean original
+// (scripts/watermark.mjs). A single image may ship unmarked, the build log says
+// why; none marked at all means the step did not run. Every other library image
+// (covers, body images, third-party photos) must reach dist/ untouched.
+const root = fileURLToPath(new URL('../', import.meta.url));
+const artworkFiles = await listArtworkFiles(root);
+let markedArtwork = 0;
+for (const rel of artworkFiles) {
+  const [original, shipped] = await Promise.all([readFile(join(root, 'public', rel)), readFile(join(dist, rel))]);
+  if (!original.equals(shipped)) markedArtwork += 1;
+  else console.warn(`Build QA note: ${rel} shipped without a watermark`);
+  if (shipped.length > 1.5 * 1024 * 1024) errors.push(`${rel}: over 1.5 MB after the watermark`);
+}
+if (artworkFiles.length > 0 && markedArtwork === 0) errors.push('no artwork was watermarked: did scripts/watermark.mjs run?');
+const libraryImages = await readdir(join(root, 'public/assets/images'));
+for (const name of libraryImages) {
+  const rel = `assets/images/${name}`;
+  if (artworkFiles.includes(rel) || name.startsWith('.')) continue;
+  const [original, shipped] = await Promise.all([readFile(join(root, 'public', rel)), readFile(join(dist, rel))]);
+  if (!original.equals(shipped)) errors.push(`${rel}: not artwork, but it differs from the library file`);
 }
 
 const targetForPath = (pathname) => {
