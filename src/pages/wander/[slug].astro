@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import WanderGallery from '../../components/WanderGallery.astro';
 import endMarkFragment from '../../vendor/vermilion/end-mark/end-mark.fragment.html?raw';
 import { pagePaths } from '../../data/site';
+import { renderContentIconText } from '../../lib/content-icons.mjs';
 import {
   formatWanderMonth,
   getCategoryLabel,
@@ -76,7 +77,7 @@ const endMark = endMarkFragment.replace(/<!--[\s\S]*?-->\s*/, '');
         <span>{languageLabel}</span>
         {dateLabel && <span>{dateLabel}</span>}
       </div>
-      {entry.data.summary && <p class="wander-article-summary">{entry.data.summary}</p>}
+      {entry.data.summary && <p class="wander-article-summary" set:html={renderContentIconText(entry.data.summary, 'zh')} />}
       {/* Gallery works put the lightbox above the prose: the images are the
           subject, the body text is the note underneath them. */}
       <WanderGallery images={galleryImages} locale="zh" />

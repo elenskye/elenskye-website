@@ -12,11 +12,11 @@ Elen Skye 的双语个人网站，以「漫游」连接写作、项目、画作�
 | `src/content/` | About、Career、Now、Wander 双语内容 |
 | `src/data/` | 站点文案、分类、社交入口、资源登记（`assets/`）与 `/love-shuyu/` 时间线数据 |
 | `src/layouts/`、`src/pages/` | 公共布局、双语路由、RSS、404 与 sitemap |
-| `src/lib/` | 内容、资源、Gallery、搜索与 RSS 逻辑 |
+| `src/lib/` | 内容、资源、Gallery、搜索与 RSS 逻辑；内容图标的替换与 remark 插件（`content-icons.mjs`、`remark-content-icons.mjs`） |
 | `src/scripts/` | 页面端脚本：Wander 墙、文末落款与 `/love-shuyu/` 各模块 |
 | `src/styles/` | 字体、Vermilion 主题、排版与响应式样式 |
 | `public/assets/` | 资源库：内容用到的全部图片（`images/`）和文档（`documents/`，含简历），每个都已登记 |
-| `src/vendor/vermilion/` | 从 visual-assets 按 tag 同步来的 Vermilion 图形与动效（默认分享图、状态插图、分类图形、文末落款等），不手改，见 `DESIGN.md` 第 10 节 |
+| `src/vendor/vermilion/` | 从 visual-assets 按 tag 同步来的 Vermilion 图形与动效（默认分享图、状态插图、分类图形、文末落款、内容图标清单等），不手改，见 `DESIGN.md` 第 10 节 |
 | `public/` 其余 | 网站自己的图标、搜索脚本，及 `/love-shuyu/` 的文件 |
 | `design/brand/` | Logo 与主屏图标的源文件，不发布 |
 | `scripts/` | QA、资源审计、删除预览与 `/love-shuyu/` 照片压缩 |

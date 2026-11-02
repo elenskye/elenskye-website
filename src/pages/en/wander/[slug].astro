@@ -4,6 +4,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import WanderGallery from '../../../components/WanderGallery.astro';
 import endMarkFragment from '../../../vendor/vermilion/end-mark/end-mark.fragment.html?raw';
 import { pagePaths } from '../../../data/site';
+import { renderContentIconText } from '../../../lib/content-icons.mjs';
 import {
   formatWanderMonth,
   extractFirstImage,
@@ -87,7 +88,7 @@ const endMark = endMarkFragment.replace(/<!--[\s\S]*?-->\s*/, '');
         <span>{languageLabel}</span>
         {dateLabel && <span>{dateLabel}</span>}
       </div>
-      {summary && <p class="wander-article-summary">{summary}</p>}
+      {summary && <p class="wander-article-summary" set:html={renderContentIconText(summary, 'en')} />}
       <WanderGallery images={galleryImages} locale="en" />
       {
         isStub ? (

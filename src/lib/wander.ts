@@ -4,6 +4,7 @@ import { toPublicAssetUrl } from './assets';
 import { resolveGalleryImages } from './gallery.js';
 import { getSharedImage } from './shared-images';
 import { getTaxonomyLabel, normalizeTaxonomyValue, normalizeTaxonomyValues } from './wander-taxonomy.js';
+import { stripContentIcons } from './content-icons.mjs';
 
 type WanderEntry = CollectionEntry<'wander'>;
 
@@ -58,6 +59,8 @@ export function makeExcerpt(body: string | undefined, language: 'zh' | 'en', max
     .replace(/^\s{0,3}([-*+]|\d+\.)\s+/gm, '')
     .replace(/^\s{0,3}-{3,}\s*$/gm, ' ')
     .replace(/\*\*|__|~~|\*|`/g, '')
+    // `:name:` content-icon shortcodes have no plain-text form.
+    .replace(/:[a-z][a-z0-9-]*:/g, (code) => stripContentIcons(code) || ' ')
     .replace(/\\\s*$/gm, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -186,8 +189,8 @@ export function toWanderCards(entries: WanderEntry[], locale: Locale): WanderCar
       // Chinese-only work shown on the English wall (a stub card) — that
       // uses the translated `englishSummary` written on the Chinese entry.
       const summary = isChineseOnlyOnEnglishPage
-        ? (entry.data.englishSummary ?? entry.data.summary ?? '')
-        : makeExcerpt(entry.body, entry.data.language) || (entry.data.summary ?? '');
+        ? stripContentIcons(entry.data.englishSummary ?? entry.data.summary ?? '')
+        : makeExcerpt(entry.body, entry.data.language) || stripContentIcons(entry.data.summary ?? '');
       const href = isChineseOnlyOnEnglishPage ? `/en/wander/${work.slug}/` : getWanderDetailPath(entry);
       const category = normalizeTaxonomyValue(entry.data.category, currentCategorySlugs);
       const topics = normalizeTaxonomyValues(entry.data.topics, currentTopicSlugs);

@@ -311,3 +311,11 @@ v1 的视觉基线已全部落定，下面两条是**留给 v2 的开放设计�
 - **404 插图**（2026-11-02 起，`vermilion-v1.2.0`）：「折页」——地图纸从左下角出血、右上角折起一角，一笔冲出纸边，圆相落在纸外。内联 `not-found-intro.fragment.html`，明暗跟随主题，最宽 `560px`；打开 404 页时用描边绘制写一次（`calm`，`640ms`），不需要脚本，减弱动效时静态。旧位图 `wander-error-cloud-pages-404.png` 已删除，`qa-build.mjs` 改查内联插图。
 - **文末落款**（2026-11-02 起）：中英文文章正文结尾居中放一个 `40px` 的小图形 `.wander-article-end`，三版——抵达、远山、三点——每次打开文章随机显示一版；第一次滚进视口时写一次（`calm`，`640ms`）。打开页面时已在屏幕里的直接静态显示，减弱动效时静态，没有脚本时显示第一版。只放在有正文的文章里，英文占位页（只链向中文原文）不放。片段与 `end-mark.js` 来自 `src/vendor/vermilion/end-mark/`，页面脚本在 `src/scripts/end-mark.ts`。不用朱红，纯装饰（`aria-hidden`）。
 - **描边绘制**：上面两处都用 `stroke-draw-v2`（`640ms`，纸片淡入 `320ms`，笔画依次写出）。它超过 `calm` 入场 `320ms` 的上限，是站主批准的例外（visual-assets 的 `tokens/motion.json`），只用于这两处。
+- **内容图标**（2026-11-02 起，`vermilion-v1.3.0`）：内容里写 `:名字:`，显示成 24 个「笔势与纸片」小图标之一（简笔加纸片，笔势青绿）。清单在 `src/vendor/vermilion/icons/icons.json`，写法说明在 visual-assets 的 `marks/icons.md`。
+  - 在哪能用：Markdown 正文都能用，由 `src/lib/remark-content-icons.mjs` 在构建时替换；职业页的按钮、技能与经历条目，以及文章摘要也能用（`renderContentIconText`）。
+  - 在哪去掉：卡片摘要、`meta description` 与搜索文字只留文字，写法去掉（`stripContentIcons`）。页面导语与标题里不支持。
+  - 只认清单里的名字，其他冒号写法原样保留；行内代码与代码块里不替换。
+  - 读屏读出图标标签，中文页读中文、英文页读英文（按内容文件名里的 `zh` / `en`）。
+  - 样式：图标 `1.2em`，基线略下沉；按钮里不缩小，与文字之间 `0.35em`。链接与按钮悬停时，笔势跟着文字变色。
+  - 网站界面自己的图标仍用 Lucide，两套不混用。
+  - 职业页中文按钮的 ❗ 已换成 `:tip:`。

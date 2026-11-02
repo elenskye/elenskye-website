@@ -1194,6 +1194,33 @@ p {
   color: var(--color-accent-strong);
 }
 
+/* Content icons (Vermilion, `:name:` in content; see content-icons.mjs):
+   sized with the text, teal strokes on a paper chip. Inside links and
+   buttons the strokes follow the text colour on hover, like the text. */
+.va-icon {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  margin: 0 0.1em;
+  vertical-align: -0.22em;
+}
+
+.va-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+a:is(:hover, :focus-visible) .va-icon .va-graphic {
+  --va-ink: currentColor;
+}
+
+.button-link .va-icon {
+  flex: none;
+  margin: 0 0.35em 0 0;
+  vertical-align: 0;
+}
+
 /* Now timeline: one circle per month. Each block carries its own dashed
    line that runs from below the circle to the end of that month's content,
    then stops — the gap between blocks stays empty. */

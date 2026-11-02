@@ -17,6 +17,7 @@ import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import { discoveryPaths, getAlternateLocale, getAlternatePath, getPagePath, localeConfig, type Locale, type PageKey } from '../data/site';
 import { toPublicAssetUrl } from '../lib/assets';
+import { stripContentIcons } from '../lib/content-icons.mjs';
 
 interface Props {
   title?: string;
@@ -42,7 +43,7 @@ interface Props {
 
 const {
   title = 'Elen Skye',
-  description = 'A bilingual personal website for work, writing, art, and current life.',
+  description: rawDescription = 'A bilingual personal website for work, writing, art, and current life.',
   locale = 'zh',
   pageKey,
   path,
@@ -57,6 +58,8 @@ const {
   noindex = false,
 } = Astro.props;
 
+// Content-icon shortcodes (`:tip:`) have no plain-text form in meta tags.
+const description = stripContentIcons(rawDescription);
 const lang = localeConfig[locale].lang;
 const alternateLocale = getAlternateLocale(locale);
 const currentPath = path ?? (pageKey ? getPagePath(pageKey, locale) : '/');

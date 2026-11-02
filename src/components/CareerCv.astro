@@ -3,6 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import { pagePaths, type Locale } from '../data/site';
 import { toPublicAssetUrl } from '../lib/assets';
 import { normalizeCareerSections } from '../lib/career-sections.js';
+import { renderContentIconText } from '../lib/content-icons.mjs';
 
 interface Props {
   locale: Locale;
@@ -17,6 +18,8 @@ const resumeDownloads = data.resumeDownloads.flatMap((item) => {
   return label && href ? [{ label, href }] : [];
 });
 const sections = normalizeCareerSections(data.sections);
+// Frontmatter text may carry `:name:` content icons (Vermilion); render them inline.
+const withIcons = (text: string) => renderContentIconText(text, locale);
 
 const labels =
   locale === 'zh'
@@ -42,7 +45,7 @@ const labels =
     <a class="button-link" href={`mailto:${data.email}`}>{labels.email}</a>
     {resumeDownloads.map((resume) => (
       <a class="button-link" href={resume.href} download>
-        {resume.label}
+        <Fragment set:html={withIcons(resume.label)} />
       </a>
     ))}
   </div>
@@ -56,8 +59,8 @@ const labels =
             <dl class="cv-skills">
               {section.items.map((item) => (
                 <>
-                  <dt>{item.heading}</dt>
-                  <dd>{item.items}</dd>
+                  <dt set:html={withIcons(item.heading)} />
+                  <dd set:html={withIcons(item.items)} />
                 </>
               ))}
             </dl>
@@ -66,12 +69,12 @@ const labels =
               <article class:list={['cv-entry', !entry.period && 'cv-entry--undated']}>
                 {entry.period && <span class="cv-period">{entry.period}</span>}
                 <div class="cv-entry-body">
-                  {entry.role && <h3>{entry.role}</h3>}
-                  {entry.org && <p class="cv-org">{entry.org}</p>}
+                  {entry.role && <h3 set:html={withIcons(entry.role)} />}
+                  {entry.org && <p class="cv-org" set:html={withIcons(entry.org)} />}
                   {entry.bullets.length > 0 && (
                     <ul>
                       {entry.bullets.map((bullet) => (
-                        <li>{bullet}</li>
+                        <li set:html={withIcons(bullet)} />
                       ))}
                     </ul>
                   )}

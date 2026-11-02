@@ -2,7 +2,7 @@
 language: zh
 email: 2711690016@qq.com
 resumeDownloads:
-  - label: ❗️中文页面简历仍在完善中❗️
+  - label: ':tip: 中文页面简历仍在完善中'
     fileRef: public/assets/documents/seek-it-cn-test-v2.pdf
 summary: >-
   重庆大学（985）本科，新加坡国立大学系统分析研究生（GDipSA, NUS-ISS），机器学习与全栈软件工程并行：设计并评测过多个深度学习模型，也以
