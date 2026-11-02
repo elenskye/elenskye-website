@@ -306,6 +306,11 @@ v1 的视觉基线已全部落定，下面两条是**留给 v2 的开放设计�
 - **空状态**：卡片墙与站内搜索的空状态改用内联矢量 `empty-graphic.svg`，明暗跟随主题；卡片墙的空状态框是表面底，插图加 `va-on-surface`。旧位图 `wander-empty-cloud-pages-oops.png` 已删除。
 - **加载圆相**：站内搜索在 `250ms` 后仍未返回结果时显示，结果出来即隐藏；纯装饰（`aria-hidden`），状态仍由文字播报。
 - **默认分享图**：`og-default.png`（分享图底图加字标与「呦呦漫游 · Wander」），构建时带哈希输出到 `/_astro/`；旧的 `images/og/default.png` 已删除。`qa-build.mjs` 从首页的 `og:image` 找到它再检查尺寸与体积。
+- **文章分享图**（2026-11-02 起，`vermilion-v1.4.0`）：每个 Wander 页面（中文页、英文页、英文占位页）各一张 1200 × 630 PNG，网站构建时按页面标题生成，发文章不用手动做图。版式「低山」：字标在左上，标题在纸山上方，标题长了自动缩字、换行，排不下时停在省略号上。有封面的文章也用它（站主定），其他页面仍用默认分享图。
+  - 生成模块与模板在 `src/vendor/vermilion/og-card/`，路由是 `src/pages/og/[locale]/[card].png.ts`，页面用的地址由 `src/lib/og-card.ts` 算出。
+  - 文件名带标题的短哈希：改了标题就换地址，转发平台才不会一直显示旧图。
+  - 构建依赖 `fontkit` 与 `@resvg/resvg-wasm`，不用浏览器；字体取 `@fontsource/source-serif-4` 与 `@fontsource/noto-serif-sc` 的 600 字重。
+  - `qa-build.mjs` 检查每个文章页的 `og:image` 都是自己的分享图，并检查尺寸与体积。
 - **跳到主要内容**：阴影只在链接获得焦点时出现，修掉每页左上角露出的灰影。
 - 链接下划线收拢、Logo A 悬停仍是网站自己的样式；visual-assets 里的同名零件与它们逐像素一致，不需要同步。
 - **404 插图**（2026-11-02 起，`vermilion-v1.2.0`）：「折页」——地图纸从左下角出血、右上角折起一角，一笔冲出纸边，圆相落在纸外。内联 `not-found-intro.fragment.html`，明暗跟随主题，最宽 `560px`；打开 404 页时用描边绘制写一次（`calm`，`640ms`），不需要脚本，减弱动效时静态。旧位图 `wander-error-cloud-pages-404.png` 已删除，`qa-build.mjs` 改查内联插图。

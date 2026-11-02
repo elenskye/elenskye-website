@@ -35,6 +35,8 @@ interface Props {
   /** Set false for content pages that have no language counterpart. */
   hasAlternate?: boolean;
   ogImage?: string;
+  /** Pixel size of `ogImage`, when known. The default share image always has one. */
+  ogImageSize?: { width: number; height: number };
   ogImageAlt?: string;
   ogType?: 'website' | 'article';
   publishedTime?: Date | string;
@@ -52,6 +54,7 @@ const {
   languagePath,
   hasAlternate = true,
   ogImage,
+  ogImageSize,
   ogImageAlt,
   ogType = 'website',
   publishedTime,
@@ -71,6 +74,7 @@ const xDefaultPath = xDefaultPathOverride ?? (pageKey ? getPagePath(pageKey, 'zh
 const xDefaultUrl = new URL(xDefaultPath, site).toString();
 const usesDefaultOgImage = !ogImage;
 const ogImageUrl = new URL(toPublicAssetUrl(ogImage) ?? ogDefaultUrl, site).toString();
+const resolvedOgImageSize = usesDefaultOgImage ? { width: 1200, height: 630 } : ogImageSize;
 const resolvedOgImageAlt =
   ogImageAlt ??
   (usesDefaultOgImage
@@ -137,8 +141,8 @@ const publishedTimeIso = publishedTime
     <meta property="og:locale" content={ogLocale} />
     {hasAlternate && <meta property="og:locale:alternate" content={alternateOgLocale} />}
     <meta property="og:image" content={ogImageUrl} />
-    {usesDefaultOgImage && <meta property="og:image:width" content="1200" />}
-    {usesDefaultOgImage && <meta property="og:image:height" content="630" />}
+    {resolvedOgImageSize && <meta property="og:image:width" content={String(resolvedOgImageSize.width)} />}
+    {resolvedOgImageSize && <meta property="og:image:height" content={String(resolvedOgImageSize.height)} />}
     <meta property="og:image:alt" content={resolvedOgImageAlt} />
     {ogType === 'article' && publishedTimeIso && <meta property="article:published_time" content={publishedTimeIso} />}
     <meta name="twitter:card" content="summary_large_image" />

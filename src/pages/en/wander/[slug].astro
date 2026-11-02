@@ -5,9 +5,9 @@ import WanderGallery from '../../../components/WanderGallery.astro';
 import endMarkFragment from '../../../vendor/vermilion/end-mark/end-mark.fragment.html?raw';
 import { pagePaths } from '../../../data/site';
 import { renderContentIconText } from '../../../lib/content-icons.mjs';
+import { ogCardPath, ogCardSize } from '../../../lib/og-card';
 import {
   formatWanderMonth,
-  extractFirstImage,
   getCategoryLabel,
   getGalleryImages,
   getTopicLabel,
@@ -52,9 +52,7 @@ const originalHref = `/wander/${getWanderSlug(entry)}/`;
 // full lightbox rather than degrading to a text-only redirect — for a photo
 // set the pictures ARE the content, and the stub note sits below them.
 const galleryImages = getGalleryImages(entry, title);
-const ogImageCandidate =
-  entry.data.thumbnailRef ?? galleryImages[0]?.src ?? extractFirstImage(entry.body);
-const ogImage = ogImageCandidate?.toLowerCase().endsWith('.svg') ? undefined : ogImageCandidate;
+const ogImage = ogCardPath('en', work.slug, title);
 const currentPath = `/en/wander/${work.slug}/`;
 const chinesePath = `/wander/${work.slug}/`;
 const hasChineseCounterpart = Boolean(work.zh);
@@ -74,6 +72,7 @@ const endMark = endMarkFragment.replace(/<!--[\s\S]*?-->\s*/, '');
   languagePath={hasChineseCounterpart ? chinesePath : pagePaths.wander.zh}
   hasAlternate={hasChineseCounterpart}
   ogImage={ogImage}
+  ogImageSize={ogCardSize}
   ogImageAlt={title}
   ogType="article"
 >

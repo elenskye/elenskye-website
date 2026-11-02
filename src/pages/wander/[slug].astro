@@ -5,13 +5,13 @@ import WanderGallery from '../../components/WanderGallery.astro';
 import endMarkFragment from '../../vendor/vermilion/end-mark/end-mark.fragment.html?raw';
 import { pagePaths } from '../../data/site';
 import { renderContentIconText } from '../../lib/content-icons.mjs';
+import { ogCardPath, ogCardSize } from '../../lib/og-card';
 import {
   formatWanderMonth,
   getCategoryLabel,
   getTopicLabel,
   getWanderDetailPath,
   getWanderSlug,
-  extractFirstImage,
   getGalleryImages,
   languageLabels,
   makeExcerpt,
@@ -43,9 +43,7 @@ const topicLabels = entry.data.topics.flatMap((topic) => getTopicLabel(topic, 'z
 const languageLabel = languageLabels.zh[entry.data.language];
 const dateLabel = formatWanderMonth(entry.data.month, 'zh');
 const galleryImages = getGalleryImages(entry, entry.data.title);
-const ogImageCandidate =
-  entry.data.thumbnailRef ?? galleryImages[0]?.src ?? extractFirstImage(entry.body);
-const ogImage = ogImageCandidate?.toLowerCase().endsWith('.svg') ? undefined : ogImageCandidate;
+const ogImage = ogCardPath('zh', getWanderSlug(entry), entry.data.title);
 const currentPath = getWanderDetailPath(entry);
 const englishPath = `/en/wander/${getWanderSlug(entry)}/`;
 // Article end mark (Vermilion): three marks in one fragment, one shown at
@@ -63,6 +61,7 @@ const endMark = endMarkFragment.replace(/<!--[\s\S]*?-->\s*/, '');
   xDefaultPath={currentPath}
   languagePath={englishPath}
   ogImage={ogImage}
+  ogImageSize={ogCardSize}
   ogImageAlt={entry.data.title}
   ogType="article"
 >

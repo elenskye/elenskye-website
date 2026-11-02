@@ -105,6 +105,24 @@ if (!defaultOgPath?.startsWith('_astro/og-default.')) {
   await checkPng(defaultOgPath, 1200, 630, 300_000);
 }
 
+// Every Wander page shares its own card, generated from its title at build
+// time (src/pages/og/), never the default image or a cover.
+const wanderPages = htmlFiles.filter((file) => /[/\\](en[/\\])?wander[/\\][^/\\]+[/\\]index\.html$/.test(file));
+if (wanderPages.length === 0) errors.push('dist: no Wander pages found to check share cards on');
+for (const file of wanderPages) {
+  const label = file.slice(dist.length);
+  const html = await readFile(file, 'utf8');
+  const cardPath = html.match(/<meta property="og:image" content="https:\/\/elenskye\.com\/([^"]+)"/)?.[1];
+  if (!cardPath || !/^og\/(zh|en)\/[a-z0-9-]+-[0-9a-f]{8}\.png$/.test(cardPath)) {
+    errors.push(`${label}: og:image should be the page's generated card, found ${cardPath}`);
+    continue;
+  }
+  await checkPng(cardPath, 1200, 630, 300_000);
+  if (!html.includes('<meta property="og:image:width" content="1200"') || !html.includes('<meta property="og:image:height" content="630"')) {
+    errors.push(`${label}: og:image should declare its size`);
+  }
+}
+
 const targetForPath = (pathname) => {
   const decoded = decodeURIComponent(pathname);
   if (decoded === '/') return join(dist, 'index.html');
