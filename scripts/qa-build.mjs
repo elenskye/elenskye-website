@@ -96,7 +96,7 @@ const checkPng = async (relativePath, expectedWidth, expectedHeight, maxBytes, r
   }
 };
 
-// The default share image is synced from visual-assets (src/vendor/vermilion/)
+// The default share image is synced from visual-atelier (src/vendor/vermilion/)
 // and bundled with a hashed name, so find it through the home page's og:image.
 const homeHtml = await readFile(join(dist, 'index.html'), 'utf8');
 const defaultOgPath = homeHtml.match(/<meta property="og:image" content="https:\/\/elenskye\.com\/([^"]+)"/)?.[1];
@@ -175,7 +175,7 @@ for (const file of htmlFiles) {
     errors.push('404.html: missing noindex');
   }
   // The 404 illustration and the article end mark are synced from
-  // visual-assets (src/vendor/vermilion/) and inlined as SVG.
+  // visual-atelier (src/vendor/vermilion/) and inlined as SVG.
   if (label === '404.html' && !html.includes('<div class="va-draw-v2 va-not-found is-playing"')) {
     errors.push('404.html: missing the approved 404 illustration');
   }

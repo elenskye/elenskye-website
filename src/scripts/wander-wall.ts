@@ -90,7 +90,7 @@ const setupWanderWall = () => {
   });
 
   // The selected topic carries the Vermilion selection slide (synced from
-  // visual-assets): a cyan underline that slides to the newly selected topic
+  // visual-atelier): a cyan underline that slides to the newly selected topic
   // and fades out when the topic is cleared. The 6px inset hugs the label.
   const topicTrack = document.querySelector<HTMLElement>('[data-topic-track]');
   const topicIndicator = topicTrack?.querySelector<HTMLElement>('.va-slide-indicator');

@@ -11,7 +11,7 @@ interface Props {
 
 const { locale, documents } = Astro.props;
 const fallbackDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
-// Vermilion graphics synced from visual-assets. The status line already
+// Vermilion graphics synced from visual-atelier. The status line already
 // announces "searching" and "no results", so both visuals stay decorative.
 const emptyIllustration = emptyGraphic.replace(
   '<svg ',

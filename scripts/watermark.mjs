@@ -1,5 +1,5 @@
 /**
- * Artwork watermark (Vermilion `watermark`, synced from visual-assets).
+ * Artwork watermark (Vermilion `watermark`, synced from visual-atelier).
  *
  *   npm run watermark -- <image…> [--corner bottom-left]
  *     One image in, one watermarked image out, next to the original as

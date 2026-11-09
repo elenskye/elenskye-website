@@ -1,4 +1,4 @@
-// Content icons (Vermilion, synced from visual-assets into src/vendor/vermilion/icons/).
+// Content icons (Vermilion, synced from visual-atelier into src/vendor/vermilion/icons/).
 // Authors write `:name:` in Markdown bodies and in some frontmatter text (the
 // career page's buttons and entries); it becomes a small inline icon with a
 // screen-reader label in the page's language. Only names listed in icons.json

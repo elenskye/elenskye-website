@@ -297,7 +297,7 @@ v1 的视觉基线已全部落定，下面两条是**留给 v2 的开放设计�
 
 ## 10. 同步来的 Vermilion 图形语言与动效（2026-10-31 登记，2026-11-01 更新）
 
-`src/vendor/vermilion/` 里的文件由 visual-assets 按 tag 复制而来（版本见其中的 `VERSION`），是已发版本的副本，**网站内不手改**；要改回 visual-assets 改、发版、再同步。本节取代上文的几处说法：§6 的默认 OG、404 与空状态插图，§9 第二条「无封面卡片暂用 Lucide」。
+`src/vendor/vermilion/` 里的文件由 visual-atelier 按 tag 复制而来（版本见其中的 `VERSION`），是已发版本的副本，**网站内不手改**；要改回 visual-atelier 改、发版、再同步。本节取代上文的几处说法：§6 的默认 OG、404 与空状态插图，§9 第二条「无封面卡片暂用 Lucide」。
 
 - **页头**：左上角只放 Logo A 标志，不放名字；三页的分区装饰也不放，页头留白（2026-11-01 站主改定）。站内搜索页改用与其他主页面相同的 `PageShell` 页头。
 - **分类图形**：无封面卡片标题左侧用 `44px` 的分类图形（写作、项目、画廊、创作四类；游记、其他留作备用），替代 Lucide 类别图标；没对应图形的类别仍退回 Lucide `Route`。悬停或键盘聚焦整张卡片时一笔笔写出（`expressive`，`700ms`），卡片出现表面色时纸片改取 `--color-surface-cool`。卡片窄的区间（四列时 `761–1023px`、两列时 `441–599px`）图形移到标题上方。
@@ -318,11 +318,11 @@ v1 的视觉基线已全部落定，下面两条是**留给 v2 的开放设计�
   - 试跑自己的作品：`npm run watermark -- <图片…>`，输出 `<名字>-watermarked.<扩展名>` 放在原图旁边，不写进仓库。
   - `qa-build.mjs` 检查作品图确实加了水印（单张没加只提示，全部没加才算错），其余资源库图片必须与原文件逐字节相同。
 - **跳到主要内容**：阴影只在链接获得焦点时出现，修掉每页左上角露出的灰影。
-- 链接下划线收拢、Logo A 悬停仍是网站自己的样式；visual-assets 里的同名零件与它们逐像素一致，不需要同步。
+- 链接下划线收拢、Logo A 悬停仍是网站自己的样式；visual-atelier 里的同名零件与它们逐像素一致，不需要同步。
 - **404 插图**（2026-11-02 起，`vermilion-v1.2.0`）：「折页」——地图纸从左下角出血、右上角折起一角，一笔冲出纸边，圆相落在纸外。内联 `not-found-intro.fragment.html`，明暗跟随主题，最宽 `560px`；打开 404 页时用描边绘制写一次（`calm`，`640ms`），不需要脚本，减弱动效时静态。旧位图 `wander-error-cloud-pages-404.png` 已删除，`qa-build.mjs` 改查内联插图。
 - **文末落款**（2026-11-02 起）：中英文文章正文结尾居中放一个 `40px` 的小图形 `.wander-article-end`，三版——抵达、远山、三点——每次打开文章随机显示一版；第一次滚进视口时写一次（`calm`，`640ms`）。打开页面时已在屏幕里的直接静态显示，减弱动效时静态，没有脚本时显示第一版。只放在有正文的文章里，英文占位页（只链向中文原文）不放。片段与 `end-mark.js` 来自 `src/vendor/vermilion/end-mark/`，页面脚本在 `src/scripts/end-mark.ts`。不用朱红，纯装饰（`aria-hidden`）。
-- **描边绘制**：上面两处都用 `stroke-draw-v2`（`640ms`，纸片淡入 `320ms`，笔画依次写出）。它超过 `calm` 入场 `320ms` 的上限，是站主批准的例外（visual-assets 的 `tokens/motion.json`），只用于这两处。
-- **内容图标**（2026-11-02 起，`vermilion-v1.3.0`）：内容里写 `:名字:`，显示成 24 个「笔势与纸片」小图标之一（简笔加纸片，笔势青绿）。清单在 `src/vendor/vermilion/icons/icons.json`，写法说明在 visual-assets 的 `marks/icons.md`。
+- **描边绘制**：上面两处都用 `stroke-draw-v2`（`640ms`，纸片淡入 `320ms`，笔画依次写出）。它超过 `calm` 入场 `320ms` 的上限，是站主批准的例外（visual-atelier 的 `tokens/motion.json`），只用于这两处。
+- **内容图标**（2026-11-02 起，`vermilion-v1.3.0`）：内容里写 `:名字:`，显示成 24 个「笔势与纸片」小图标之一（简笔加纸片，笔势青绿）。清单在 `src/vendor/vermilion/icons/icons.json`，写法说明在 visual-atelier 的 `marks/icons.md`。
   - 在哪能用：Markdown 正文都能用，由 `src/lib/remark-content-icons.mjs` 在构建时替换；职业页的按钮、技能与经历条目，以及文章摘要也能用（`renderContentIconText`）。
   - 在哪去掉：卡片摘要、`meta description` 与搜索文字只留文字，写法去掉（`stripContentIcons`）。页面导语与标题里不支持。
   - 只认清单里的名字，其他冒号写法原样保留；行内代码与代码块里不替换。
