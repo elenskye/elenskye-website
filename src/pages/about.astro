@@ -4,6 +4,7 @@ import { missingEntryNotice, requireEntry } from '../lib/require-entry';
 import AboutMedia from '../components/AboutMedia.astro';
 import PageShell from '../components/PageShell.astro';
 import { pageCopy } from '../data/site';
+import { renderContentIconText } from '../lib/content-icons.mjs';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const page = pageCopy.zh.about;
@@ -12,6 +13,8 @@ const [rawEntry] = await getCollection('about', (item) => item.data.language ===
 const entry = requireEntry(rawEntry, 'about', 'zh');
 const Story = entry ? (await render(entry)).Content : undefined;
 const contextParagraphs = (entry?.data.contextIntro ?? '').split(/\n{2,}/).filter(Boolean);
+// Frontmatter text may carry `:name:` content icons (Vermilion); render them inline.
+const withIcons = (text: string) => renderContentIconText(text, 'zh');
 ---
 
 <BaseLayout title="关于我 | Elen Skye" description={page.description} locale="zh" pageKey="about">
@@ -27,7 +30,7 @@ const contextParagraphs = (entry?.data.contextIntro ?? '').split(/\n{2,}/).filte
             一点背景
           </h2>
           <div class="about-context-intro">
-            {contextParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+            {contextParagraphs.map((paragraph) => <p set:html={withIcons(paragraph)} />)}
           </div>
           <ol class="about-timeline">
             {
@@ -35,10 +38,10 @@ const contextParagraphs = (entry?.data.contextIntro ?? '').split(/\n{2,}/).filte
                 <li>
                   <span class="about-marker" aria-hidden="true" />
                   <h3 class="about-role">
-                    {item.role} · <span class="about-org">{item.org}</span>
+                    <Fragment set:html={withIcons(item.role)} /> · <span class="about-org" set:html={withIcons(item.org)} />
                   </h3>
                   <p class="about-period">{item.period}</p>
-                  {item.description && <p class="about-desc">{item.description}</p>}
+                  {item.description && <p class="about-desc" set:html={withIcons(item.description)} />}
                 </li>
               ))
             }
